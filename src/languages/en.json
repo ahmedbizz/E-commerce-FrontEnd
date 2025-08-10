@@ -1,0 +1,35 @@
+{
+
+  "title-header1":"Fast deliver every where",
+  "login":"Login",
+  "Categoryies":"Categoryies",
+  "SubCategoryies":"SubCategoryies",
+  "Products":"Products",
+  "Users":"Users",
+  "Logout":"Logout",
+  "password":"password",
+  "email":"email",
+  "login-erorr":"Invalid Email Or Password Try agin !!",
+  "Singup":"Singup",
+  "Add-Cart":"Add to Cart",
+  "buy":"buy now",
+  "Home":"Home",
+  "Profile":"Profile",
+  "Login":"Login",
+  "Search":"Search",
+  "Manage Product":"Manage Product",
+  "Display Products":"Display Products",
+  "Create Product":"Create Product",
+  "Manage Users":"Manage Users",
+  "Display Users":"Display Users",
+  "Create User":"Create User",
+  "Create Role":  "Create Role",
+  "Display Role":"Display Role",
+  "Name":"Name",
+  "Save":"Save",
+  "ID":"ID",
+  "Action":"Action",
+  "Create At":"Create At"
+
+  
+  }

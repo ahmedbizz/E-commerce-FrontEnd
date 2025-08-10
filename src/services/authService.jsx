@@ -1,13 +1,15 @@
 import axios from "axios";
 const API_URL = "https://localhost:7137";
+import Cookies from "js-cookie";
 
 
 export const login = async (data) =>{
   const res =  await axios.post(`${API_URL}/api/Account/login`, data);
   const token  = res.data.token
-
+  
   if(token){
-    localStorage.setItem('token',token);
+    //localStorage.setItem('token',token);
+    Cookies.set("token", token, { expires: 3 });
   }
   return res.data
 }

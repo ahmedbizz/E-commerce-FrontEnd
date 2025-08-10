@@ -1,10 +1,52 @@
 body {
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-    direction: rtl;
-  }
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
-  
+  margin: 0;
+  font-family: "Arial", sans-serif;
+  direction: rtl;
+  background-color: azure;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* hedear 1 in Nave page section  */
+#Box_header_1 {
+  color: "inherit";
+  border: "2px solid red";
+  max-height: "50px";
+}
+
+#EN_AR_List {
+  max-width: 50px;
+  max-height: 60px;
+}
+#EN_AR_List :hover {
+  color: teal;
+  background-color: none;
+}
+/* لو تريد تعدل على .MuiTypography-root داخل EN_AR_List */
+#EN_AR_List .MuiTypography-root {
+  color: inherit;
+}
+
+/* headar 2 in Nave page section  */
+.AppBarHeader {
+  background-color: rgb(56, 122, 122) !important;
+  box-shadow: 0px 6px 0px rgb(240, 240, 175, 1) !important;
+}
+
+/* Role Create Page Continer */
+.RoleCreatePageContiner {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 50vh;
+}
+
+/* Group Create Page Continer */
+.GroupCreatePageContiner {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 50vh;
+}

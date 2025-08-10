@@ -1,12 +1,10 @@
 import React, { use, useContext, useState } from "react";
-import { Link } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
   IconButton,
   Typography,
   InputBase,
-  Badge,
   Menu,
   MenuItem,
   Avatar,
@@ -14,10 +12,10 @@ import {
   List,
   ListItemButton,
   ListItemText,
+  Button,
 } from "@mui/material";
-
+import { Link } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
-import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { AuthContext } from "../../context/AuthContext"; // تأكد من المسار الصحيح
 import { useTranslation } from "react-i18next";
@@ -39,12 +37,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   width: "100%",
 }));
 
-export default function Navbar() {
+export default function ManageDashboard() {
   const { i18n } = useTranslation();
   const { t } = useTranslation();
   const { user, logoutUser } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorElang, setAnchorElang] = useState(null);
+  const [anchorElProducts, setAnchorElProducts] = useState(null);
+  const [anchorElUsers, setAnchorElUsers] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
   // to cahange langueg
   const options = ["AR", "ENG"];
@@ -75,20 +75,26 @@ export default function Navbar() {
     logoutUser();
     handleClose();
   };
-  console.log(user);
+  const handleOpenProducts = (event) => {
+    setAnchorElProducts(event.currentTarget);
+  };
+
+  const handleCloseProducts = () => {
+    setAnchorElProducts(null);
+  };
+
+  const handleOpenUsers = (event) => {
+    setAnchorElUsers(event.currentTarget);
+  };
+
+  const handleCloseUsers = () => {
+    setAnchorElUsers(null);
+  };
   return (
     <div>
       {/* headar 1 section  */}
-      <Box
-      id="Box_header_1"
-        sx={{
-
-        }}
-      >
-        <List
-          id="EN_AR_List"
-          aria-label="Device settings"
-        >
+      <Box id="Box_header_1" sx={{}}>
+        <List id="EN_AR_List" aria-label="Device settings">
           <ListItemButton
             id="lock-button"
             aria-haspopup="listbox"
@@ -122,40 +128,93 @@ export default function Navbar() {
         </Menu>
       </Box>
       <AppBar className="AppBarHeader" position="static">
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Toolbar>
           {/* الشعار */}
           <Typography
             variant="h6"
             component={Link}
             to="/"
-            sx={{ textDecoration: "none", color: "white" }}
+            sx={{ textDecoration: "none", color: "white", flexGrow: 1 }}
           >
             🛒 {t("Home")}
           </Typography>
-          <Link to={"/product/create"}>Create product</Link>
-          {/* البحث */}
-          <Search>
-            <StyledInputBase
-              placeholder={t("Search")}
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
+          {/* إدارة المنتجات */}
+          <Button color="inherit" onClick={handleOpenProducts}>
+            {t("Manage Product")}
+          </Button>
+          <Menu
+            anchorEl={anchorElProducts}
+            open={Boolean(anchorElProducts)}
+            onClose={handleCloseProducts}
+          >
+            <MenuItem
+              component={Link}
+              to="/product/create"
+              onClick={handleCloseProducts}
+            >
+              {t("Create Product")}
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/products"
+              onClick={handleCloseProducts}
+            >
+              {t("Display Products")}
+            </MenuItem>
+          </Menu>
 
+          {/* إدارة المستخدمين */}
+          <Button color="inherit" onClick={handleOpenUsers}>
+            {t("Manage Users")}
+          </Button>
+          <Menu
+            anchorEl={anchorElUsers}
+            open={Boolean(anchorElUsers)}
+            onClose={handleCloseUsers}
+          >
+            <MenuItem component={Link} to="/users" onClick={handleCloseUsers}>
+              {t("Display Users")}
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/users/manage"
+              onClick={handleCloseUsers}
+            >
+              {t("Create User")}
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/role/create"
+              onClick={handleCloseUsers}
+            >
+              {t("Create Role")}
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/role"
+              onClick={handleCloseUsers}
+            >
+              {t("Display Role")}
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/groups"
+              onClick={handleCloseUsers}
+            >
+              {t("Display Groups")}
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/group/create"
+              onClick={handleCloseUsers}
+            >
+              {t("Create Group")}
+            </MenuItem>
+          </Menu>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             {/* صورة المستخدم وقائمة */}
             {user ? (
               <>
-                {/* أيقونة السلة */}
-                <IconButton
-                  component={Link}
-                  to="/cart"
-                  size="large"
-                  color="inherit"
-                >
-                  <Badge badgeContent={2} color="error">
-                    <ShoppingCartIcon />
-                  </Badge>
-                </IconButton>
                 <IconButton onClick={handleMenu} size="large" sx={{ p: 0 }}>
                   <Avatar
                     alt={user.name}

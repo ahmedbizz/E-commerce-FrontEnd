@@ -1,19 +1,19 @@
 import { createContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-
+import Cookies from "js-cookie";
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (token) {
       try {
         const decoded = jwtDecode(token);
         setUser(decoded);
       } catch {
-        localStorage.removeItem("token");
+        Cookies.remove("token");
       }
     }
   }, []);
@@ -25,7 +25,7 @@ export function AuthProvider({ children }) {
   };
 
   const logoutUser = () => {
-    localStorage.removeItem("token");
+    Cookies.remove("token");
     setUser(null);
   };
 
