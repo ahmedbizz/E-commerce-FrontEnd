@@ -54,7 +54,7 @@ export default function Navbar() {
     logoutUser();
     handleClose();
   };
-
+  console.log(user)
   return (
     <AppBar position="static" sx={{ backgroundColor:'teal' }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>

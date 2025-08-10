@@ -4,8 +4,8 @@ import ProductDetails from "../pages/ProductDetails";
 import Cart from "../pages/Cart";
 import NotFound from "../pages/NotFound";
 import MainLayout from "../layouts/MainLayout";
-import Login from '../pages/Login';
-import Register from '../pages/Register';
+import SignInSide from '../pages/SignInSide';
+import SignUp from '../pages/SignUp';
 import PrivateRoute from './PrivateRoute';
 import AddProduct from "../pages/AddProduct";
 
@@ -14,9 +14,13 @@ export default function AppRouter() {
    
       <Routes>
 
+
+
+        <Route path="/login" element={<SignInSide />} />
+        <Route path="/SignUp" element={<SignUp />} />
+
         <Route path="/" element={<MainLayout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+
           <Route index element={<Home />} />
           <Route path="product/:id" element={<ProductDetails />} />
           <Route element={<PrivateRoute />}>

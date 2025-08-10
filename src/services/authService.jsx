@@ -3,7 +3,7 @@ const API_URL = "https://localhost:7137";
 
 
 export const login = async (data) =>{
-  const res =  await axios.post(`${API_URL}/api/account/login`, data);
+  const res =  await axios.post(`${API_URL}/api/Account/login`, data);
   const token  = res.data.token
 
   if(token){
@@ -13,4 +13,8 @@ export const login = async (data) =>{
 }
 
 
-export const register = (data) => axios.post(`${API_URL}/api/account/register`, data);
+export const register = (data) => axios.post(`${API_URL}/api/Account/Register`, data, {
+  headers: {
+    "Content-Type": "multipart/form-data"
+  }
+});
