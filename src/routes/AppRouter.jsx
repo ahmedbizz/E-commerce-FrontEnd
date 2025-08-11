@@ -14,22 +14,41 @@ import { AuthContext } from "../context/AuthContext";
 // Role Management
 import CreateRoleUi from "../pages/Management/RoleManagment/CreateRoleUi";
 import DispalyRole from "../pages/Management/RoleManagment/DispalyRole";
+// Group Managment
+import DispalyGroup from "../pages/Management/GroupManagment/DisplayGroups";
 import CreateGroup from "../pages/Management/GroupManagment/CreateGroup";
+import UpdateGroup from "../pages/Management/GroupManagment/UpdateGrop"
+// User Managment
+import DisplayUsers from "../pages/Management/UserMangment/DisplayUsers";
+import CreateUser from "../pages/Management/UserMangment/CreateUser";
+import UpdateUser from "../pages/Management/UserMangment/UpadteUser";
+import AssginUserToGroupUI from "../pages/Management/UserMangment/AssginUserToGroupUI";
+import AssginRoleToGroupUI from "../pages/Management/GroupManagment/AssginRoleToGroupUI";
+
 export default function AppRouter() {
   const { user } = useContext(AuthContext);
+  const isAdmin = Array.isArray(user?.role) && user.role.some(r => r === "Admin");
   return (
     <Routes>
       <Route path="/login" element={<SignInSide />} />
       <Route path="/SignUp" element={<SignUp />} />
-      {user &&
-      user.role &&
-      user.role.some((r) => r.toLowerCase() === "admin") ? (
+      {isAdmin ? (
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Main />} />
           <Route path="/product/create" element={<AddProduct />} />
+          {/* Role Managment */}
           <Route path="/role/create" element={<CreateRoleUi />} />
           <Route path="/role" element={<DispalyRole />} />
+          {/* // Group Managment */}
+          <Route path="/groups" element={<DispalyGroup />} />
           <Route path="/group/create" element={<CreateGroup />} />
+          <Route path="/group/:id" element={<UpdateGroup />} />
+          <Route path="/assgin/users/:id" element={<AssginUserToGroupUI />} />
+          <Route path="/assgin/roles/:id" element={<AssginRoleToGroupUI />} />
+          {/* // User Managment */}
+          <Route path="/users" element={<DisplayUsers />} />
+          <Route path="/users/create" element={<CreateUser />} />
+          <Route path="/user/:id" element={<UpdateUser />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       ) : (

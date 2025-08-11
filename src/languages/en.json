@@ -29,7 +29,18 @@
   "Save":"Save",
   "ID":"ID",
   "Action":"Action",
-  "Create At":"Create At"
+  "Create At":"Create At",
+  "Display Groups":"Display Groups",
+  "Create Group":"Create Group",
+  "Description":"Description",
+    "emailConfirmed":"email Confirmed",
+    "birthDay":"birthDay",
+    "phone":"phone",
+    "Image":"Image",
+    "Back":"Back",
+    "Update Group":"Update Group",
+    "Select":"Select",
+    "Assign Selected Users":"Assign Selected Users"
 
   
   }

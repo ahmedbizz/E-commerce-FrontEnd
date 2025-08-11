@@ -5,10 +5,8 @@ import './styles/global.css';
 import i18n from './utils/i18n'; 
 
 function App() {
-
-  const language = Cookies.get("language");
-
-  const [direction, setDirection] = useState("ltr");
+  const [language, setLanguage] = useState(Cookies.get("language") || "1");
+  const [direction, setDirection] = useState("");
 
   useEffect(() => {
     if (language === '0') {
@@ -18,13 +16,16 @@ function App() {
       setDirection("ltr");
       i18n.changeLanguage("en");
     }
-  }, [i18n, language]);
+    // وأيضا يحدث الكوكيز هنا لضمان التزامن
+    Cookies.set("language", language, { expires: 7, secure: true });
+  }, [language]);
 
   return (
     <div dir={direction}>
-      <AppRouter />
+      <AppRouter setLanguage={setLanguage} />
     </div>
   );
 }
+
 
 export default App;

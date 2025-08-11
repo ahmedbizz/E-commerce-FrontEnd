@@ -31,6 +31,17 @@
   "Save":"حفظ ",
   "ID":"رقم",
   "Action":"عملية",
-  "Create At":"انشاء في "
+  "Create At":"انشاء في ",
+  "Display Groups":"عرض المجموعات",
+  "Create Group":"انشاء مجموعه ",
+  "Description":"وصف",
+  "emailConfirmed":"تاكيد الايميل",
+  "birthDay":"تاريخ الميلاد",
+  "phone":"الهاتف",
+  "Image":"صورة",
+  "Back":"عودة",
+  "Update Group":"تحديث مجموعه",
+  "Select":"اختيار",
+  "Assign Selected Users":" اضافة الى المجموعه"
 
 }

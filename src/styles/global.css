@@ -32,7 +32,7 @@ a {
 /* headar 2 in Nave page section  */
 .AppBarHeader {
   background-color: rgb(56, 122, 122) !important;
-  box-shadow: 0px 6px 0px rgb(240, 240, 175, 1) !important;
+  box-shadow: 0px 6px 0px rgba(230, 231, 135, 0.966) !important;
 }
 
 /* Role Create Page Continer */
@@ -44,7 +44,14 @@ a {
 }
 
 /* Group Create Page Continer */
-.GroupCreatePageContiner {
+.GroupCreatePageContiner  {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 50vh;
+}
+
+.GroupUpdatePageContiner {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;

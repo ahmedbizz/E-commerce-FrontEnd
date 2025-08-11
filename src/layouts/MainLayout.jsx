@@ -6,10 +6,11 @@ import { AuthContext } from "../context/AuthContext";
 
 
 export default function MainLayout() {
-  const { user, logoutUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+  const isAdmin = Array.isArray(user?.role) && user.role.some(r => r === "Admin");
   return (
     <> 
-    {user && user.role && user.role.some(r => r.toLowerCase() === "admin")?
+    {isAdmin?
     <ManageDashboard/>:
     <Navbar />
 

@@ -177,7 +177,7 @@ export default function ManageDashboard() {
             </MenuItem>
             <MenuItem
               component={Link}
-              to="/users/manage"
+              to="/users/create"
               onClick={handleCloseUsers}
             >
               {t("Create User")}
@@ -210,6 +210,8 @@ export default function ManageDashboard() {
             >
               {t("Create Group")}
             </MenuItem>
+
+
           </Menu>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             {/* صورة المستخدم وقائمة */}
