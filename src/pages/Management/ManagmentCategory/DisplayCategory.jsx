@@ -12,13 +12,13 @@ import {
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
-import { GetGroups, DeleteGroupByID } from "../../../services/GroupService";
+import { GetCategorys, DeleteCategoryByID } from "../../../services/CategoryService";
 import { useState, useEffect } from "react";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import EditNote from "@mui/icons-material/EditNote";
 import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from "react-toastify";
-const DispalyGroup = () => {
+const DispalyCategory = () => {
   const { t } = useTranslation();
   const notify = (value) => {
     toast.success(`${value} `, {
@@ -44,13 +44,13 @@ const DispalyGroup = () => {
       theme: "light",
     });
   };
-  // for get all Group in list
-  const [Groups, setGroups] = useState([]);
+  // for get all Category in list
+  const [Categorys, setCategorys] = useState([]);
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   useEffect(() => {
-    GetGroups()
-      .then((res) => setGroups(res.data))
+    GetCategorys()
+      .then((res) => setCategorys(res.data))
       .catch((err) => {
         if (err.response?.status === 404) {
           notifyErorr("لا يوجد مستخدمين في هذه المجموعة.");
@@ -66,8 +66,8 @@ const DispalyGroup = () => {
   }, []);
 
   const Refresh = () => {
-    GetGroups()
-      .then((res) => setGroups(res.data))
+    GetCategorys()
+      .then((res) => setCategorys(res.data))
       .catch((err) => {
         notifyErorr(err.message);
         setError(true);
@@ -75,10 +75,10 @@ const DispalyGroup = () => {
       .finally(() => setLoading(false));
   };
 
-  // for delete Group
+  // for delete Category
   // this for delete Prodect
   const deleteByID = (id) => {
-    DeleteGroupByID(id)
+    DeleteCategoryByID(id)
       .then((res) => {
         notify(res.data.message);
         Refresh();
@@ -154,7 +154,7 @@ const DispalyGroup = () => {
           </TableRow>
         </TableHead>
         <TableBody sx={{ backgroundColor: "rgba(255, 255, 255, 0.966)" }}>
-          {(Groups || []).map((item, index) => {
+          {(Categorys || []).map((item, index) => {
             return (
               <TableRow
                 key={index}
@@ -170,6 +170,16 @@ const DispalyGroup = () => {
                 <TableCell align="left">{item.description}</TableCell>
                 <TableCell align="left">{item.createdAt}</TableCell>
                 <TableCell align="left">
+
+                  <IconButton
+                    component={Link}
+                    to={`/categorys/${item.id}`}
+                    sx={{ color: "green" }}
+
+                  >
+                    <EditNote />
+                  </IconButton>
+
                   <IconButton
                     sx={{ color: "red" }}
                     onClick={() => {
@@ -177,28 +187,6 @@ const DispalyGroup = () => {
                     }}
                   >
                     <DeleteRoundedIcon />
-                  </IconButton>
-                  <IconButton
-                    component={Link}
-                    to={`/group/${item.id}`}
-                    sx={{ color: "green" }}
-
-                  >
-                    <EditNote />
-                  </IconButton>
-                  <IconButton
-                    component={Link}
-                    to={`/assgin/users/${item.id}`}
-                    sx={{ color: "balck" }}
-                  >
-                    <EditNote />
-                  </IconButton>
-                  <IconButton
-                    component={Link}
-                    to={`/assgin/roles/${item.id}`}
-                    sx={{ color: "gainsboro" }}
-                  >
-                    <EditNote />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -210,4 +198,4 @@ const DispalyGroup = () => {
   );
 };
 
-export default DispalyGroup;
+export default DispalyCategory;

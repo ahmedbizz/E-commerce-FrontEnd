@@ -40,7 +40,9 @@
     "Back":"Back",
     "Update Group":"Update Group",
     "Select":"Select",
-    "Assign Selected Users":"Assign Selected Users"
+    "Assign Selected Users":"Assign Selected Users",
+    "Display Category":"Display Category",
+    "Create Category":"Create Category"
 
   
   }

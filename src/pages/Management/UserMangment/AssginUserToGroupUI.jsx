@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
 import { GetUsers } from "../../../services/UsersService";
-import { AssginUserToGroup } from "../../../services/GroupService";
+import { AssginUserToGroup ,GetUserInGroupByID} from "../../../services/GroupService";
 import { useState, useEffect } from "react";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import { ToastContainer, toast } from "react-toastify";
@@ -61,7 +61,7 @@ const AssginUserToGroupUI = () => {
       theme: "light",
     });
   };
-  // for get all Role in list
+  // for get all User in list
   const [Users, setUsers] = useState([]);
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -75,8 +75,26 @@ const AssginUserToGroupUI = () => {
       .finally(() => setLoading(false));
   }, []);
 
+    // for get all Selected User in list
+
+
+
+    useEffect(() => {
+      GetUserInGroupByID(id)
+        .then((res) => setSelectedUsers(res.data))
+        .catch((err) => {
+          if (err.response?.status === 404) {
+            console.log("لا يوجد مستخدمين في هذه المجموعة.");
+          } else {
+            console.log("حدث خطأ أثناء جلب البيانات.");
+          }
+        })
+        .finally(() => setLoading(false));
+    }, []);
+
   const handleSubmit =async (event) => {
     event.preventDefault();
+    console.log(selectedUsers)
     const data ={UserIds:selectedUsers}
 
     try {

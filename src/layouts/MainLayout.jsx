@@ -7,7 +7,10 @@ import { AuthContext } from "../context/AuthContext";
 
 export default function MainLayout() {
   const { user } = useContext(AuthContext);
-  const isAdmin = Array.isArray(user?.role) && user.role.some(r => r === "Admin");
+  const isAdmin = Array.isArray(user?.role) 
+  ? user.role.some(r => r.toLowerCase() === "admin") 
+  : typeof user?.role === "string" && user?.role.toLowerCase() === "admin";
+  console.log("isAdmin-->",isAdmin)
   return (
     <> 
     {isAdmin?

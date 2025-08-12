@@ -15,4 +15,5 @@ export const UpdateGroupById  = (data,id)=> axios.put(`/groups/${id}`,data);
 export const AssginRoleToGroup = (id,data) => axios.post(`/groups/assign/Roles/${id}`,data);
 // for assgin User Tp Group
 export const AssginUserToGroup = (id,data) => axios.post(`/groups/assign/Users/${id}`,data);
+export const GetUserInGroupByID = (id)=> axios.get(`/groups/${id}/users`)
 

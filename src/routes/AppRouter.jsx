@@ -24,10 +24,17 @@ import CreateUser from "../pages/Management/UserMangment/CreateUser";
 import UpdateUser from "../pages/Management/UserMangment/UpadteUser";
 import AssginUserToGroupUI from "../pages/Management/UserMangment/AssginUserToGroupUI";
 import AssginRoleToGroupUI from "../pages/Management/GroupManagment/AssginRoleToGroupUI";
-
+// Category Managment
+import CreateCategory from "../pages/Management/ManagmentCategory/CreateCategory";
+import DispalyCategory from "../pages/Management/ManagmentCategory/DisplayCategory";
+import UpdateCategory from "../pages/Management/ManagmentCategory/UpdateCategory";
 export default function AppRouter() {
   const { user } = useContext(AuthContext);
-  const isAdmin = Array.isArray(user?.role) && user.role.some(r => r === "Admin");
+  console.log(user)
+  const isAdmin = Array.isArray(user?.role) 
+  ? user.role.some(r => r.toLowerCase() === "admin") 
+  : typeof user?.role === "string" && user?.role.toLowerCase() === "admin";
+  console.log("isAdmin-->",isAdmin)
   return (
     <Routes>
       <Route path="/login" element={<SignInSide />} />
@@ -50,6 +57,11 @@ export default function AppRouter() {
           <Route path="/users/create" element={<CreateUser />} />
           <Route path="/user/:id" element={<UpdateUser />} />
           <Route path="*" element={<NotFound />} />
+          {/* Managment Category */}
+          <Route path="/categorys" element={<DispalyCategory />} />
+          <Route path="/categorys/create" element={<CreateCategory />} />
+          <Route path="/categorys/:id" element={<UpdateCategory />} />
+          
         </Route>
       ) : (
         <Route path="/" element={<MainLayout />}>

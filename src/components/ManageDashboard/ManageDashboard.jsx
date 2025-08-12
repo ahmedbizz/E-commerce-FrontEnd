@@ -147,6 +147,13 @@ export default function ManageDashboard() {
             open={Boolean(anchorElProducts)}
             onClose={handleCloseProducts}
           >
+                        <MenuItem
+              component={Link}
+              to="/products"
+              onClick={handleCloseProducts}
+            >
+              {t("Display Products")}
+            </MenuItem>
             <MenuItem
               component={Link}
               to="/product/create"
@@ -156,11 +163,19 @@ export default function ManageDashboard() {
             </MenuItem>
             <MenuItem
               component={Link}
-              to="/products"
+              to="/categorys"
               onClick={handleCloseProducts}
             >
-              {t("Display Products")}
+              {t("Display Category")}
             </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/categorys/create"
+              onClick={handleCloseProducts}
+            >
+              {t("Create Category")}
+            </MenuItem>
+
           </Menu>
 
           {/* إدارة المستخدمين */}
