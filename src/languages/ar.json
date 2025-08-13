@@ -44,6 +44,15 @@
   "Select":"اختيار",
   "Assign Selected Users":" اضافة الى المجموعه",
   "Display Category":"عرض الاصناف",
-  "Create Category":"انشاء صنف"
+  "Create Category":"انشاء صنف",
+  "There are no item added yet.":"لا توجد عناصر مضافة حتى الآن",
+  "isEmpty_add":"جرّب إضافة عنصر جديد للبدء",
+  "new_item":"إضافة عنصر جديد",
+  "Capacity":"السعه",
+  "Location":"الموقع",
+  "Create WareHouse":"انشاء مستودع ",
+  "Display WareHouse":"عرض المستودعات"
+
+
 
 }

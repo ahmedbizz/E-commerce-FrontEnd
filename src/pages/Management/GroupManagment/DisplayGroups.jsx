@@ -9,16 +9,22 @@ import {
   IconButton,
   Typography,
   Button,
+  Pagination
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
 import { GetGroups, DeleteGroupByID } from "../../../services/GroupService";
 import { useState, useEffect } from "react";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import Security from "@mui/icons-material/Security";
+import VerifiedUser from "@mui/icons-material/VerifiedUser";
+import SupervisedUserCircle from "@mui/icons-material/SupervisedUserCircle";
 import EditNote from "@mui/icons-material/EditNote";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+
 const DispalyGroup = () => {
+  const navigete = useNavigate();
   const { t } = useTranslation();
   const notify = (value) => {
     toast.success(`${value} `, {
@@ -46,47 +52,112 @@ const DispalyGroup = () => {
   };
   // for get all Group in list
   const [Groups, setGroups] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  useEffect(() => {
-    GetGroups()
-      .then((res) => setGroups(res.data))
+  const [isEmpty, setEmpty] = useState(false);
+  const fetchGroups = async (page = 1) => {
+    GetGroups((page = 1))
+      .then((res) => {
+        setGroups(res.data.items);
+        console.log(res.data)
+        if(res.data?.items.length <=0){
+          setEmpty(true);
+        }
+        setCurrentPage(res.data.currentPage);
+        setTotalPages(res.data.totalPages);
+      })
       .catch((err) => {
         if (err.response?.status === 404) {
           notifyErorr("لا يوجد مستخدمين في هذه المجموعة.");
-          setError(true);
-      
+
+          setEmpty(true);
         } else {
           notifyErorr("حدث خطأ أثناء جلب البيانات.");
           setError(true);
         }
       })
       .finally(() => setLoading(false));
-    
-  }, []);
+  };
 
-  const Refresh = () => {
-    GetGroups()
-      .then((res) => setGroups(res.data))
-      .catch((err) => {
-        notifyErorr(err.message);
+  useEffect(() => {
+    fetchGroups(currentPage);
+  }, [currentPage]);
+
+  const Refresh = async (page = currentPage) => {
+    setLoading(true);
+    try {
+      const res = await GetGroups(page);
+      if (!res.data.items || res.data.items.length === 0) {
+        // إذا الصفحة أصبحت فارغة بعد الحذف
+        const newPage = page > 1 ? page - 1 : 1;
+        if (newPage !== page) {
+          setCurrentPage(newPage);
+          return Refresh(newPage); // إعادة المحاولة بالصفحة الجديدة
+        } else {
+          setGroups([]);
+          setEmpty(true);
+        }
+      } else {
+        setGroups(res.data.items);
+        setCurrentPage(res.data.currentPage);
+        setTotalPages(res.data.totalPages);
+        setEmpty(false);
+      }
+    } catch (err) {
+      if (err.response?.status === 404) {
+        notifyErorr("لا يوجد مستودعات في هذه الصفحة.");
+        setEmpty(true);
+      } else {
+        notifyErorr("حدث خطأ أثناء جلب البيانات.");
         setError(true);
-      })
-      .finally(() => setLoading(false));
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // for delete Group
-  // this for delete Prodect
-  const deleteByID = (id) => {
-    DeleteGroupByID(id)
-      .then((res) => {
-        notify(res.data.message);
-        Refresh();
-      })
-      .catch((err) => {
-        notifyErorr(err.message);
-      });
+  // for delete WareHouse
+  const deleteByID = async (id) => {
+    try {
+      const res = await DeleteGroupByID(id);
+      notify(res.data.message);
+      Refresh(currentPage); // تحديث الصفحة بعد الحذف
+    } catch (err) {
+      notifyErorr(err.message);
+    }
   };
+  if (isEmpty) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          gap: 2,
+          textAlign: "center",
+        }}
+      >
+        <InventoryOutlinedIcon sx={{ fontSize: 80, color: "text.secondary" }} />
+        <Typography variant="h6" color="text.secondary">
+          {t("There are no item added yet.")}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {t("isEmpty_add")}
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigete("/categorys/create")} // أو أي مسار إضافة المنتج
+        >
+          {t("new_item")}
+        </Button>
+      </Box>
+    );
+  }
   if (Loading) {
     return (
       <Box
@@ -115,7 +186,7 @@ const DispalyGroup = () => {
           height: "100vh",
         }}
       >
-          <ToastContainer />
+        <ToastContainer />
         <Typography variant="h5" color="error">
           Oops! Something went wrong. Please try again.
         </Typography>
@@ -148,7 +219,7 @@ const DispalyGroup = () => {
           <TableRow>
             <TableCell>{t("ID")}</TableCell>
             <TableCell>{t("Name")}</TableCell>
-            <TableCell>{t("Description")}</TableCell>  
+            <TableCell>{t("Description")}</TableCell>
             <TableCell align="left">{t("Create At")}</TableCell>
             <TableCell>{t("Action")}</TableCell>
           </TableRow>
@@ -171,18 +242,9 @@ const DispalyGroup = () => {
                 <TableCell align="left">{item.createdAt}</TableCell>
                 <TableCell align="left">
                   <IconButton
-                    sx={{ color: "red" }}
-                    onClick={() => {
-                      deleteByID(item.id);
-                    }}
-                  >
-                    <DeleteRoundedIcon />
-                  </IconButton>
-                  <IconButton
                     component={Link}
                     to={`/group/${item.id}`}
                     sx={{ color: "green" }}
-
                   >
                     <EditNote />
                   </IconButton>
@@ -191,14 +253,22 @@ const DispalyGroup = () => {
                     to={`/assgin/users/${item.id}`}
                     sx={{ color: "balck" }}
                   >
-                    <EditNote />
+                    <SupervisedUserCircle />
                   </IconButton>
                   <IconButton
                     component={Link}
                     to={`/assgin/roles/${item.id}`}
-                    sx={{ color: "gainsboro" }}
+                    sx={{ color: "balck" }}
                   >
-                    <EditNote />
+                    <Security />
+                  </IconButton>
+                  <IconButton
+                    sx={{ color: "red" }}
+                    onClick={() => {
+                      deleteByID(item.id);
+                    }}
+                  >
+                    <DeleteRoundedIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -206,6 +276,23 @@ const DispalyGroup = () => {
           })}
         </TableBody>
       </Table>
+      <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
+        <Pagination
+           sx={{
+            "& .MuiPaginationItem-root": {
+              color: "rgb(56, 122, 122)", // لون النص
+            },
+            "& .Mui-selected": {
+              backgroundColor: "rgb(56, 122, 122)", // خلفية الصفحة المختارة
+              color: "#fff", // لون نص الصفحة المختارة
+            },
+          }}
+          count={totalPages}
+          page={currentPage}
+          onChange={(e, page) => setCurrentPage(page)}
+          color="primary"
+        />
+      </Box>
     </Box>
   );
 };

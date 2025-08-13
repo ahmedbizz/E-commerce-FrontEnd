@@ -175,6 +175,20 @@ export default function ManageDashboard() {
             >
               {t("Create Category")}
             </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/wareHouses"
+              onClick={handleCloseProducts}
+            >
+              {t("Display WareHouse")}
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/wareHouse/create"
+              onClick={handleCloseProducts}
+            >
+              {t("Create WareHouse")}
+            </MenuItem>
 
           </Menu>
 
@@ -199,18 +213,19 @@ export default function ManageDashboard() {
             </MenuItem>
             <MenuItem
               component={Link}
-              to="/role/create"
-              onClick={handleCloseUsers}
-            >
-              {t("Create Role")}
-            </MenuItem>
-            <MenuItem
-              component={Link}
               to="/role"
               onClick={handleCloseUsers}
             >
               {t("Display Role")}
             </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/role/create"
+              onClick={handleCloseUsers}
+            >
+              {t("Create Role")}
+            </MenuItem>
+
             <MenuItem
               component={Link}
               to="/groups"

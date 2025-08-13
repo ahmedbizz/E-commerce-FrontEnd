@@ -7,22 +7,24 @@ import {
   TableCell,
   TableBody,
   IconButton,
-  Avatar,
-  Typography,Button,Pagination
+  Typography,
+  Button,
+  Pagination,
 } from "@mui/material";
-import { Link ,useNavigate} from 'react-router-dom';
+import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
 import {
-  GetUsers,
-  DeleteUserByID,
-  
-} from "../../../services/UsersService";
+  GetWareHouses,
+  DeleteWareHouseByID,
+} from "../../../services/WareHouseService";
 import { useState, useEffect } from "react";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import EditNote from "@mui/icons-material/EditNote";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-const DisplayUsers = () => {
+
+const DispalyWareHouse = () => {
   const navigete = useNavigate();
   const { t } = useTranslation();
   const notify = (value) => {
@@ -49,44 +51,45 @@ const DisplayUsers = () => {
       theme: "light",
     });
   };
-  // for get all Role in list
-  const [Users, setUsers] = useState([]);
+  // for get all WareHouse in list
+  const [WareHouses, setWareHouses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [isEmpty , setEmpty]=useState(false)
-  const fetchUsers = async (page = 1) => {
-    GetUsers(page =1)
-      .then((res) => {setUsers(res.data.items)
-      
-        if(res.data?.items.length <=0){
+  const [isEmpty, setEmpty] = useState(false);
+
+  const fetchWarehouses = async (page = 1) => {
+    GetWareHouses(page)
+      .then((res) => {
+        setWareHouses(res.data.items);
+        if (res.data?.items.length <= 0) {
           setEmpty(true);
         }
         setCurrentPage(res.data.currentPage);
-        setTotalPages(res.data.totalPages);})
+        setTotalPages(res.data.totalPages);
+      })
+
       .catch((err) => {
         if (err.response?.status === 404) {
           notifyErorr("لا يوجد مستخدمين في هذه المجموعة.");
-          
+
           setEmpty(true);
-      
         } else {
           notifyErorr("حدث خطأ أثناء جلب البيانات.");
           setError(true);
         }
       })
       .finally(() => setLoading(false));
-  }
-
+  };
   useEffect(() => {
-    fetchUsers(currentPage);
+    fetchWarehouses(currentPage);
   }, [currentPage]);
 
   const Refresh = async (page = currentPage) => {
     setLoading(true);
     try {
-      const res = await GetUsers(page);
+      const res = await GetWareHouses(page);
       if (!res.data.items || res.data.items.length === 0) {
         // إذا الصفحة أصبحت فارغة بعد الحذف
         const newPage = page > 1 ? page - 1 : 1;
@@ -94,11 +97,11 @@ const DisplayUsers = () => {
           setCurrentPage(newPage);
           return Refresh(newPage); // إعادة المحاولة بالصفحة الجديدة
         } else {
-          setUsers([]);
+          setWareHouses([]);
           setEmpty(true);
         }
       } else {
-        setUsers(res.data.items);
+        setWareHouses(res.data.items);
         setCurrentPage(res.data.currentPage);
         setTotalPages(res.data.totalPages);
         setEmpty(false);
@@ -119,7 +122,7 @@ const DisplayUsers = () => {
   // for delete WareHouse
   const deleteByID = async (id) => {
     try {
-      const res = await DeleteUserByID(id);
+      const res = await DeleteWareHouseByID(id);
       notify(res.data.message);
       Refresh(currentPage); // تحديث الصفحة بعد الحذف
     } catch (err) {
@@ -166,7 +169,7 @@ const DisplayUsers = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => navigete("/users/create")} // أو أي مسار إضافة المنتج
+          onClick={() => navigete("/wareHouse/create")} // أو أي مسار إضافة المنتج
         >
           {t("new_item")}
         </Button>
@@ -184,6 +187,7 @@ const DisplayUsers = () => {
           height: "100vh",
         }}
       >
+        <ToastContainer />
         <Typography variant="h5" color="error">
           Oops! Something went wrong. Please try again.
         </Typography>
@@ -206,35 +210,24 @@ const DisplayUsers = () => {
         alignSelf: "center",
         width: "100%",
 
-
         boxShadow:
           "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
       }}
     >
       <ToastContainer />
-      <Table >
-        <TableHead
-          sx={{
-            backgroundColor: "rgb(240, 240, 175, 1)",
-            alignContent:"center"
-            
-          
-          }}
-        >
+      <Table>
+        <TableHead sx={{ backgroundColor: "rgb(240, 240, 175, 1)" }}>
           <TableRow>
-            <TableCell>{t("Image")}</TableCell>
+            <TableCell>{t("ID")}</TableCell>
             <TableCell>{t("Name")}</TableCell>
-            <TableCell>{t("email")}</TableCell>
-            <TableCell>{t("emailConfirmed")}</TableCell>
-            <TableCell>{t("birthDay")}</TableCell>
-            <TableCell>{t("phone")}</TableCell>
+            <TableCell>{t("Location")}</TableCell>
+            <TableCell>{t("Capacity")}</TableCell>
             <TableCell align="left">{t("Create At")}</TableCell>
             <TableCell>{t("Action")}</TableCell>
-
           </TableRow>
         </TableHead>
-        <TableBody sx={{backgroundColor:"rgba(255, 255, 255, 0.966)"}}>
-          {(Users || []).map((item, index) => {
+        <TableBody sx={{ backgroundColor: "rgba(255, 255, 255, 0.966)" }}>
+          {(WareHouses || []).map((item, index) => {
             return (
               <TableRow
                 key={index}
@@ -245,24 +238,20 @@ const DisplayUsers = () => {
                   },
                 }}
               >
-                <TableCell>
-                  {" "}
-                  <Avatar
-                    alt={item.fullName}
-                    src={
-                      item.imagePath
-                        ? `https://localhost:7137/images/Users/${item.imagePath}`
-                        : "/user-avatar.jpg"
-                    }
-                  />
-                </TableCell>
-                <TableCell>{item.fullName}</TableCell>
-                <TableCell align="left">{item.email}</TableCell>
-                <TableCell align="left">{item.emailConfirmed}</TableCell>
-                <TableCell align="left">{item.birthDay}</TableCell>
-                <TableCell align="left">{item.phoneNumber}</TableCell>
-                <TableCell align="left">{item.createAt}</TableCell>
+                <TableCell>{item.id}</TableCell>
+                <TableCell>{item.name}</TableCell>
+                <TableCell align="left">{item.location}</TableCell>
+                <TableCell align="left">{item.capacity}</TableCell>
+                <TableCell align="left">{item.createdAt}</TableCell>
                 <TableCell align="left">
+                  <IconButton
+                    component={Link}
+                    to={`/wareHouse/${item.id}`}
+                    sx={{ color: "green" }}
+                  >
+                    <EditNote />
+                  </IconButton>
+
                   <IconButton
                     sx={{ color: "red" }}
                     onClick={() => {
@@ -270,14 +259,6 @@ const DisplayUsers = () => {
                     }}
                   >
                     <DeleteRoundedIcon />
-                  </IconButton>
-                  <IconButton
-                    component={Link}
-                    to={`/user/${item.id}`}
-                    sx={{ color: "green" }}
-
-                  >
-                    <EditNote />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -287,7 +268,7 @@ const DisplayUsers = () => {
       </Table>
       <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
         <Pagination
-           sx={{
+          sx={{
             "& .MuiPaginationItem-root": {
               color: "rgb(56, 122, 122)", // لون النص
             },
@@ -306,4 +287,4 @@ const DisplayUsers = () => {
   );
 };
 
-export default DisplayUsers;
+export default DispalyWareHouse;

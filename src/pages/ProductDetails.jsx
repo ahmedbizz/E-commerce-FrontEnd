@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { getProductById } from "../services/productService";
+import { GetProductById } from "../services/productService";
 import { useEffect, useState } from "react";
 
 import {
@@ -18,7 +18,7 @@ export default function ProductDetails() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getProductById(id)
+    GetProductById(id)
       .then((res) => {
         setProduct(res.data);
         setLoading(false);

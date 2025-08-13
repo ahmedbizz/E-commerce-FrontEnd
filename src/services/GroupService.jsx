@@ -4,7 +4,7 @@ export const AddGroup  = (data)=> axios.post(`/groups`, data, {
     "Content-Type": "application/json"
   }
 });
-export const GetGroups = ()=>axios.get('/groups');
+export const GetGroups = (page =1)=>axios.get(`/groups?page=${page}`);
 export const GetGroupByID = (id)=> axios.get(`/groups/${id}`)
 
 
@@ -16,4 +16,5 @@ export const AssginRoleToGroup = (id,data) => axios.post(`/groups/assign/Roles/$
 // for assgin User Tp Group
 export const AssginUserToGroup = (id,data) => axios.post(`/groups/assign/Users/${id}`,data);
 export const GetUserInGroupByID = (id)=> axios.get(`/groups/${id}/users`)
+export const GetRolesInGroupByID = (id)=> axios.get(`/groups/${id}/roles`)
 

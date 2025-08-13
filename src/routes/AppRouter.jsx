@@ -7,7 +7,7 @@ import MainLayout from "../layouts/MainLayout";
 import SignInSide from "../pages/SignInSide";
 import SignUp from "../pages/SignUp";
 import PrivateRoute from "./PrivateRoute";
-import AddProduct from "../pages/AddProduct";
+
 import Main from "../pages/Management/Main";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
@@ -28,6 +28,14 @@ import AssginRoleToGroupUI from "../pages/Management/GroupManagment/AssginRoleTo
 import CreateCategory from "../pages/Management/ManagmentCategory/CreateCategory";
 import DispalyCategory from "../pages/Management/ManagmentCategory/DisplayCategory";
 import UpdateCategory from "../pages/Management/ManagmentCategory/UpdateCategory";
+// Managment WhareHouse
+import CreateWareHouse from "../pages/Management/ManagmentWareHouse/CreateWareHouse";
+import DispalyWareHouse from "../pages/Management/ManagmentWareHouse/DisplayWareHouse";
+import UpdateWareHouse from "../pages/Management/ManagmentWareHouse/UpdateWareHouse";
+// Mangment Product
+import AddProduct from "../pages/Management/ProductManagment/AddProduct";
+import DisplayProducts from "../pages/Management/ProductManagment/DisplayProducts";
+
 export default function AppRouter() {
   const { user } = useContext(AuthContext);
   console.log(user)
@@ -42,7 +50,9 @@ export default function AppRouter() {
       {isAdmin ? (
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Main />} />
+          {/* Managment Product */}
           <Route path="/product/create" element={<AddProduct />} />
+          <Route path="/products" element={<DisplayProducts />} />
           {/* Role Managment */}
           <Route path="/role/create" element={<CreateRoleUi />} />
           <Route path="/role" element={<DispalyRole />} />
@@ -61,6 +71,10 @@ export default function AppRouter() {
           <Route path="/categorys" element={<DispalyCategory />} />
           <Route path="/categorys/create" element={<CreateCategory />} />
           <Route path="/categorys/:id" element={<UpdateCategory />} />
+          {/* Management WhareHouse */}
+          <Route path="/wareHouses" element={<DispalyWareHouse />} />
+          <Route path="/wareHouse/create" element={<CreateWareHouse />} />
+          <Route path="/wareHouse/:id" element={<UpdateWareHouse />} />
           
         </Route>
       ) : (

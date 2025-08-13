@@ -15,8 +15,9 @@ import { GetRoles ,DeleteRoleByID} from "../../../services/RoleService";
 import { useState, useEffect } from "react";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 const DispalyRole = () => {
-
+  const navigete = useNavigate();
   const { t } = useTranslation();
   const notify = (value) => {
     toast.success(`${value} `, {
@@ -46,12 +47,20 @@ const DispalyRole = () => {
   const [Roles, setRoles] = useState([]);
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [isEmpty , setEmpty]=useState(false)
   useEffect(() => {
     GetRoles()
       .then((res) => setRoles(res.data))
       .catch((err) => {
-        notifyErorr(err)
-        setError(true);
+        if (err.response?.status === 404) {
+          notifyErorr("لا يوجد مستخدمين في هذه المجموعة.");
+          
+          setEmpty(true);
+      
+        } else {
+          notifyErorr("حدث خطأ أثناء جلب البيانات.");
+          setError(true);
+        }
       })
       .finally(() => setLoading(false));
   }, []);
@@ -60,8 +69,15 @@ const DispalyRole = () => {
     GetRoles()
     .then((res) => setRoles(res.data))
     .catch((err) => {
-      notifyErorr(err.message);
-      setError(true);
+      if (err.response?.status === 404) {
+        notifyErorr("لا يوجد مستخدمين في هذه المجموعة.");
+        
+        setEmpty(true);
+    
+      } else {
+        notifyErorr("حدث خطأ أثناء جلب البيانات.");
+        setError(true);
+      }
     })
     .finally(() => setLoading(false));
   }
@@ -91,6 +107,36 @@ if(Loading){
       }}
     >
     <CircularProgress sx={{ animation: 'rotate 1.5s linear infinite' }} size={80} />
+    </Box>
+  );
+}
+if (isEmpty) {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        gap: 2,
+        textAlign: "center",
+      }}
+    >
+      <InventoryOutlinedIcon sx={{ fontSize: 80, color: "text.secondary" }} />
+      <Typography variant="h6" color="text.secondary">
+        {t("There are no item added yet.")}
+      </Typography>
+      <Typography variant="body2" color="text.secondary">
+        {t("isEmpty_add")}
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => navigete("/role/create")} // أو أي مسار إضافة المنتج
+      >
+        {t("new_item")}
+      </Button>
     </Box>
   );
 }

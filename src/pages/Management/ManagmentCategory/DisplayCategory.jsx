@@ -9,16 +9,20 @@ import {
   IconButton,
   Typography,
   Button,
+  Pagination
 } from "@mui/material";
+import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
 import { GetCategorys, DeleteCategoryByID } from "../../../services/CategoryService";
 import { useState, useEffect } from "react";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import EditNote from "@mui/icons-material/EditNote";
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from "react-toastify";
+
 const DispalyCategory = () => {
+  const navigete = useNavigate();
   const { t } = useTranslation();
   const notify = (value) => {
     toast.success(`${value} `, {
@@ -46,15 +50,23 @@ const DispalyCategory = () => {
   };
   // for get all Category in list
   const [Categorys, setCategorys] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  useEffect(() => {
-    GetCategorys()
-      .then((res) => setCategorys(res.data))
+  const [isEmpty , setEmpty]=useState(false)
+  const fetchCategorys = async (page = 1) => {
+    GetCategorys(page =1)
+      .then((res) => {setCategorys(res.data.items)
+        if(res.data?.items.length <=0){
+          setEmpty(true);
+        }
+      setCurrentPage(res.data.currentPage);
+      setTotalPages(res.data.totalPages);})
       .catch((err) => {
         if (err.response?.status === 404) {
-          notifyErorr("لا يوجد مستخدمين في هذه المجموعة.");
-          setError(true);
+          notifyErorr("لا يوجد مستخدمين في هذه المجموعة.");          
+          setEmpty(true);
       
         } else {
           notifyErorr("حدث خطأ أثناء جلب البيانات.");
@@ -63,29 +75,54 @@ const DispalyCategory = () => {
       })
       .finally(() => setLoading(false));
     
-  }, []);
+  }
+  useEffect(() => {
+    fetchCategorys(currentPage);
+  }, [currentPage]);
 
-  const Refresh = () => {
-    GetCategorys()
-      .then((res) => setCategorys(res.data))
-      .catch((err) => {
-        notifyErorr(err.message);
+
+  const Refresh = async (page = currentPage) => {
+    setLoading(true);
+    try {
+      const res = await GetCategorys(page);
+      if (!res.data.items || res.data.items.length === 0) {
+        // إذا الصفحة أصبحت فارغة بعد الحذف
+        const newPage = page > 1 ? page - 1 : 1;
+        if (newPage !== page) {
+          setCurrentPage(newPage);
+          return Refresh(newPage); // إعادة المحاولة بالصفحة الجديدة
+        } else {
+          setCategorys([]);
+          setEmpty(true);
+        }
+      } else {
+        setCategorys(res.data.items);
+        setCurrentPage(res.data.currentPage);
+        setTotalPages(res.data.totalPages);
+        setEmpty(false);
+      }
+    } catch (err) {
+      if (err.response?.status === 404) {
+        notifyErorr("لا يوجد مستودعات في هذه الصفحة.");
+        setEmpty(true);
+      } else {
+        notifyErorr("حدث خطأ أثناء جلب البيانات.");
         setError(true);
-      })
-      .finally(() => setLoading(false));
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   // for delete Category
-  // this for delete Prodect
-  const deleteByID = (id) => {
-    DeleteCategoryByID(id)
-      .then((res) => {
-        notify(res.data.message);
-        Refresh();
-      })
-      .catch((err) => {
-        notifyErorr(err.message);
-      });
+  const deleteByID = async (id) => {
+    try {
+      const res = await DeleteCategoryByID(id);
+      notify(res.data.message);
+      Refresh(currentPage); // تحديث الصفحة بعد الحذف
+    } catch (err) {
+      notifyErorr(err.message);
+    }
   };
   if (Loading) {
     return (
@@ -101,6 +138,36 @@ const DispalyCategory = () => {
           sx={{ animation: "rotate 1.5s linear infinite" }}
           size={80}
         />
+      </Box>
+    );
+  }
+  if (isEmpty) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          gap: 2,
+          textAlign: "center",
+        }}
+      >
+        <InventoryOutlinedIcon sx={{ fontSize: 80, color: "text.secondary" }} />
+        <Typography variant="h6" color="text.secondary">
+          {t("There are no item added yet.")}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {t("isEmpty_add")}
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigete("/categorys/create")} // أو أي مسار إضافة المنتج
+        >
+          {t("new_item")}
+        </Button>
       </Box>
     );
   }
@@ -194,7 +261,25 @@ const DispalyCategory = () => {
           })}
         </TableBody>
       </Table>
+            <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
+        <Pagination
+           sx={{
+            "& .MuiPaginationItem-root": {
+              color: "rgb(56, 122, 122)", // لون النص
+            },
+            "& .Mui-selected": {
+              backgroundColor: "rgb(56, 122, 122)", // خلفية الصفحة المختارة
+              color: "#fff", // لون نص الصفحة المختارة
+            },
+          }}
+          count={totalPages}
+          page={currentPage}
+          onChange={(e, page) => setCurrentPage(page)}
+          color="primary"
+        />
+      </Box>
     </Box>
+  
   );
 };
 

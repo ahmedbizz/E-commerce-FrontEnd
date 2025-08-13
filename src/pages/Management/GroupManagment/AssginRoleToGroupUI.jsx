@@ -13,7 +13,7 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
 import { GetRoles } from "../../../services/RoleService";
-import { AssginRoleToGroup } from "../../../services/GroupService";
+import { AssginRoleToGroup ,GetRolesInGroupByID } from "../../../services/GroupService";
 import { useState, useEffect } from "react";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import { ToastContainer, toast } from "react-toastify";
@@ -92,7 +92,22 @@ const AssginRoleToGroupUI = () => {
     }
 
   };
+    // for get all Selected Roles in list
 
+
+
+    useEffect(() => {
+      GetRolesInGroupByID(id)
+        .then((res) => setSelectedroleNames(res.data))
+        .catch((err) => {
+          if (err.response?.status === 404) {
+            console.log("لا يوجد مستخدمين في هذه المجموعة.");
+          } else {
+            console.log("حدث خطأ أثناء جلب البيانات.");
+          }
+        })
+        .finally(() => setLoading(false));
+    }, []);
 
 if(Loading){
   return(

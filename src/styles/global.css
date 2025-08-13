@@ -57,3 +57,11 @@ a {
   align-items: center !important;
   height: 50vh;
 }
+
+/* Category pages */
+.CategoryUpdatePageContiner {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 50vh;
+}

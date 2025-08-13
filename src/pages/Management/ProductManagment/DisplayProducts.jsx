@@ -14,15 +14,14 @@ import { Link ,useNavigate} from 'react-router-dom';
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
 import {
-  GetUsers,
-  DeleteUserByID,
-  
-} from "../../../services/UsersService";
+  GetProducts,
+  DeleteProductByID,
+  } from "../../../services/productService";
 import { useState, useEffect } from "react";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import EditNote from "@mui/icons-material/EditNote";
 import { ToastContainer, toast } from "react-toastify";
-const DisplayUsers = () => {
+const DisplayProducts = () => {
   const navigete = useNavigate();
   const { t } = useTranslation();
   const notify = (value) => {
@@ -50,16 +49,16 @@ const DisplayUsers = () => {
     });
   };
   // for get all Role in list
-  const [Users, setUsers] = useState([]);
+  const [Products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [isEmpty , setEmpty]=useState(false)
-  const fetchUsers = async (page = 1) => {
-    GetUsers(page =1)
-      .then((res) => {setUsers(res.data.items)
-      
+  const fetchProducts = async (page = 1) => {
+    GetProducts(page =1)
+      .then((res) => {setProducts(res.data.items)
+      console.log(res.data.items)
         if(res.data?.items.length <=0){
           setEmpty(true);
         }
@@ -80,13 +79,13 @@ const DisplayUsers = () => {
   }
 
   useEffect(() => {
-    fetchUsers(currentPage);
+    fetchProducts(currentPage);
   }, [currentPage]);
 
   const Refresh = async (page = currentPage) => {
     setLoading(true);
     try {
-      const res = await GetUsers(page);
+      const res = await GetProducts(page);
       if (!res.data.items || res.data.items.length === 0) {
         // إذا الصفحة أصبحت فارغة بعد الحذف
         const newPage = page > 1 ? page - 1 : 1;
@@ -94,11 +93,11 @@ const DisplayUsers = () => {
           setCurrentPage(newPage);
           return Refresh(newPage); // إعادة المحاولة بالصفحة الجديدة
         } else {
-          setUsers([]);
+          setProducts([]);
           setEmpty(true);
         }
       } else {
-        setUsers(res.data.items);
+        setProducts(res.data.items);
         setCurrentPage(res.data.currentPage);
         setTotalPages(res.data.totalPages);
         setEmpty(false);
@@ -119,7 +118,7 @@ const DisplayUsers = () => {
   // for delete WareHouse
   const deleteByID = async (id) => {
     try {
-      const res = await DeleteUserByID(id);
+      const res = await DeleteProductByID(id);
       notify(res.data.message);
       Refresh(currentPage); // تحديث الصفحة بعد الحذف
     } catch (err) {
@@ -166,7 +165,7 @@ const DisplayUsers = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => navigete("/users/create")} // أو أي مسار إضافة المنتج
+          onClick={() => navigete("/Products/create")} // أو أي مسار إضافة المنتج
         >
           {t("new_item")}
         </Button>
@@ -224,17 +223,17 @@ const DisplayUsers = () => {
           <TableRow>
             <TableCell>{t("Image")}</TableCell>
             <TableCell>{t("Name")}</TableCell>
-            <TableCell>{t("email")}</TableCell>
-            <TableCell>{t("emailConfirmed")}</TableCell>
-            <TableCell>{t("birthDay")}</TableCell>
-            <TableCell>{t("phone")}</TableCell>
-            <TableCell align="left">{t("Create At")}</TableCell>
+            <TableCell>{t("price")}</TableCell>
+            <TableCell>{t("costPrice")}</TableCell>
+            <TableCell>{t("stockQuantity")}</TableCell>
+            <TableCell>{t("categoryId")}</TableCell>
+            <TableCell align="left">{t("isActive")}</TableCell>
             <TableCell>{t("Action")}</TableCell>
 
           </TableRow>
         </TableHead>
         <TableBody sx={{backgroundColor:"rgba(255, 255, 255, 0.966)"}}>
-          {(Users || []).map((item, index) => {
+          {(Products || []).map((item, index) => {
             return (
               <TableRow
                 key={index}
@@ -248,20 +247,27 @@ const DisplayUsers = () => {
                 <TableCell>
                   {" "}
                   <Avatar
-                    alt={item.fullName}
+                    alt={item.name}
+                    variant="square"
+                    sx={{
+                      width:"100px",
+                      height:"100px",
+                      borderRadius:"10px"
+                    }}
                     src={
-                      item.imagePath
-                        ? `https://localhost:7137/images/Users/${item.imagePath}`
-                        : "/user-avatar.jpg"
+                      item.imageUrl
+                        ? `https://localhost:7137/images/Products/${item.imageUrl}`
+                        : "/Product-avatar.jpg"
                     }
                   />
                 </TableCell>
-                <TableCell>{item.fullName}</TableCell>
-                <TableCell align="left">{item.email}</TableCell>
-                <TableCell align="left">{item.emailConfirmed}</TableCell>
-                <TableCell align="left">{item.birthDay}</TableCell>
-                <TableCell align="left">{item.phoneNumber}</TableCell>
-                <TableCell align="left">{item.createAt}</TableCell>
+                <TableCell>{item.name}</TableCell>
+                <TableCell align="left">{item.price}</TableCell>
+                <TableCell align="left">{item.costPrice}</TableCell>
+                <TableCell align="left">{item.stockQuantity}</TableCell>
+                <TableCell align="left">{item.categoryId}</TableCell>
+      
+                <TableCell align="left">{item.isActive}</TableCell>
                 <TableCell align="left">
                   <IconButton
                     sx={{ color: "red" }}
@@ -273,7 +279,7 @@ const DisplayUsers = () => {
                   </IconButton>
                   <IconButton
                     component={Link}
-                    to={`/user/${item.id}`}
+                    to={`/Product/${item.id}`}
                     sx={{ color: "green" }}
 
                   >
@@ -306,4 +312,4 @@ const DisplayUsers = () => {
   );
 };
 
-export default DisplayUsers;
+export default DisplayProducts;

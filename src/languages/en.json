@@ -42,7 +42,11 @@
     "Select":"Select",
     "Assign Selected Users":"Assign Selected Users",
     "Display Category":"Display Category",
-    "Create Category":"Create Category"
+    "Create Category":"Create Category",
+    "There are no item added yet.":"There are no item added yet.",
+    "isEmpty_add":"Try adding a new item to get started.",
+    "new_item":"Add a new item",
+    "Display WareHouse":"Display WareHouse"
 
   
   }
