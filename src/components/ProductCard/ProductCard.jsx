@@ -9,8 +9,28 @@ import {
   Button,
 } from '@mui/material';
 import {formatPrice} from "/src/utils/formatPrice"
+import {AddToCart} from "../../services/CartService"
+
 
 export default function ProductCard({ product }) {
+
+
+  const handelCart = async(produtc)=>{
+    console.log(product.price)
+    const data ={
+    
+      "productId": produtc.id,
+      "quantity": 1,
+      "unitPrice": product.price
+    }
+    const res = await AddToCart(data);
+    if(res){
+      console.log(res)
+    }
+
+  }
+
+
 
   return (
     <Card sx={{ maxWidth: 300, borderRadius: 2, boxShadow: 3 }}>
@@ -39,6 +59,14 @@ export default function ProductCard({ product }) {
           variant="outlined"
         >
           عرض التفاصيل
+        </Button>
+        <Button
+          component={Link}
+          onClick={()=> handelCart(product)}
+          size="small"
+          variant="outlined"
+        >
+        اضف الى السله 
         </Button>
       </CardActions>
     </Card>

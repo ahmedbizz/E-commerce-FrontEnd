@@ -35,14 +35,18 @@ import UpdateWareHouse from "../pages/Management/ManagmentWareHouse/UpdateWareHo
 // Mangment Product
 import AddProduct from "../pages/Management/ProductManagment/AddProduct";
 import DisplayProducts from "../pages/Management/ProductManagment/DisplayProducts";
-
+import UpdateProduct from "../pages/Management/ProductManagment/UpdateProduct";
+// Managment inventory
+import CreateInventory from "../pages/Management/ManagmentInventory/CreateInventory";
+import DispalyInventory from "../pages/Management/ManagmentInventory/DisplayInventory";
+import UpdateInventory from "../pages/Management/ManagmentInventory/UpdateInventory";
 export default function AppRouter() {
   const { user } = useContext(AuthContext);
-  console.log(user)
+
   const isAdmin = Array.isArray(user?.role) 
   ? user.role.some(r => r.toLowerCase() === "admin") 
   : typeof user?.role === "string" && user?.role.toLowerCase() === "admin";
-  console.log("isAdmin-->",isAdmin)
+
   return (
     <Routes>
       <Route path="/login" element={<SignInSide />} />
@@ -53,6 +57,7 @@ export default function AppRouter() {
           {/* Managment Product */}
           <Route path="/product/create" element={<AddProduct />} />
           <Route path="/products" element={<DisplayProducts />} />
+          <Route path="/product/:id" element={<UpdateProduct />} />
           {/* Role Managment */}
           <Route path="/role/create" element={<CreateRoleUi />} />
           <Route path="/role" element={<DispalyRole />} />
@@ -75,6 +80,12 @@ export default function AppRouter() {
           <Route path="/wareHouses" element={<DispalyWareHouse />} />
           <Route path="/wareHouse/create" element={<CreateWareHouse />} />
           <Route path="/wareHouse/:id" element={<UpdateWareHouse />} />
+          {/* Managment Inventory */}
+          <Route path="/inventorys" element={<DispalyInventory />} />
+          <Route path="/inventory/create" element={<CreateInventory />} />
+          <Route path="/inventory/:id" element={<UpdateInventory />} />
+
+      
           
         </Route>
       ) : (

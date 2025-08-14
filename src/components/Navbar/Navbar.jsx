@@ -75,7 +75,7 @@ export default function Navbar() {
     logoutUser();
     handleClose();
   };
-  console.log(user);
+
   return (
     <div>
       {/* headar 1 section  */}
@@ -132,7 +132,7 @@ export default function Navbar() {
           >
             🛒 {t("Home")}
           </Typography>
-          <Link to={"/product/create"}>Create product</Link>
+        
           {/* البحث */}
           <Search>
             <StyledInputBase

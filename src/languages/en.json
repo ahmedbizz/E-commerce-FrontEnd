@@ -46,7 +46,16 @@
     "There are no item added yet.":"There are no item added yet.",
     "isEmpty_add":"Try adding a new item to get started.",
     "new_item":"Add a new item",
-    "Display WareHouse":"Display WareHouse"
-
+    "Display WareHouse":"Display WareHouse",
+    "Access Denied.":"Access Denied.",
+    "Access_logout":"Login",
+    "Quantity":"Quantity",
+    "Warehouses":"Warehouses",
+    "add_success":"added successfully",
+    "errorr_message":"An error occurred, please try again later",
+    "Add product to WareHouse":"Add product to WareHouse",
+    "Display Inventory":"Display Inventory",
+    "Create Inventory":"Create Inventory",
+    "update_success":"updateing successfully"
   
   }

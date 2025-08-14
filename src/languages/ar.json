@@ -51,8 +51,18 @@
   "Capacity":"السعه",
   "Location":"الموقع",
   "Create WareHouse":"انشاء مستودع ",
-  "Display WareHouse":"عرض المستودعات"
-
+  "Display WareHouse":"عرض المستودعات",
+  "Access Denied.":" انتهت صلاحية الجلسة ",
+  "Access_logout":"تسجيل الدخول",
+  "Quantity":"الكمية",
+  "Warehouses":"المستودعات",
+  "add_success":"تم إضافة  بنجاح",
+  "errorr_message":"حدث خطأ ، يرجى المحاولة لاحقاً.",
+  "Add product to WareHouse":"اضافة منتج الى المستودع ",
+  "Display Inventory":"عرض المخزون ",
+  "Create Inventory":"اضافة مخزون ",
+  "update_success":"تم التحديث بنجاع "
+  
 
 
 }

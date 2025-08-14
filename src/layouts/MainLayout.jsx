@@ -10,7 +10,7 @@ export default function MainLayout() {
   const isAdmin = Array.isArray(user?.role) 
   ? user.role.some(r => r.toLowerCase() === "admin") 
   : typeof user?.role === "string" && user?.role.toLowerCase() === "admin";
-  console.log("isAdmin-->",isAdmin)
+
   return (
     <> 
     {isAdmin?

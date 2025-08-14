@@ -7,24 +7,24 @@ import {
   TableCell,
   TableBody,
   IconButton,
-  Avatar,
-  Typography,Button,Pagination
+  Typography,
+  Button,
+  Pagination,
 } from "@mui/material";
-import { Link ,useNavigate} from 'react-router-dom';
+import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
 import {
-  GetProducts,
-  DeleteProductByID,
-  } from "../../../services/productService";
+  GetInventorys,
+  DeleteInventoryByID,
+} from "../../../services/InventoryService";
 import { useState, useEffect } from "react";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import EditNote from "@mui/icons-material/EditNote";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import AccessAlarm from "@mui/icons-material/AccessAlarm";
-import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 
-const DisplayProducts = () => {
+const DispalyInventory = () => {
   const navigete = useNavigate();
   const { t } = useTranslation();
   const notify = (value) => {
@@ -51,45 +51,48 @@ const DisplayProducts = () => {
       theme: "light",
     });
   };
-  // for get all Role in list
-  const [Products, setProducts] = useState([]);
+  // for get all Inventory in list
+  const [Inventorys, setInventorys] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [isEmpty , setEmpty]=useState(false)
-  const [isAccess , setAccess]=useState(false)
-  const fetchProducts = async (page = 1) => {
-    GetProducts(page =1)
-      .then((res) => {setProducts(res.data.items)
-      console.log(res.data.items)
-        if(res.data?.items.length <=0){
+  const [isEmpty, setEmpty] = useState(false);
+
+  const fetchInventorys = async (page = 1) => {
+    GetInventorys(page)
+      .then((res) => {
+    
+        setInventorys(res.data.items);
+    
+        if (res.data?.items.length <= 0) {
           setEmpty(true);
         }
         setCurrentPage(res.data.currentPage);
-        setTotalPages(res.data.totalPages);})
+        setTotalPages(res.data.totalPages);
+      })
+
       .catch((err) => {
+    
         if (err.response?.status === 404) {
           notifyErorr("لا يوجد مستخدمين في هذه المجموعة.");
-          
+
           setEmpty(true);
-      
         } else {
           notifyErorr("حدث خطأ أثناء جلب البيانات.");
           setError(true);
         }
       })
       .finally(() => setLoading(false));
-  }
-
+  };
   useEffect(() => {
-    fetchProducts(currentPage);
+    fetchInventorys(currentPage);
   }, [currentPage]);
 
   const Refresh = async (page = currentPage) => {
     setLoading(true);
     try {
-      const res = await GetProducts(page);
+      const res = await GetInventorys(page);
       if (!res.data.items || res.data.items.length === 0) {
         // إذا الصفحة أصبحت فارغة بعد الحذف
         const newPage = page > 1 ? page - 1 : 1;
@@ -97,11 +100,11 @@ const DisplayProducts = () => {
           setCurrentPage(newPage);
           return Refresh(newPage); // إعادة المحاولة بالصفحة الجديدة
         } else {
-          setProducts([]);
+          setInventorys([]);
           setEmpty(true);
         }
       } else {
-        setProducts(res.data.items);
+        setInventorys(res.data.items);
         setCurrentPage(res.data.currentPage);
         setTotalPages(res.data.totalPages);
         setEmpty(false);
@@ -110,13 +113,7 @@ const DisplayProducts = () => {
       if (err.response?.status === 404) {
         notifyErorr("لا يوجد مستودعات في هذه الصفحة.");
         setEmpty(true);
-      } 
-      if (err.response?.status === 401) {
-        notifyErorr("لا يوجد مستودعات في هذه الصفحة.");
-        setAccess(true);
-      }
-      
-      else {
+      } else {
         notifyErorr("حدث خطأ أثناء جلب البيانات.");
         setError(true);
       }
@@ -125,23 +122,13 @@ const DisplayProducts = () => {
     }
   };
 
-  // for delete WareHouse
+  // for delete Inventory
   const deleteByID = async (id) => {
     try {
-      const res = await DeleteProductByID(id);
+      const res = await DeleteInventoryByID(id);
       notify(res.data.message);
       Refresh(currentPage); // تحديث الصفحة بعد الحذف
     } catch (err) {
-      if (err.response?.status === 401) {
-        notifyErorr("Access denied 401 Unauthorized");
-      }
-      if (err.response?.status === 404) {
-        notifyErorr("لا يوجد منتجات في هذه الصفحة.");
-        
-      } else {
-        notifyErorr("حدث خطأ أثناء جلب البيانات.");
-        setError(true);
-      }
       notifyErorr(err.message);
     }
   };
@@ -159,36 +146,6 @@ const DisplayProducts = () => {
           sx={{ animation: "rotate 1.5s linear infinite" }}
           size={80}
         />
-      </Box>
-    );
-  }
-  if (isAccess) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          gap: 2,
-          textAlign: "center",
-        }}
-      >
-        <AccessAlarm sx={{ fontSize: 80, color: "text.secondary" }} />
-        <Typography variant="h6" color="text.secondary">
-          {t("Access Denied.")}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {t("Access_logout")}
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => navigete("/logout")} // أو أي مسار إضافة المنتج
-        >
-          {t("new_item")}
-        </Button>
       </Box>
     );
   }
@@ -215,7 +172,7 @@ const DisplayProducts = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => navigete("/product/create")} // أو أي مسار إضافة المنتج
+          onClick={() => navigete("/Inventory/create")} // أو أي مسار إضافة المنتج
         >
           {t("new_item")}
         </Button>
@@ -233,6 +190,7 @@ const DisplayProducts = () => {
           height: "100vh",
         }}
       >
+        <ToastContainer />
         <Typography variant="h5" color="error">
           Oops! Something went wrong. Please try again.
         </Typography>
@@ -255,35 +213,24 @@ const DisplayProducts = () => {
         alignSelf: "center",
         width: "100%",
 
-
         boxShadow:
           "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
       }}
     >
       <ToastContainer />
-      <Table >
-        <TableHead
-          sx={{
-            backgroundColor: "rgb(240, 240, 175, 1)",
-            alignContent:"center"
-            
-          
-          }}
-        >
+      <Table>
+        <TableHead sx={{ backgroundColor: "rgb(240, 240, 175, 1)" }}>
           <TableRow>
-            <TableCell>{t("Image")}</TableCell>
-            <TableCell>{t("Name")}</TableCell>
-            <TableCell>{t("price")}</TableCell>
-            <TableCell>{t("costPrice")}</TableCell>
-            <TableCell>{t("stockQuantity")}</TableCell>
-            <TableCell>{t("categoryId")}</TableCell>
-            <TableCell align="left">{t("isActive")}</TableCell>
-            <TableCell>{t("Action")}</TableCell>
+          
+            <TableCell>{t("Products")}</TableCell>
+            <TableCell>{t("Warehouses")}</TableCell>
+            <TableCell>{t("Quantity")}</TableCell>
 
+            <TableCell>{t("Action")}</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody sx={{backgroundColor:"rgba(255, 255, 255, 0.966)"}}>
-          {(Products || []).map((item, index) => {
+        <TableBody sx={{ backgroundColor: "rgba(255, 255, 255, 0.966)" }}>
+          {(Inventorys || []).map((item, index) => {
             return (
               <TableRow
                 key={index}
@@ -294,31 +241,21 @@ const DisplayProducts = () => {
                   },
                 }}
               >
-                <TableCell>
-                  {" "}
-                  <Avatar
-                    alt={item.name}
-                    variant="square"
-                    sx={{
-                      width:"100px",
-                      height:"100px",
-                      borderRadius:"10px"
-                    }}
-                    src={
-                      item.imageUrl
-                        ? `https://localhost:7137/images/Products/${item.imageUrl}`
-                        : "/Product-avatar.jpg"
-                    }
-                  />
-                </TableCell>
-                <TableCell>{item.name}</TableCell>
-                <TableCell align="left">{item.price}</TableCell>
-                <TableCell align="left">{item.costPrice}</TableCell>
-                <TableCell align="left">{item.stockQuantity}</TableCell>
-                <TableCell align="left">{item.categoryId}</TableCell>
+          
+              
+                <TableCell align="left">{item.productName}</TableCell>
+                <TableCell align="left">{item.warehouseName}</TableCell>
+                <TableCell align="left">{item.quantity}</TableCell>
       
-                <TableCell align="left">{item.isActive}</TableCell>
                 <TableCell align="left">
+                  <IconButton
+                    component={Link}
+                    to={`/Inventory/${item.id}`}
+                    sx={{ color: "green" }}
+                  >
+                    <EditNote />
+                  </IconButton>
+
                   <IconButton
                     sx={{ color: "red" }}
                     onClick={() => {
@@ -326,14 +263,6 @@ const DisplayProducts = () => {
                     }}
                   >
                     <DeleteRoundedIcon />
-                  </IconButton>
-                  <IconButton
-                    component={Link}
-                    to={`/product/${item.id}`}
-                    sx={{ color: "green" }}
-
-                  >
-                    <EditNote />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -343,7 +272,7 @@ const DisplayProducts = () => {
       </Table>
       <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
         <Pagination
-           sx={{
+          sx={{
             "& .MuiPaginationItem-root": {
               color: "rgb(56, 122, 122)", // لون النص
             },
@@ -362,4 +291,4 @@ const DisplayProducts = () => {
   );
 };
 
-export default DisplayProducts;
+export default DispalyInventory;

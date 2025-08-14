@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Alert} from '@mui/material'
+import {Alert,CircularProgress} from '@mui/material'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import MuiCard from '@mui/material/Card';
@@ -39,6 +39,7 @@ const CreateWareHouse = () => {
   const [LocationMessage, setLocationMessage] = React.useState('');
   const [Capacity, setCapacity] = React.useState(false);
   const [CapacityMessage, setCapacityMessage] = React.useState('');
+  const [loading, setLoading] = useState(false);
 
   const notify_Create = (info) => {
     toast.success(` ${info} `, {
@@ -63,6 +64,7 @@ const CreateWareHouse = () => {
     }
     const data = {Name,Location,Capacity};  
     try {
+      setLoading(true);
         const res = await AddWareHouse(data);
         if(res){
           notify_Create(res.data.message)
@@ -74,6 +76,8 @@ const CreateWareHouse = () => {
       } catch (err) {
     
         setError("WareHouse create is failed")
+      }finally {
+        setLoading(false);
       }
   };
 
@@ -115,7 +119,7 @@ const CreateWareHouse = () => {
 
 
   return (
-<Box className="WareHouseCreatePageContiner" >
+<Box className="WareHouseCreatePageContiner" sx={{display:"flex", justifyContent:"center"}} >
       <Card variant="outlined">
         <ToastContainer/>
         <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
@@ -195,8 +199,8 @@ const CreateWareHouse = () => {
   
   
           
-          <Button type="submit" fullWidth variant="contained" sx={{backgroundColor:"rgb(56, 122, 122)",boxShadow:"0px 6px 0px rgb(240, 240, 175, 1)"}} onClick={validateInputs}>
-          {t("Save")}
+          <Button type="submit"  disabled={loading} fullWidth variant="contained" sx={{backgroundColor:"rgb(56, 122, 122)",boxShadow:"0px 6px 0px rgb(240, 240, 175, 1)"}} onClick={validateInputs}>
+          {loading ? <CircularProgress size={24} /> : t("Save")}
           </Button>
   
         </Box>

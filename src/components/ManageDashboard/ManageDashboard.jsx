@@ -190,6 +190,21 @@ export default function ManageDashboard() {
               {t("Create WareHouse")}
             </MenuItem>
 
+            <MenuItem
+              component={Link}
+              to="/inventorys"
+              onClick={handleCloseProducts}
+            >
+              {t("Display Inventory")}
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/inventory/create"
+              onClick={handleCloseProducts}
+            >
+              {t("Create Inventory")}
+            </MenuItem>
+
           </Menu>
 
           {/* إدارة المستخدمين */}
