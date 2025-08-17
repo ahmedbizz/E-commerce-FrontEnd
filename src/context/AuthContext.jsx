@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const loginUser = (token) => {
-    localStorage.setItem("token", token);
+    Cookies.set("token", token, { expires: 7 });
     const decoded = jwtDecode(token);
     setUser(decoded);
   };

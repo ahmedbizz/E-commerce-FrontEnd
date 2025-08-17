@@ -72,10 +72,13 @@ export default function SignInCard() {
     
     try {
         const res = await login(data);
+      
         if(res.token){
+        
         loginUser(res.token); // نفترض أن الـ API يرجع { token: "..." }
         navigate("/");}
         else{
+      
           setError(res.message ||"Email or password failed")
         }
       } catch (err) {

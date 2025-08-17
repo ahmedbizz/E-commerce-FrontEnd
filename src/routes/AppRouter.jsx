@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
+import AdsPanel from "../pages/AdsPanel";
 import ProductDetails from "../pages/ProductDetails";
 import Cart from "../pages/Cart";
 import NotFound from "../pages/NotFound";
@@ -90,7 +91,9 @@ export default function AppRouter() {
         </Route>
       ) : (
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<Home />} />
+          <Route index element={<div>
+            <AdsPanel/> <Home />
+          </div>} />
           <Route path="product/:id" element={<ProductDetails />} />
           <Route element={<PrivateRoute />}>  
             <Route path="cart" element={<Cart />} />

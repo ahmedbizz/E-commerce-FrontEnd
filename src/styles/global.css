@@ -1,9 +1,102 @@
-body {
-  margin: 0;
-  font-family: "Arial", sans-serif;
-  direction: rtl;
-  background-color: azure;
+@charset "UTF-8";
+html, body, #root {
+  margin: 0 auto;
+  padding: 0;
 }
+
+main {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.ads-container {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.ads-container .slide {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+.ads-container .slide img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  display: block;
+}
+
+.ads-container .slide .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.ads-container .slide .GO_TO_SHOP_BT {
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  background: rgba(0, 0, 0, 0.4);
+  width: 200px;
+  height: 70px;
+}
+
+.Panel-container {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.Products-Main-container {
+  width: 100%;
+  height: 100vh;
+  margin: 30px;
+  padding: 0;
+}
+
+.ImageBox {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+.ImageBox img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  display: block;
+}
+
+.ImageBox .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.ImageBox .GO_TO_SHOP_BT {
+  color: black;
+  border-radius: 30px;
+  position: absolute;
+  top: 80%;
+  left: 5%;
+  background: white;
+  width: 90px;
+  height: 30px;
+  font-weight: bold;
+}
+
 a {
   text-decoration: none;
   color: inherit;
@@ -20,10 +113,12 @@ a {
   max-width: 50px;
   max-height: 60px;
 }
+
 #EN_AR_List :hover {
   color: teal;
   background-color: none;
 }
+
 /* لو تريد تعدل على .MuiTypography-root داخل EN_AR_List */
 #EN_AR_List .MuiTypography-root {
   color: inherit;
@@ -31,37 +126,63 @@ a {
 
 /* headar 2 in Nave page section  */
 .AppBarHeader {
-  background-color: rgb(56, 122, 122) !important;
-  box-shadow: 0px 6px 0px rgba(230, 231, 135, 0.966) !important;
+  background-color: #0e1313 !important;
+  -webkit-box-shadow: 0px 6px 0px rgba(230, 231, 135, 0.966) !important;
+          box-shadow: 0px 6px 0px rgba(230, 231, 135, 0.966) !important;
 }
 
 /* Role Create Page Continer */
 .RoleCreatePageContiner {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
   display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
+  -webkit-box-pack: center !important;
+      -ms-flex-pack: center !important;
+          justify-content: center !important;
+  -webkit-box-align: center !important;
+      -ms-flex-align: center !important;
+          align-items: center !important;
   height: 50vh;
 }
 
 /* Group Create Page Continer */
-.GroupCreatePageContiner  {
+.GroupCreatePageContiner {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
   display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
+  -webkit-box-pack: center !important;
+      -ms-flex-pack: center !important;
+          justify-content: center !important;
+  -webkit-box-align: center !important;
+      -ms-flex-align: center !important;
+          align-items: center !important;
   height: 50vh;
 }
 
 .GroupUpdatePageContiner {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
   display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
+  -webkit-box-pack: center !important;
+      -ms-flex-pack: center !important;
+          justify-content: center !important;
+  -webkit-box-align: center !important;
+      -ms-flex-align: center !important;
+          align-items: center !important;
   height: 50vh;
 }
 
 /* Category pages */
 .CategoryUpdatePageContiner {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
   display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
+  -webkit-box-pack: center !important;
+      -ms-flex-pack: center !important;
+          justify-content: center !important;
+  -webkit-box-align: center !important;
+      -ms-flex-align: center !important;
+          align-items: center !important;
   height: 50vh;
 }
+/*# sourceMappingURL=global.css.map */

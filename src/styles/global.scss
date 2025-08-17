@@ -1,0 +1,161 @@
+html, body, #root  {
+  margin: 0 auto;
+  padding: 0;
+
+}
+main {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+// Ads  Page 
+.ads-container {
+  width: 100%;
+  height: 100vh; // تملأ الشاشة
+  margin: 0;
+  padding: 0;
+
+  .slide {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4); // طبقة تعتيم سوداء
+    }
+    .GO_TO_SHOP_BT{
+      position: absolute;
+      top: 50%;
+      left: 45%;
+      background: rgba(0, 0, 0, 0.4);
+      width: 200px;
+      height: 70px;
+  
+    }
+  }
+}
+
+.Panel-container{
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+.Products-Main-container{
+  width: 100%;
+  height: 100vh;
+  margin: 30px;
+  padding: 0;
+
+}
+.ImageBox{
+
+    position: relative;
+    width: 100%;
+    height: 100vh;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4); // طبقة تعتيم سوداء
+    }
+    .GO_TO_SHOP_BT{
+      color: black;
+      border-radius: 30px;
+      position: absolute;
+      top: 80%;
+      left: 5%;
+      background: rgb(255, 255, 255);
+      width: 90px;
+      height: 30px;
+      font-weight: bold;
+  
+    }
+
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* hedear 1 in Nave page section  */
+#Box_header_1 {
+  color: "inherit";
+  border: "2px solid red";
+  max-height: "50px";
+}
+
+#EN_AR_List {
+  max-width: 50px;
+  max-height: 60px;
+}
+#EN_AR_List :hover {
+  color: teal;
+  background-color: none;
+}
+/* لو تريد تعدل على .MuiTypography-root داخل EN_AR_List */
+#EN_AR_List .MuiTypography-root {
+  color: inherit;
+}
+
+/* headar 2 in Nave page section  */
+.AppBarHeader {
+  background-color: rgb(14, 19, 19) !important;
+  box-shadow: 0px 6px 0px rgba(230, 231, 135, 0.966) !important;
+}
+
+
+
+/* Role Create Page Continer */
+.RoleCreatePageContiner {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 50vh;
+}
+
+/* Group Create Page Continer */
+.GroupCreatePageContiner  {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 50vh;
+}
+
+.GroupUpdatePageContiner {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 50vh;
+}
+
+/* Category pages */
+.CategoryUpdatePageContiner {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 50vh;
+}

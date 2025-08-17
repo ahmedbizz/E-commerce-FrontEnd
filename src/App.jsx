@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import AppRouter from './routes/AppRouter';
 import Cookies from "js-cookie";
 import './styles/global.css';
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
 import i18n from './utils/i18n'; 
 
 function App() {
