@@ -11,15 +11,9 @@ const Panel = () => {
   return (
 <Box className="Panel-container">
       <Box
+      className="Box-Panel"
         sx={{
-          width: "100%",
-          height: "100vh",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr", // عمودين
-          gridTemplateRows: "1fr 1fr", // صفين
-          gap: "10px", // المسافة بين الصور
-          p: "0px", // مسافة من الحواف الخارجية
-          boxSizing: "border-box",
+
         }}
       >
         {images.map((img, index) => (

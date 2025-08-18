@@ -1,38 +1,20 @@
 import * as React from "react";
-import { Alert,  CircularProgress, } from "@mui/material";
+import { Alert, CircularProgress, Card } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import MuiCard from "@mui/material/Card";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/material/styles";
 import { UpdateGroupById, GetGroupByID } from "../../../services/GroupService";
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ToastContainer, toast } from "react-toastify";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import "../../../styles/global.css";
 import { useParams } from "react-router-dom";
-const Card = styled(MuiCard)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  alignSelf: "center",
-  width: "100%",
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
-  boxShadow:
-    "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
-  [theme.breakpoints.up("sm")]: {
-    width: "450px",
-  },
-  ...theme.applyStyles("dark", {
-    boxShadow:
-      "hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px",
-  }),
-}));
+
 const UpdateGroup = () => {
   const { id } = useParams();
   const { t } = useTranslation();
@@ -76,9 +58,9 @@ const UpdateGroup = () => {
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+
     if (!validateInputs()) return;
-  
+
     try {
       const res = await UpdateGroupById(formData, id);
       if (res) {
@@ -90,11 +72,10 @@ const UpdateGroup = () => {
       setError("Group Update failed");
     }
   };
-  
 
   const validateInputs = () => {
     let isValid = true;
-  
+
     if (!formData.Name || !/^[a-zA-Z0-9]{3,}$/.test(formData.Name)) {
       setName(true);
       setNameMessage("Please enter a valid Name.");
@@ -103,7 +84,7 @@ const UpdateGroup = () => {
       setName(false);
       setNameMessage("");
     }
-  
+
     if (!formData.Description) {
       setDescription(true);
       setDescriptionMessage("Please enter a valid Description.!!");
@@ -112,7 +93,7 @@ const UpdateGroup = () => {
       setDescription(false);
       setDescriptionMessage("");
     }
-  
+
     return isValid;
   };
   if (Loading) {
@@ -134,8 +115,8 @@ const UpdateGroup = () => {
   }
 
   return (
-    <Box className="GroupUpdatePageContiner">
-      <Card variant="outlined">
+    <Box className="Card-Continer">
+      <Card className="Card" variant="outlined">
         <ToastContainer />
         <Box sx={{ display: { xs: "flex", md: "none" } }}></Box>
         <Typography
@@ -166,41 +147,44 @@ const UpdateGroup = () => {
           <FormControl>
             <FormLabel htmlFor="Name">{t("Name")}</FormLabel>
             <TextField
-  error={Name}
-  helperText={NameMessage}
-  value={formData.Name}
-  onChange={(e) =>
-    setFormData((prev) => ({ ...prev, Name: e.target.value }))
-  }
-  id="Name"
-  name="Name"
-  placeholder={t("Name")}
-  autoComplete="Name"
-  autoFocus
-  required
-  fullWidth
-  variant="outlined"
-  color={Name ? "error" : "primary"}
-/>
+              error={Name}
+              helperText={NameMessage}
+              value={formData.Name}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, Name: e.target.value }))
+              }
+              id="Name"
+              name="Name"
+              placeholder={t("Name")}
+              autoComplete="Name"
+              autoFocus
+              required
+              fullWidth
+              variant="outlined"
+              color={Name ? "error" : "primary"}
+            />
           </FormControl>
           <FormControl>
             <FormLabel htmlFor="Description">{t("Description")}</FormLabel>
             <TextField
-  error={Description}
-  helperText={DescriptionMessage}
-  value={formData.Description}
-  onChange={(e) =>
-    setFormData((prev) => ({ ...prev, Description: e.target.value }))
-  }
-  id="Description"
-  name="Description"
-  placeholder={t("Description")}
-  autoComplete="Description"
-  required
-  fullWidth
-  variant="outlined"
-  color={Description ? "error" : "primary"}
-/>
+              error={Description}
+              helperText={DescriptionMessage}
+              value={formData.Description}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  Description: e.target.value,
+                }))
+              }
+              id="Description"
+              name="Description"
+              placeholder={t("Description")}
+              autoComplete="Description"
+              required
+              fullWidth
+              variant="outlined"
+              color={Description ? "error" : "primary"}
+            />
           </FormControl>
 
           <Box sx={{ display: "flex", gap: "5px" }}>

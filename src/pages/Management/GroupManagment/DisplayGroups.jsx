@@ -9,7 +9,9 @@ import {
   IconButton,
   Typography,
   Button,
-  Pagination
+  Pagination,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
@@ -22,6 +24,8 @@ import SupervisedUserCircle from "@mui/icons-material/SupervisedUserCircle";
 import EditNote from "@mui/icons-material/EditNote";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import Add from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
 
 const DispalyGroup = () => {
   const navigete = useNavigate();
@@ -57,12 +61,14 @@ const DispalyGroup = () => {
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [isEmpty, setEmpty] = useState(false);
+  const [Filter, setFilter] = useState([]);
   const fetchGroups = async (page = 1) => {
     GetGroups((page = 1))
       .then((res) => {
         setGroups(res.data.items);
-        console.log(res.data)
-        if(res.data?.items.length <=0){
+        setFilter(res.data.items);
+
+        if (res.data?.items.length <= 0) {
           setEmpty(true);
         }
         setCurrentPage(res.data.currentPage);
@@ -128,6 +134,24 @@ const DispalyGroup = () => {
       notifyErorr(err.message);
     }
   };
+
+  // sraech
+
+  // function for sreash on the site
+
+  const handleSearch = (event) => {
+    const query = event.target.value;
+    if (!query) {
+      setFilter(Groups); // إذا خانة البحث فارغة، نعرض كل العناصر
+      return;
+    }
+
+    const filtered = Groups.filter((us) =>
+      us.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilter(filtered);
+  };
+
   if (isEmpty) {
     return (
       <Box
@@ -202,20 +226,37 @@ const DispalyGroup = () => {
     );
   }
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignSelf: "center",
-        width: "100%",
-
-        boxShadow:
-          "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
-      }}
-    >
+    <Box className="Display-Item-Continer">
       <ToastContainer />
-      <Table>
-        <TableHead sx={{ backgroundColor: "rgb(240, 240, 175, 1)" }}>
+      <Box className="Button_Search_Panel">
+        <Button
+          startIcon={<Add />}
+          component={Link}
+          to={`/group/create`}
+          variant="contained"
+          className="create-button"
+        >
+          {t("new_item")}
+        </Button>
+        {/* البحث */}
+        <TextField
+          variant="outlined"
+          placeholder={"Type.."}
+          onChange={(e) => handleSearch(e)}
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon className="search-icon" />
+              </InputAdornment>
+            ),
+            className: "search-input",
+          }}
+        />
+      </Box>
+
+      <Table className="Table">
+        <TableHead className="TableHead">
           <TableRow>
             <TableCell>{t("ID")}</TableCell>
             <TableCell>{t("Name")}</TableCell>
@@ -225,17 +266,9 @@ const DispalyGroup = () => {
           </TableRow>
         </TableHead>
         <TableBody sx={{ backgroundColor: "rgba(255, 255, 255, 0.966)" }}>
-          {(Groups || []).map((item, index) => {
+          {(Filter.length ? Filter : []).map((item, index) => {
             return (
-              <TableRow
-                key={index}
-                sx={{
-                  ":hover": {
-                    backgroundColor: "rgb(141, 189, 189)",
-                    boxShadow: " 0px 6px 0px rgb(240, 240, 175, 1)",
-                  },
-                }}
-              >
+              <TableRow key={index} className="TableRow">
                 <TableCell>{item.id}</TableCell>
                 <TableCell>{item.name}</TableCell>
                 <TableCell align="left">{item.description}</TableCell>
@@ -278,15 +311,7 @@ const DispalyGroup = () => {
       </Table>
       <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
         <Pagination
-           sx={{
-            "& .MuiPaginationItem-root": {
-              color: "rgb(56, 122, 122)", // لون النص
-            },
-            "& .Mui-selected": {
-              backgroundColor: "rgb(56, 122, 122)", // خلفية الصفحة المختارة
-              color: "#fff", // لون نص الصفحة المختارة
-            },
-          }}
+          className="Pagination"
           count={totalPages}
           page={currentPage}
           onChange={(e, page) => setCurrentPage(page)}

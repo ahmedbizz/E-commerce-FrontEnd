@@ -1,12 +1,9 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { Alert } from "@mui/material";
+import { Alert,Card } from "@mui/material";
 import { useState } from "react";
-import Divider from "@mui/material/Divider";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
-import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import MuiCard from "@mui/material/Card";
@@ -16,26 +13,9 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { useTranslation } from "react-i18next";
 import { AddUser } from "../../../services/UsersService";
 import { ToastContainer, toast } from "react-toastify";
-const Card = styled(MuiCard)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  alignSelf: "center",
-  width: "100%",
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
-  margin: "auto",
-  // maxHeight: '100dvh', // لتجنب تجاوز الشاشة
-  // overflowY: 'auto',    // لإظهار سكرول إذا زاد المحتوى
-  boxShadow:
-    "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
-  [theme.breakpoints.up("sm")]: {
-    width: "450px",
-  },
-  ...theme.applyStyles("dark", {
-    boxShadow:
-      "hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px",
-  }),
-}));
+import { Link } from "react-router-dom";
+import ArrowBack from "@mui/icons-material/ArrowBack";
+
 
 export default function CreateUser() {
   const { t } = useTranslation();
@@ -207,162 +187,177 @@ export default function CreateUser() {
   };
 
   return (
-    <Card variant="outlined">
-        <ToastContainer/>
-      <Typography
-        component="h1"
-        variant="h4"
-        sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
-      >
-        {t("Singup")}
-      </Typography>
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-      >
-        <FormControl
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+<Box className="Card-Continer">
+      <Card className="Card" variant="outlined">
+          <ToastContainer/>
+        <Typography
+          component="h1"
+          variant="h4"
+          sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
         >
-          <Box position="relative" display="inline-block">
-            {/* Hidden input */}
-            <input
-              id="clientFile"
-              type="file"
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={handleImageChange}
-            />
-
-            {/* Label acts as clickable avatar */}
-            <label htmlFor="clientFile" style={{ cursor: "pointer" }}>
-              <Avatar
-                alt="Profile"
-                src={preview || "/static/images/avatar/1.jpg"}
-                sx={{
-                  width: 100,
-                  height: 100,
-                  transition: "0.3s",
-                }}
+          {t("Singup")}
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+        >
+          <FormControl
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Box position="relative" display="inline-block">
+              {/* Hidden input */}
+              <input
+                id="clientFile"
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleImageChange}
               />
-              {/* Camera icon overlay */}
-              <Box
-                position="absolute"
-                bottom={0}
-                right={0}
-                bgcolor="white"
-                borderRadius="50%"
-                p={0.5}
-              >
-                <AddAPhotoIcon fontSize="small" />
-              </Box>
-            </label>
-          </Box>
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor="name">{t("Name")}</FormLabel>
-          <TextField
-            autoComplete="name"
-            name="name"
-            required
+  
+              {/* Label acts as clickable avatar */}
+              <label htmlFor="clientFile" style={{ cursor: "pointer" }}>
+                <Avatar
+                  alt="Profile"
+                  src={preview || "/static/images/avatar/1.jpg"}
+                  sx={{
+                    width: 100,
+                    height: 100,
+                    transition: "0.3s",
+                  }}
+                />
+                {/* Camera icon overlay */}
+                <Box
+                  position="absolute"
+                  bottom={0}
+                  right={0}
+                  bgcolor="white"
+                  borderRadius="50%"
+                  p={0.5}
+                >
+                  <AddAPhotoIcon fontSize="small" />
+                </Box>
+              </label>
+            </Box>
+          </FormControl>
+          <FormControl>
+            <FormLabel htmlFor="name">{t("Name")}</FormLabel>
+            <TextField
+              autoComplete="name"
+              name="name"
+              required
+              fullWidth
+              id="name"
+              placeholder="Jon Snow"
+              error={nameError}
+              helperText={nameErrorMessage}
+              color={nameError ? "error" : "primary"}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel htmlFor="PhoneNumber">{t("phone")}</FormLabel>
+            <TextField
+              autoComplete="PhoneNumber"
+              name="PhoneNumber"
+              required
+              fullWidth
+              id="PhoneNumber"
+              placeholder="050********"
+              error={PhoneNumberError}
+              helperText={PhoneNumberErrorMessage}
+              color={PhoneNumberError ? "error" : "primary"}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel htmlFor="email">{t("email")}</FormLabel>
+            <TextField
+              required
+              fullWidth
+              id="email"
+              placeholder="your@email.com"
+              name="email"
+              autoComplete="email"
+              variant="outlined"
+              error={emailError}
+              helperText={emailErrorMessage}
+              color={passwordError ? "error" : "primary"}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel htmlFor="birthDay">{t("birthDay")}</FormLabel>
+            <TextField
+              required
+              fullWidth
+              type="date"
+              id="birthDay"
+              placeholder="1990-01-01"
+              name="birthDay"
+              autoComplete="birthDay"
+              variant="outlined"
+              error={birthDayError}
+              helperText={birthDayErrorMessage}
+              color={birthDayError ? "error" : "primary"}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel htmlFor="password">{t("password")}</FormLabel>
+            <TextField
+              required
+              fullWidth
+              name="password"
+              placeholder="••••••"
+              type="password"
+              id="password"
+              autoComplete="new-password"
+              variant="outlined"
+              error={passwordError}
+              helperText={passwordErrorMessage}
+              color={passwordError ? "error" : "primary"}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            {error && (
+              <Alert severity="error" sx={{ mt: 2, width: "100%" }}>
+                {error}
+              </Alert>
+            )}
+          </FormControl>
+  
+          <Button
+            type="submit"
+            sx={{
+              backgroundColor: "rgb(56, 122, 122)",
+              boxShadow: "0px 6px 0px rgb(240, 240, 175, 1)",
+            }}
             fullWidth
-            id="name"
-            placeholder="Jon Snow"
-            error={nameError}
-            helperText={nameErrorMessage}
-            color={nameError ? "error" : "primary"}
-            onChange={handleChange}
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor="PhoneNumber">{t("phone")}</FormLabel>
-          <TextField
-            autoComplete="PhoneNumber"
-            name="PhoneNumber"
-            required
+            variant="contained"
+          >
+            {t("Save")}
+          </Button>
+          <Button
+            startIcon={<ArrowBack />}
+            component={Link}
+            to={`/users`}
+            sx={{
+              backgroundColor: "rgb(200, 122, 122)",
+              boxShadow: "0px 6px 0px rgb(240, 240, 175, 1)",
+            }}
             fullWidth
-            id="PhoneNumber"
-            placeholder="050********"
-            error={PhoneNumberError}
-            helperText={PhoneNumberErrorMessage}
-            color={PhoneNumberError ? "error" : "primary"}
-            onChange={handleChange}
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor="email">{t("email")}</FormLabel>
-          <TextField
-            required
-            fullWidth
-            id="email"
-            placeholder="your@email.com"
-            name="email"
-            autoComplete="email"
-            variant="outlined"
-            error={emailError}
-            helperText={emailErrorMessage}
-            color={passwordError ? "error" : "primary"}
-            onChange={handleChange}
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor="birthDay">{t("birthDay")}</FormLabel>
-          <TextField
-            required
-            fullWidth
-            type="date"
-            id="birthDay"
-            placeholder="1990-01-01"
-            name="birthDay"
-            autoComplete="birthDay"
-            variant="outlined"
-            error={birthDayError}
-            helperText={birthDayErrorMessage}
-            color={birthDayError ? "error" : "primary"}
-            onChange={handleChange}
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor="password">{t("password")}</FormLabel>
-          <TextField
-            required
-            fullWidth
-            name="password"
-            placeholder="••••••"
-            type="password"
-            id="password"
-            autoComplete="new-password"
-            variant="outlined"
-            error={passwordError}
-            helperText={passwordErrorMessage}
-            color={passwordError ? "error" : "primary"}
-            onChange={handleChange}
-          />
-        </FormControl>
-        <FormControl>
-          {error && (
-            <Alert severity="error" sx={{ mt: 2, width: "100%" }}>
-              {error}
-            </Alert>
-          )}
-        </FormControl>
-
-        <Button
-          type="submit"
-          sx={{
-            backgroundColor: "rgb(56, 122, 122)",
-            boxShadow: "0px 6px 0px rgb(240, 240, 175, 1)",
-          }}
-          fullWidth
-          variant="contained"
-        >
-          {t("Save")}
-        </Button>
-      </Box>
-    </Card>
+            variant="contained"
+          >
+            {t("Back")}
+          </Button>
+        </Box>
+      </Card>
+</Box>
   );
 }

@@ -9,17 +9,26 @@ import {
   IconButton,
   Typography,
   Button,
-  Pagination
+  Pagination,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
+
+import SearchIcon from "@mui/icons-material/Search";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
-import { GetCategorys, DeleteCategoryByID } from "../../../services/CategoryService";
+import {
+  GetCategorys,
+  DeleteCategoryByID,
+} from "../../../services/CategoryService";
 import { useState, useEffect } from "react";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import EditNote from "@mui/icons-material/EditNote";
-import { Link,useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import Avatar from "@mui/material/Avatar";
+import Add from "@mui/icons-material/Add";
 
 const DispalyCategory = () => {
   const navigete = useNavigate();
@@ -54,32 +63,33 @@ const DispalyCategory = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [isEmpty , setEmpty]=useState(false)
+  const [isEmpty, setEmpty] = useState(false);
+  const [Filter, setFilter] = useState([]);
   const fetchCategorys = async (page = 1) => {
-    GetCategorys(page =1)
-      .then((res) => {setCategorys(res.data.items)
-        if(res.data?.items.length <=0){
+    GetCategorys((page = 1))
+      .then((res) => {
+        setCategorys(res.data.items);
+        setFilter(res.data.items);
+        if (res.data?.items.length <= 0) {
           setEmpty(true);
         }
-      setCurrentPage(res.data.currentPage);
-      setTotalPages(res.data.totalPages);})
+        setCurrentPage(res.data.currentPage);
+        setTotalPages(res.data.totalPages);
+      })
       .catch((err) => {
         if (err.response?.status === 404) {
-          notifyErorr("لا يوجد مستخدمين في هذه المجموعة.");          
+          notifyErorr("لا يوجد مستخدمين في هذه المجموعة.");
           setEmpty(true);
-      
         } else {
           notifyErorr("حدث خطأ أثناء جلب البيانات.");
           setError(true);
         }
       })
       .finally(() => setLoading(false));
-    
-  }
+  };
   useEffect(() => {
     fetchCategorys(currentPage);
   }, [currentPage]);
-
 
   const Refresh = async (page = currentPage) => {
     setLoading(true);
@@ -124,6 +134,24 @@ const DispalyCategory = () => {
       notifyErorr(err.message);
     }
   };
+
+  // sraech
+
+  // function for sreash on the site
+
+  const handleSearch = (event) => {
+    const query = event.target.value;
+    if (!query) {
+      setFilter(Categorys); // إذا خانة البحث فارغة، نعرض كل العناصر
+      return;
+    }
+
+    const filtered = Categorys.filter((Cat) =>
+      Cat.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilter(filtered);
+  };
+
   if (Loading) {
     return (
       <Box
@@ -182,7 +210,7 @@ const DispalyCategory = () => {
           height: "100vh",
         }}
       >
-          <ToastContainer />
+        <ToastContainer />
         <Typography variant="h5" color="error">
           Oops! Something went wrong. Please try again.
         </Typography>
@@ -198,51 +226,73 @@ const DispalyCategory = () => {
     );
   }
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignSelf: "center",
-        width: "100%",
-
-        boxShadow:
-          "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
-      }}
-    >
+    <Box className="Display-Item-Continer">
       <ToastContainer />
-      <Table>
-        <TableHead sx={{ backgroundColor: "rgb(240, 240, 175, 1)" }}>
+      <Box className="Button_Search_Panel">
+        <Button
+          startIcon={<Add />}
+          component={Link}
+          to={`/categorys/create`}
+          variant="contained"
+          className="create-button"
+        >
+          {t("new_item")}
+        </Button>
+        {/* البحث */}
+        <TextField
+          variant="outlined"
+          placeholder={"Type.."}
+          onChange={(e) => handleSearch(e)}
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon className="search-icon" />
+              </InputAdornment>
+            ),
+            className: "search-input",
+          }}
+        />
+      </Box>
+      <Table className="Table">
+        <TableHead className="TableHead">
           <TableRow>
             <TableCell>{t("ID")}</TableCell>
             <TableCell>{t("Name")}</TableCell>
-            <TableCell>{t("Description")}</TableCell>  
+            <TableCell>{t("Description")}</TableCell>
             <TableCell align="left">{t("Create At")}</TableCell>
             <TableCell>{t("Action")}</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody sx={{ backgroundColor: "rgba(255, 255, 255, 0.966)" }}>
-          {(Categorys || []).map((item, index) => {
+        <TableBody>
+          {(Filter?.length ? Filter : []).map((item, index) => {
             return (
-              <TableRow
-                key={index}
-                sx={{
-                  ":hover": {
-                    backgroundColor: "rgb(141, 189, 189)",
-                    boxShadow: " 0px 6px 0px rgb(240, 240, 175, 1)",
-                  },
-                }}
-              >
-                <TableCell>{item.id}</TableCell>
+              <TableRow key={index} className="TableRow">
+                <TableCell>
+                  {" "}
+                  <Avatar
+                    alt={item.name}
+                    variant="square"
+                    sx={{
+                      width: "100px",
+                      height: "100px",
+                      borderRadius: "10px",
+                    }}
+                    src={
+                      item.imageUrl
+                        ? `https://localhost:7137/images/Categorys/${item.imageUrl}`
+                        : "/public/Images/AddPic.webp"
+                    }
+                  />
+                </TableCell>
                 <TableCell>{item.name}</TableCell>
                 <TableCell align="left">{item.description}</TableCell>
                 <TableCell align="left">{item.createdAt}</TableCell>
                 <TableCell align="left">
-
                   <IconButton
                     component={Link}
                     to={`/categorys/${item.id}`}
                     sx={{ color: "green" }}
-
                   >
                     <EditNote />
                   </IconButton>
@@ -261,25 +311,15 @@ const DispalyCategory = () => {
           })}
         </TableBody>
       </Table>
-            <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
         <Pagination
-           sx={{
-            "& .MuiPaginationItem-root": {
-              color: "rgb(56, 122, 122)", // لون النص
-            },
-            "& .Mui-selected": {
-              backgroundColor: "rgb(56, 122, 122)", // خلفية الصفحة المختارة
-              color: "#fff", // لون نص الصفحة المختارة
-            },
-          }}
+          className="Pagination"
           count={totalPages}
           page={currentPage}
           onChange={(e, page) => setCurrentPage(page)}
-          color="primary"
         />
       </Box>
     </Box>
-  
   );
 };
 

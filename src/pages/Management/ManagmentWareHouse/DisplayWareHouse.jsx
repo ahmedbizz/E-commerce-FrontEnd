@@ -9,7 +9,8 @@ import {
   IconButton,
   Typography,
   Button,
-  Pagination,
+  Pagination,  TextField,
+  InputAdornment,
 } from "@mui/material";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -23,6 +24,8 @@ import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import EditNote from "@mui/icons-material/EditNote";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import Add from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
 
 const DispalyWareHouse = () => {
   const navigete = useNavigate();
@@ -58,11 +61,13 @@ const DispalyWareHouse = () => {
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [isEmpty, setEmpty] = useState(false);
+  const [Filter, setFilter] = useState([]);
 
   const fetchWarehouses = async (page = 1) => {
     GetWareHouses(page)
       .then((res) => {
         setWareHouses(res.data.items);
+        setFilter(res.data.items);
         if (res.data?.items.length <= 0) {
           setEmpty(true);
         }
@@ -129,6 +134,27 @@ const DispalyWareHouse = () => {
       notifyErorr(err.message);
     }
   };
+
+
+  // sraech
+
+  // function for sreash on the site
+
+  const handleSearch = (event) => {
+    const query = event.target.value;
+    if (!query) {
+      setFilter(WareHouses); // إذا خانة البحث فارغة، نعرض كل العناصر
+      return;
+    }
+
+    const filtered = WareHouses.filter((us) =>
+      us.name.toLowerCase().includes(query.toLowerCase())||
+      us.location.toLowerCase().includes(query.toLowerCase())
+      );
+    setFilter(filtered);
+  };
+
+
   if (Loading) {
     return (
       <Box
@@ -146,6 +172,9 @@ const DispalyWareHouse = () => {
       </Box>
     );
   }
+
+
+
   if (isEmpty) {
     return (
       <Box
@@ -203,20 +232,38 @@ const DispalyWareHouse = () => {
     );
   }
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignSelf: "center",
-        width: "100%",
+    <Box   className="Display-Item-Continer">
+    
+      <ToastContainer/>
+      <Box className="Button_Search_Panel">
+        <Button
+          startIcon={<Add />}
+          component={Link}
+          to={`/wareHouse/create`}
+          variant="contained"
+          className="create-button"
+        >
+          {t("new_item")}
+        </Button>
+        {/* البحث */}
+        <TextField
+          variant="outlined"
+          placeholder={"Type.."}
+          onChange={(e) => handleSearch(e)}
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon className="search-icon" />
+              </InputAdornment>
+            ),
+            className: "search-input",
+          }}
+        />
+      </Box>
 
-        boxShadow:
-          "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
-      }}
-    >
-      <ToastContainer />
-      <Table>
-        <TableHead sx={{ backgroundColor: "rgb(240, 240, 175, 1)" }}>
+      <Table className="Table">
+        <TableHead   className="TableHead">
           <TableRow>
             <TableCell>{t("ID")}</TableCell>
             <TableCell>{t("Name")}</TableCell>
@@ -226,17 +273,12 @@ const DispalyWareHouse = () => {
             <TableCell>{t("Action")}</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody sx={{ backgroundColor: "rgba(255, 255, 255, 0.966)" }}>
-          {(WareHouses || []).map((item, index) => {
+        <TableBody >
+          {(Filter.length?Filter:[]).map((item, index) => {
             return (
               <TableRow
                 key={index}
-                sx={{
-                  ":hover": {
-                    backgroundColor: "rgb(141, 189, 189)",
-                    boxShadow: " 0px 6px 0px rgb(240, 240, 175, 1)",
-                  },
-                }}
+    className="TableRow"
               >
                 <TableCell>{item.id}</TableCell>
                 <TableCell>{item.name}</TableCell>
@@ -268,15 +310,7 @@ const DispalyWareHouse = () => {
       </Table>
       <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
         <Pagination
-          sx={{
-            "& .MuiPaginationItem-root": {
-              color: "rgb(56, 122, 122)", // لون النص
-            },
-            "& .Mui-selected": {
-              backgroundColor: "rgb(56, 122, 122)", // خلفية الصفحة المختارة
-              color: "#fff", // لون نص الصفحة المختارة
-            },
-          }}
+          className="Pagination"
           count={totalPages}
           page={currentPage}
           onChange={(e, page) => setCurrentPage(page)}

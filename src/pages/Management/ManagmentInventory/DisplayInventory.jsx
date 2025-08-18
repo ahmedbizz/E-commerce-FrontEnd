@@ -9,7 +9,8 @@ import {
   IconButton,
   Typography,
   Button,
-  Pagination,
+  Pagination,  TextField,
+  InputAdornment,
 } from "@mui/material";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -23,6 +24,8 @@ import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import EditNote from "@mui/icons-material/EditNote";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import Add from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
 
 const DispalyInventory = () => {
   const navigete = useNavigate();
@@ -58,12 +61,14 @@ const DispalyInventory = () => {
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [isEmpty, setEmpty] = useState(false);
+  const [Filter, setFilter] = useState([]);
 
   const fetchInventorys = async (page = 1) => {
     GetInventorys(page)
       .then((res) => {
     
         setInventorys(res.data.items);
+        setFilter(res.data.items);
     
         if (res.data?.items.length <= 0) {
           setEmpty(true);
@@ -131,6 +136,26 @@ const DispalyInventory = () => {
     } catch (err) {
       notifyErorr(err.message);
     }
+  };
+
+
+    // sraech
+
+  // function for sreash on the site
+
+  const handleSearch = (event) => {
+    const query = event.target.value;
+    if (!query) {
+      setFilter(Inventorys); // إذا خانة البحث فارغة، نعرض كل العناصر
+      return;
+    }
+
+    const filtered = Inventorys.filter((us) =>
+      us.warehouseName.toLowerCase().includes(query.toLowerCase())||
+        us.productName.toLowerCase().includes(query.toLowerCase())
+
+    );
+    setFilter(filtered);
   };
   if (Loading) {
     return (
@@ -206,21 +231,39 @@ const DispalyInventory = () => {
     );
   }
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignSelf: "center",
-        width: "100%",
+    <Box   className="Display-Item-Continer">
+    
+      <ToastContainer/>
+      <Box className="Button_Search_Panel">
+        <Button
+          startIcon={<Add />}
+          component={Link}
+          to={`/inventory/create`}
+          variant="contained"
+          className="create-button"
+        >
+          {t("new_item")}
+        </Button>
+        {/* البحث */}
+        <TextField
+          variant="outlined"
+          placeholder={"Type.."}
+          onChange={(e) => handleSearch(e)}
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon className="search-icon" />
+              </InputAdornment>
+            ),
+            className: "search-input",
+          }}
+        />
+      </Box>
 
-        boxShadow:
-          "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
-      }}
-    >
-      <ToastContainer />
-      <Table>
-        <TableHead sx={{ backgroundColor: "rgb(240, 240, 175, 1)" }}>
-          <TableRow>
+      <Table className="Table">
+        <TableHead   className="TableHead">
+          <TableRow className="TableRow">
           
             <TableCell>{t("Products")}</TableCell>
             <TableCell>{t("Warehouses")}</TableCell>
@@ -230,7 +273,7 @@ const DispalyInventory = () => {
           </TableRow>
         </TableHead>
         <TableBody sx={{ backgroundColor: "rgba(255, 255, 255, 0.966)" }}>
-          {(Inventorys || []).map((item, index) => {
+          {(Filter.length?Filter:[]).map((item, index) => {
             return (
               <TableRow
                 key={index}

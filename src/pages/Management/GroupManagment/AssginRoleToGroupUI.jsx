@@ -8,7 +8,9 @@ import {
   TableCell,
   TableBody,
   IconButton,
-  Typography,Button
+  Typography,Button,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
@@ -19,6 +21,7 @@ import ArrowBack from "@mui/icons-material/ArrowBack";
 import { ToastContainer, toast } from "react-toastify";
 import Checkbox from "@mui/material/Checkbox";
 import { useParams } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
 const AssginRoleToGroupUI = () => {
 
   const { t } = useTranslation();
@@ -63,9 +66,11 @@ const AssginRoleToGroupUI = () => {
   const [Roles, setRoles] = useState([]);
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [Filter, setFilter] = useState([]);
   useEffect(() => {
     GetRoles()
-      .then((res) => setRoles(res.data))
+      .then((res) =>{ setRoles(res.data)
+        setFilter(res.data)})
       .catch((err) => {
         notifyErorr(err)
         setError(true);
@@ -109,6 +114,23 @@ const AssginRoleToGroupUI = () => {
         .finally(() => setLoading(false));
     }, []);
 
+      // sraech
+
+  // function for sreash on the site
+
+  const handleSearch = (event) => {
+    const query = event.target.value;
+    if (!query) {
+      setFilter(Roles); // إذا خانة البحث فارغة، نعرض كل العناصر
+      return;
+    }
+
+    const filtered = Roles.filter((us) =>
+      us.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilter(filtered);
+  };
+
 if(Loading){
   return(
     <Box 
@@ -135,18 +157,30 @@ if (error) {
   );
 }
   return (
-    <Box sx={{
-        display: 'flex',
-    flexDirection: 'column',
-    alignSelf: 'center',
-    width: '100%',
-
-    boxShadow:
-      'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
-    }}>
+    <Box   className="Display-Item-Continer">
+    
       <ToastContainer/>
-      <Table>
-        <TableHead   sx={{backgroundColor: "rgb(240, 240, 175, 1)"}}>
+      <Box className="Button_Search_Panel">
+
+        {/* البحث */}
+        <TextField
+          variant="outlined"
+          placeholder={"Type.."}
+          onChange={(e) => handleSearch(e)}
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon className="search-icon" />
+              </InputAdornment>
+            ),
+            className: "search-input",
+          }}
+        />
+      </Box>
+
+      <Table className="Table">
+        <TableHead   className="TableHead">
           <TableRow>
             <TableCell>{t("Name")}</TableCell>
             <TableCell>{t("ID")}</TableCell>
@@ -155,7 +189,7 @@ if (error) {
           </TableRow>
         </TableHead>
         <TableBody sx={{backgroundColor:"rgba(255, 255, 255, 0.966)"}} >
-          {(Roles || []).map((item, index) => {
+          {(Filter.length ? Filter : []).map((item, index) => {
           return(     
           <TableRow key={index} sx={{":hover":{
             backgroundColor: "rgb(141, 189, 189)" ,

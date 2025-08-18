@@ -8,7 +8,8 @@ import {
   TableBody,
   IconButton,
   Avatar,
-  Typography,Button,Pagination
+  Typography,Button,Pagination , TextField,
+  InputAdornment,
 } from "@mui/material";
 import { Link ,useNavigate} from 'react-router-dom';
 import CircularProgress from "@mui/material/CircularProgress";
@@ -23,6 +24,8 @@ import EditNote from "@mui/icons-material/EditNote";
 import { ToastContainer, toast } from "react-toastify";
 import AccessAlarm from "@mui/icons-material/AccessAlarm";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
+import Add from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
 
 const DisplayProducts = () => {
   const navigete = useNavigate();
@@ -59,10 +62,11 @@ const DisplayProducts = () => {
   const [error, setError] = useState(false);
   const [isEmpty , setEmpty]=useState(false)
   const [isAccess , setAccess]=useState(false)
+  const [Filter, setFilter] = useState([]);
   const fetchProducts = async (page = 1) => {
     GetProducts(page =1)
       .then((res) => {setProducts(res.data.items)
-      console.log(res.data.items)
+        setFilter(res.data.items)
         if(res.data?.items.length <=0){
           setEmpty(true);
         }
@@ -145,6 +149,26 @@ const DisplayProducts = () => {
       notifyErorr(err.message);
     }
   };
+
+      // sraech
+
+  // function for sreash on the site
+
+  const handleSearch = (event) => {
+    const query = event.target.value;
+    if (!query) {
+      setFilter(Products); // إذا خانة البحث فارغة، نعرض كل العناصر
+      return;
+    }
+
+    const filtered = Products.filter((us) =>
+      us.name.toLowerCase().includes(query.toLowerCase())
+
+    );
+    setFilter(filtered);
+  };
+
+
   if (Loading) {
     return (
       <Box
@@ -248,29 +272,39 @@ const DisplayProducts = () => {
     );
   }
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignSelf: "center",
-        width: "100%",
-
-
-        boxShadow:
-          "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
-      }}
-    >
-      <ToastContainer />
-      <Table >
-        <TableHead
-          sx={{
-            backgroundColor: "rgb(240, 240, 175, 1)",
-            alignContent:"center"
-            
-          
-          }}
+    <Box   className="Display-Item-Continer">
+    
+      <ToastContainer/>
+      <Box className="Button_Search_Panel">
+        <Button
+          startIcon={<Add />}
+          component={Link}
+          to={`/product/create`}
+          variant="contained"
+          className="create-button"
         >
-          <TableRow>
+          {t("new_item")}
+        </Button>
+        {/* البحث */}
+        <TextField
+          variant="outlined"
+          placeholder={"Type.."}
+          onChange={(e) => handleSearch(e)}
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon className="search-icon" />
+              </InputAdornment>
+            ),
+            className: "search-input",
+          }}
+        />
+      </Box>
+
+      <Table className="Table">
+        <TableHead   className="TableHead">
+          <TableRow className="TableRow">
             <TableCell>{t("Image")}</TableCell>
             <TableCell>{t("Name")}</TableCell>
             <TableCell>{t("price")}</TableCell>
@@ -282,8 +316,8 @@ const DisplayProducts = () => {
 
           </TableRow>
         </TableHead>
-        <TableBody sx={{backgroundColor:"rgba(255, 255, 255, 0.966)"}}>
-          {(Products || []).map((item, index) => {
+        <TableBody >
+          {(Filter.length?Filter:[]).map((item, index) => {
             return (
               <TableRow
                 key={index}
@@ -343,15 +377,7 @@ const DisplayProducts = () => {
       </Table>
       <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
         <Pagination
-           sx={{
-            "& .MuiPaginationItem-root": {
-              color: "rgb(56, 122, 122)", // لون النص
-            },
-            "& .Mui-selected": {
-              backgroundColor: "rgb(56, 122, 122)", // خلفية الصفحة المختارة
-              color: "#fff", // لون نص الصفحة المختارة
-            },
-          }}
+          className="Pagination"
           count={totalPages}
           page={currentPage}
           onChange={(e, page) => setCurrentPage(page)}

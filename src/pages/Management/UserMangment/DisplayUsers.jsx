@@ -8,7 +8,9 @@ import {
   TableBody,
   IconButton,
   Avatar,
-  Typography,Button,Pagination
+  Typography,Button,Pagination,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import { Link ,useNavigate} from 'react-router-dom';
 import CircularProgress from "@mui/material/CircularProgress";
@@ -22,6 +24,8 @@ import { useState, useEffect } from "react";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import EditNote from "@mui/icons-material/EditNote";
 import { ToastContainer, toast } from "react-toastify";
+import Add from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
 const DisplayUsers = () => {
   const navigete = useNavigate();
   const { t } = useTranslation();
@@ -56,10 +60,11 @@ const DisplayUsers = () => {
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [isEmpty , setEmpty]=useState(false)
+  const [Filter, setFilter] = useState([]);
   const fetchUsers = async (page = 1) => {
     GetUsers(page =1)
       .then((res) => {setUsers(res.data.items)
-      
+        setFilter(res.data.items)
         if(res.data?.items.length <=0){
           setEmpty(true);
         }
@@ -126,6 +131,28 @@ const DisplayUsers = () => {
       notifyErorr(err.message);
     }
   };
+
+  // sraech
+
+  // function for sreash on the site
+
+  const handleSearch = (event) => {
+    const query = event.target.value;
+    if (!query) {
+      setFilter(Users); // إذا خانة البحث فارغة، نعرض كل العناصر
+      return;
+    }
+
+    const filtered = Users.filter((us) =>
+      us.fullName.toLowerCase().includes(query.toLowerCase())||
+      us.email.toLowerCase().includes(query.toLowerCase())||
+      us.phoneNumber.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilter(filtered);
+  };
+
+
+
   if (Loading) {
     return (
       <Box
@@ -200,28 +227,40 @@ const DisplayUsers = () => {
   }
   return (
     <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignSelf: "center",
-        width: "100%",
-
-
-        boxShadow:
-          "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
-      }}
+    className="Display-Item-Continer"
     >
       <ToastContainer />
-      <Table >
-        <TableHead
-          sx={{
-            backgroundColor: "rgb(240, 240, 175, 1)",
-            alignContent:"center"
-            
-          
-          }}
+      <Box className="Button_Search_Panel">
+        <Button
+          startIcon={<Add />}
+          component={Link}
+          to={`/users/create`}
+          variant="contained"
+          className="create-button"
         >
-          <TableRow>
+          {t("new_item")}
+        </Button>
+        {/* البحث */}
+        <TextField
+          variant="outlined"
+          placeholder={"Type.."}
+          onChange={(e) => handleSearch(e)}
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon className="search-icon" />
+              </InputAdornment>
+            ),
+            className: "search-input",
+          }}
+        />
+      </Box>
+      <Table  className="Table">
+        <TableHead className="TableHead"
+
+        >
+          <TableRow >
             <TableCell>{t("Image")}</TableCell>
             <TableCell>{t("Name")}</TableCell>
             <TableCell>{t("email")}</TableCell>
@@ -234,16 +273,11 @@ const DisplayUsers = () => {
           </TableRow>
         </TableHead>
         <TableBody sx={{backgroundColor:"rgba(255, 255, 255, 0.966)"}}>
-          {(Users || []).map((item, index) => {
+          {(Filter?.length ? Filter : []).map((item, index) => {
             return (
               <TableRow
                 key={index}
-                sx={{
-                  ":hover": {
-                    backgroundColor: "rgb(141, 189, 189)",
-                    boxShadow: " 0px 6px 0px rgb(240, 240, 175, 1)",
-                  },
-                }}
+                className="TableRow"
               >
                 <TableCell>
                   {" "}
@@ -287,19 +321,11 @@ const DisplayUsers = () => {
       </Table>
       <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
         <Pagination
-           sx={{
-            "& .MuiPaginationItem-root": {
-              color: "rgb(56, 122, 122)", // لون النص
-            },
-            "& .Mui-selected": {
-              backgroundColor: "rgb(56, 122, 122)", // خلفية الصفحة المختارة
-              color: "#fff", // لون نص الصفحة المختارة
-            },
-          }}
+className="Pagination"
           count={totalPages}
           page={currentPage}
           onChange={(e, page) => setCurrentPage(page)}
-          color="primary"
+          
         />
       </Box>
     </Box>

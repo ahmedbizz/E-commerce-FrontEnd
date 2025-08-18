@@ -6,10 +6,10 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  IconButton,
+  TextField,
   Avatar,
   Typography,
-  Button,
+  Button,InputAdornment 
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -21,6 +21,8 @@ import ArrowBack from "@mui/icons-material/ArrowBack";
 import { ToastContainer, toast } from "react-toastify";
 import Checkbox from "@mui/material/Checkbox";
 import { useParams } from "react-router-dom";
+import SearchIcon from "@mui/icons-material/Search";
+
 const AssginUserToGroupUI = () => {
   const { t } = useTranslation();
   const { id } = useParams();
@@ -65,9 +67,11 @@ const AssginUserToGroupUI = () => {
   const [Users, setUsers] = useState([]);
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [Filter, setFilter] = useState([]);
   useEffect(() => {
     GetUsers()
-      .then((res) => setUsers(res.data))
+      .then((res) => {setUsers(res.data.items)
+        setFilter(res.data.items)})
       .catch((err) => {
         notifyErorr(err);
         setError(true);
@@ -110,6 +114,25 @@ const AssginUserToGroupUI = () => {
       notifyErorr("Group assgin failed");
     }
 
+  };
+
+    // sraech
+
+  // function for sreash on the site
+
+  const handleSearch = (event) => {
+    const query = event.target.value;
+    if (!query) {
+      setFilter(Users); // إذا خانة البحث فارغة، نعرض كل العناصر
+      return;
+    }
+
+    const filtered = Users.filter((us) =>
+    us.fullName.toLowerCase().includes(query.toLowerCase())||
+    us.email.toLowerCase().includes(query.toLowerCase())||
+    us.phoneNumber.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilter(filtered);
   };
 
   if (Loading) {
@@ -155,25 +178,30 @@ const AssginUserToGroupUI = () => {
     );
   }
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignSelf: "center",
-        width: "100%",
+    <Box   className="Display-Item-Continer">
+    
+      <ToastContainer/>
+      <Box className="Button_Search_Panel">
 
-        boxShadow:
-          "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
-      }}
-    >
-      <ToastContainer />
-      <Table>
-        <TableHead
-          sx={{
-            backgroundColor: "rgb(240, 240, 175, 1)",
-            alignContent: "center",
+        {/* البحث */}
+        <TextField
+          variant="outlined"
+          placeholder={"Type.."}
+          onChange={(e) => handleSearch(e)}
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon className="search-icon" />
+              </InputAdornment>
+            ),
+            className: "search-input",
           }}
-        >
+        />
+      </Box>
+
+      <Table className="Table">
+        <TableHead   className="TableHead">
           <TableRow>
             <TableCell>{t("Image")}</TableCell>
             <TableCell>{t("Name")}</TableCell>
@@ -186,7 +214,7 @@ const AssginUserToGroupUI = () => {
           </TableRow>
         </TableHead>
         <TableBody sx={{ backgroundColor: "rgba(255, 255, 255, 0.966)" }}>
-          {(Users || []).map((item, index) => {
+          {(Filter.length?Filter:[]).map((item, index) => {
             return (
               <TableRow
                 key={index}

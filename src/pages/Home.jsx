@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { GetProducts } from "../services/productService";
 import ProductCard from "../components/ProductCard/ProductCard";
-import Panel from "../components/Panel/Panel";
+
 import { Box, Grid, IconButton, CircularProgress } from "@mui/material";
 import { ArrowForward, ArrowBack } from "@mui/icons-material"; // إضافة أيقونات الأسهم
 export default function Home() {
@@ -41,7 +41,7 @@ export default function Home() {
   };
   return (
     <Box className="Products-Main-container">
-      <Panel/>
+  
       <Box
         sx={{
           display: "flex",

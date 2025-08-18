@@ -1,13 +1,13 @@
 import * as React from "react";
-import { Alert, CircularProgress } from "@mui/material";
+import { Alert, CircularProgress,Card } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import MuiCard from "@mui/material/Card";
+
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/material/styles";
+
 import {
   UpdateWareHouseById,
   GetWareHouseByID,
@@ -19,23 +19,7 @@ import { Link } from "react-router-dom";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import "../../../styles/global.css";
 import { useParams } from "react-router-dom";
-const Card = styled(MuiCard)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  alignSelf: "center",
-  width: "100%",
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
-  boxShadow:
-    "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
-  [theme.breakpoints.up("sm")]: {
-    width: "450px",
-  },
-  ...theme.applyStyles("dark", {
-    boxShadow:
-      "hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px",
-  }),
-}));
+
 const UpdateWareHouse = () => {
   const { id } = useParams();
   const { t } = useTranslation();
@@ -139,8 +123,8 @@ const UpdateWareHouse = () => {
   }
 
   return (
-    <Box className="WareHouseUpdatePageContiner">
-      <Card variant="outlined">
+    <Box className="Card-Continer">
+      <Card className="Card" variant="outlined">
         <ToastContainer />
         <Box sx={{ display: { xs: "flex", md: "none" } }}></Box>
         <Typography

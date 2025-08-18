@@ -1,35 +1,21 @@
 import * as React from 'react';
-import {Alert,CircularProgress} from '@mui/material'
+import {Alert,CircularProgress,Card} from '@mui/material'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import MuiCard from '@mui/material/Card';
+
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
+
 import { AddWareHouse } from "../../../services/WareHouseService";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ToastContainer, toast } from "react-toastify";
+import ArrowBack from "@mui/icons-material/ArrowBack";
+import { Link } from "react-router-dom";
 import "../../../styles/global.css"
-const Card = styled(MuiCard)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignSelf: 'center',
-  width: '100%',
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
-  boxShadow:
-    'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
-  [theme.breakpoints.up('sm')]: {
-    width: '450px',
-  },
-  ...theme.applyStyles('dark', {
-    boxShadow:
-      'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
-  }),
-}));
+
 const CreateWareHouse = () => {
   const { t } = useTranslation();
   const [error, setError] = useState('');
@@ -119,8 +105,8 @@ const CreateWareHouse = () => {
 
 
   return (
-<Box className="WareHouseCreatePageContiner" sx={{display:"flex", justifyContent:"center"}} >
-      <Card variant="outlined">
+<Box className="Card-Continer" sx={{display:"flex", justifyContent:"center"}} >
+      <Card className='Card' variant="outlined">
         <ToastContainer/>
         <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
       
@@ -201,6 +187,19 @@ const CreateWareHouse = () => {
           
           <Button type="submit"  disabled={loading} fullWidth variant="contained" sx={{backgroundColor:"rgb(56, 122, 122)",boxShadow:"0px 6px 0px rgb(240, 240, 175, 1)"}} onClick={validateInputs}>
           {loading ? <CircularProgress size={24} /> : t("Save")}
+          </Button>
+          <Button
+            startIcon={<ArrowBack />}
+            component={Link}
+            to={`/wareHouses`}
+            sx={{
+              backgroundColor: "rgb(200, 122, 122)",
+              boxShadow: "0px 6px 0px rgb(240, 240, 175, 1)",
+            }}
+            fullWidth
+            variant="contained"
+          >
+            {t("Back")}
           </Button>
   
         </Box>

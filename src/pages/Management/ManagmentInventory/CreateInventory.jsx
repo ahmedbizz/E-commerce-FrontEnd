@@ -6,36 +6,18 @@ import {
   CircularProgress,
   Alert,
   Select,
-  MenuItem,Typography
+  MenuItem,Typography,Card
 } from "@mui/material";
 import { addInventory } from "../../../services/InventoryService";
 import { GetWareHouses } from "../../../services/WareHouseService";
 import { GetProducts } from "../../../services/productService";
-import MuiCard from "@mui/material/Card";
-import { styled } from "@mui/material/styles";
+
 import { ToastContainer, toast } from "react-toastify";
 import FormControl from "@mui/material/FormControl";
 import { useTranslation } from "react-i18next";
-const Card = styled(MuiCard)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  alignSelf: "center",
-  width: "100%",
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
-  margin: "auto",
-  // maxHeight: '100dvh', // لتجنب تجاوز الشاشة
-  // overflowY: 'auto',    // لإظهار سكرول إذا زاد المحتوى
-  boxShadow:
-    "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
-  [theme.breakpoints.up("sm")]: {
-    width: "450px",
-  },
-  ...theme.applyStyles("dark", {
-    boxShadow:
-      "hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px",
-  }),
-}));
+import ArrowBack from "@mui/icons-material/ArrowBack";
+import { Link } from "react-router-dom";
+
 export default function CreateInventory() {
   const { t } = useTranslation();
   const notify = (value) => {
@@ -134,92 +116,107 @@ export default function CreateInventory() {
   };
 
   return (
-    <Card variant="outlined">
-      <ToastContainer />
-      <Typography
-          component="h1"
-          variant="h4"
-          sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+<Box className="Card-Continer">
+      <Card className="Card" variant="outlined">
+        <ToastContainer />
+        <Typography
+            component="h1"
+            variant="h4"
+            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+          >
+            {t("Add product to WareHouse")}
+          </Typography>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {success}
+          </Alert>
+        )}
+  
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
         >
-          {t("Add product to WareHouse")}
-        </Typography>
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
-        </Alert>
-      )}
-      {success && (
-        <Alert severity="success" sx={{ mb: 2 }}>
-          {success}
-        </Alert>
-      )}
-
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-      >
-        <FormControl>
-          <Select
-            name="WarehouseId"
-            required
-            value={formData.WarehouseId}
-            onChange={handleChange}
-            fullWidth
-            sx={{ mb: 2 }}
-          >
-            <MenuItem value="">
-              <em>
-                {t("Select")}-{t("Warehouses")}
-              </em>
-            </MenuItem>
-            {(Warehouses || []).map((wh) => (
-              <MenuItem key={wh.id} value={wh.id}>
-                {wh.name}
+          <FormControl>
+            <Select
+              name="WarehouseId"
+              required
+              value={formData.WarehouseId}
+              onChange={handleChange}
+              fullWidth
+              sx={{ mb: 2 }}
+            >
+              <MenuItem value="">
+                <em>
+                  {t("Select")}-{t("Warehouses")}
+                </em>
               </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <FormControl>
-          <Select
-            name="ProductId"
-            required
-            value={formData.ProductId}
-            onChange={handleChange}
-            fullWidth
-            sx={{ mb: 2 }}
-          >
-            <MenuItem value="">
-              <em>
-                {t("Select")}-{t("Products")}
-              </em>
-            </MenuItem>
-            {(Products || []).map((p) => (
-              <MenuItem key={p.id} value={p.id}>
-                {p.name}
+              {(Warehouses || []).map((wh) => (
+                <MenuItem key={wh.id} value={wh.id}>
+                  {wh.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+  
+          <FormControl>
+            <Select
+              name="ProductId"
+              required
+              value={formData.ProductId}
+              onChange={handleChange}
+              fullWidth
+              sx={{ mb: 2 }}
+            >
+              <MenuItem value="">
+                <em>
+                  {t("Select")}-{t("Products")}
+                </em>
               </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <FormControl>
-          <TextField
-            label={t("Quantity")}
-            required
-            name="Quantity"
-            type="number"
+              {(Products || []).map((p) => (
+                <MenuItem key={p.id} value={p.id}>
+                  {p.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+  
+          <FormControl>
+            <TextField
+              label={t("Quantity")}
+              required
+              name="Quantity"
+              type="number"
+              fullWidth
+              sx={{ mb: 2 }}
+              value={formData.Quantity}
+              onChange={handleChange}
+            />
+          </FormControl>
+  
+          <Button type="submit" variant="contained" fullWidth disabled={loading} sx={{backgroundColor:"rgb(56, 122, 122)",boxShadow:"0px 6px 0px rgb(240, 240, 175, 1)"}}>
+            {loading ? <CircularProgress size={24} /> : t("Save")}
+          </Button>
+          <Button
+            startIcon={<ArrowBack />}
+            component={Link}
+            to={`/inventorys`}
+            sx={{
+              backgroundColor: "rgb(200, 122, 122)",
+              boxShadow: "0px 6px 0px rgb(240, 240, 175, 1)",
+            }}
             fullWidth
-            sx={{ mb: 2 }}
-            value={formData.Quantity}
-            onChange={handleChange}
-          />
-        </FormControl>
-
-        <Button type="submit" variant="contained" fullWidth disabled={loading}>
-          {loading ? <CircularProgress size={24} /> : t("Save")}
-        </Button>
-      </Box>
-    </Card>
+            variant="contained"
+          >
+            {t("Back")}
+          </Button>
+        </Box>
+      </Card>
+</Box>
   );
 }
