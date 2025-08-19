@@ -9,25 +9,28 @@ import {
   IconButton,
   Typography,
   Button,
-  Pagination,  TextField,
+  Pagination,
+  TextField,
   InputAdornment,
 } from "@mui/material";
+
+import SearchIcon from "@mui/icons-material/Search";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
 import {
-  GetInventorys,
-  DeleteInventoryByID,
-} from "../../../services/InventoryService";
+  GetSizes,
+  DeleteSizeByID,
+} from "../../../services/SizeService";
 import { useState, useEffect } from "react";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import EditNote from "@mui/icons-material/EditNote";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import Avatar from "@mui/material/Avatar";
 import Add from "@mui/icons-material/Add";
-import SearchIcon from "@mui/icons-material/Search";
 
-const DispalyInventory = () => {
+const DispalySize = () => {
   const navigete = useNavigate();
   const { t } = useTranslation();
   const notify = (value) => {
@@ -54,34 +57,29 @@ const DispalyInventory = () => {
       theme: "light",
     });
   };
-  // for get all Inventory in list
-  const [Inventorys, setInventorys] = useState([]);
+  // for get all Size in list
+  const [Sizes, setSizes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [isEmpty, setEmpty] = useState(false);
   const [Filter, setFilter] = useState([]);
-
-  const fetchInventorys = async (page = 1) => {
-    GetInventorys(page)
+  const fetchSizes = async (page = 1) => {
+    GetSizes((page = 1))
       .then((res) => {
-    
-        setInventorys(res.data.items);
-        setFilter(res.data.items);
-    
-        if (res.data?.items.length <= 0) {
+        console.log(res)
+        setSizes(res.data);
+        setFilter(res.data);
+        if (res.data?.length <= 0) {
           setEmpty(true);
         }
         setCurrentPage(res.data.currentPage);
         setTotalPages(res.data.totalPages);
       })
-
       .catch((err) => {
-    
         if (err.response?.status === 404) {
           notifyErorr("لا يوجد مستخدمين في هذه المجموعة.");
-
           setEmpty(true);
         } else {
           notifyErorr("حدث خطأ أثناء جلب البيانات.");
@@ -91,13 +89,13 @@ const DispalyInventory = () => {
       .finally(() => setLoading(false));
   };
   useEffect(() => {
-    fetchInventorys(currentPage);
+    fetchSizes(currentPage);
   }, [currentPage]);
 
   const Refresh = async (page = currentPage) => {
     setLoading(true);
     try {
-      const res = await GetInventorys(page);
+      const res = await GetSizes(page);
       if (!res.data.items || res.data.items.length === 0) {
         // إذا الصفحة أصبحت فارغة بعد الحذف
         const newPage = page > 1 ? page - 1 : 1;
@@ -105,11 +103,11 @@ const DispalyInventory = () => {
           setCurrentPage(newPage);
           return Refresh(newPage); // إعادة المحاولة بالصفحة الجديدة
         } else {
-          setInventorys([]);
+          setSizes([]);
           setEmpty(true);
         }
       } else {
-        setInventorys(res.data.items);
+        setSizes(res.data.items);
         setCurrentPage(res.data.currentPage);
         setTotalPages(res.data.totalPages);
         setEmpty(false);
@@ -127,10 +125,10 @@ const DispalyInventory = () => {
     }
   };
 
-  // for delete Inventory
+  // for delete Size
   const deleteByID = async (id) => {
     try {
-      const res = await DeleteInventoryByID(id);
+      const res = await DeleteSizeByID(id);
       notify(res.data.message);
       Refresh(currentPage); // تحديث الصفحة بعد الحذف
     } catch (err) {
@@ -138,25 +136,23 @@ const DispalyInventory = () => {
     }
   };
 
-
-    // sraech
+  // sraech
 
   // function for sreash on the site
 
   const handleSearch = (event) => {
     const query = event.target.value;
     if (!query) {
-      setFilter(Inventorys); // إذا خانة البحث فارغة، نعرض كل العناصر
+      setFilter(Sizes); // إذا خانة البحث فارغة، نعرض كل العناصر
       return;
     }
 
-    const filtered = Inventorys.filter((us) =>
-      us.warehouseName.toLowerCase().includes(query.toLowerCase())||
-        us.productName.toLowerCase().includes(query.toLowerCase())
-
+    const filtered = Sizes.filter((Cat) =>
+      Cat.name.toLowerCase().includes(query.toLowerCase())
     );
     setFilter(filtered);
   };
+
   if (Loading) {
     return (
       <Box
@@ -197,7 +193,7 @@ const DispalyInventory = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => navigete("/Inventory/create")} // أو أي مسار إضافة المنتج
+          onClick={() => navigete("/Sizes/create")} // أو أي مسار إضافة المنتج
         >
           {t("new_item")}
         </Button>
@@ -231,14 +227,13 @@ const DispalyInventory = () => {
     );
   }
   return (
-    <Box   className="Display-Item-Continer">
-    
-      <ToastContainer/>
+    <Box className="Display-Item-Continer">
+      <ToastContainer />
       <Box className="Button_Search_Panel">
         <Button
           startIcon={<Add />}
           component={Link}
-          to={`/inventory/create`}
+          to={`/Size/create`}
           variant="contained"
           className="create-button"
         >
@@ -260,36 +255,28 @@ const DispalyInventory = () => {
           }}
         />
       </Box>
-
       <Table className="Table">
-        <TableHead   className="TableHead">
-          <TableRow >
-          
-            <TableCell>{t("Products")}</TableCell>
-            <TableCell>{t("Warehouses")}</TableCell>
-            <TableCell>{t("Quantity")}</TableCell>
+        <TableHead className="TableHead">
+          <TableRow>
 
+            <TableCell>{t("Name")}</TableCell>
+            <TableCell>{t("Type")}</TableCell>
+            <TableCell align="left">{t("Create At")}</TableCell>
             <TableCell>{t("Action")}</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody sx={{ backgroundColor: "rgba(255, 255, 255, 0.966)" }}>
-          {(Filter.length?Filter:[]).map((item, index) => {
+        <TableBody>
+          {(Filter?.length ? Filter : []).map((item, index) => {
             return (
-              <TableRow
-              className="TableRow"
-                key={index}
+              <TableRow key={index} className="TableRow">
 
-              >
-          
-              
-                <TableCell align="left">{item.productName}</TableCell>
-                <TableCell align="left">{item.warehouseName}</TableCell>
-                <TableCell align="left">{item.quantity}</TableCell>
-      
+                <TableCell>{item.name}</TableCell>
+                <TableCell align="left">{item.type}</TableCell>
+                <TableCell align="left">{item.createdAt}</TableCell>
                 <TableCell align="left">
                   <IconButton
                     component={Link}
-                    to={`/Inventory/${item.id}`}
+                    to={`/Size/${item.id}`}
                     sx={{ color: "green" }}
                   >
                     <EditNote />
@@ -315,11 +302,10 @@ const DispalyInventory = () => {
           count={totalPages}
           page={currentPage}
           onChange={(e, page) => setCurrentPage(page)}
-          color="primary"
         />
       </Box>
     </Box>
   );
 };
 
-export default DispalyInventory;
+export default DispalySize;

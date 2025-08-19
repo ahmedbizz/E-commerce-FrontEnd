@@ -30,6 +30,10 @@ import AssginRoleToGroupUI from "../pages/Management/GroupManagment/AssginRoleTo
 import CreateCategory from "../pages/Management/ManagmentCategory/CreateCategory";
 import DispalyCategory from "../pages/Management/ManagmentCategory/DisplayCategory";
 import UpdateCategory from "../pages/Management/ManagmentCategory/UpdateCategory";
+// Brand Managment
+import CreateBrand from "../pages/ManagmentBrans/CreateBrands";
+import DispalyBrand from "../pages/ManagmentBrans/DisplayBrans";
+import UpdateBrand from "../pages/ManagmentBrans/UpdateBrands";
 // Managment WhareHouse
 import CreateWareHouse from "../pages/Management/ManagmentWareHouse/CreateWareHouse";
 import DispalyWareHouse from "../pages/Management/ManagmentWareHouse/DisplayWareHouse";
@@ -38,6 +42,10 @@ import UpdateWareHouse from "../pages/Management/ManagmentWareHouse/UpdateWareHo
 import AddProduct from "../pages/Management/ProductManagment/AddProduct";
 import DisplayProducts from "../pages/Management/ProductManagment/DisplayProducts";
 import UpdateProduct from "../pages/Management/ProductManagment/UpdateProduct";
+//  Managment Size
+import CreateSize from "../pages/Management/ManagmentSize/CreateSize";
+import DispalySize from "../pages/Management/ManagmentSize/DispalySizes";
+import UpdateSize from "../pages/Management/ManagmentSize/UpdateSize";
 // Managment inventory
 import CreateInventory from "../pages/Management/ManagmentInventory/CreateInventory";
 import DispalyInventory from "../pages/Management/ManagmentInventory/DisplayInventory";
@@ -78,6 +86,14 @@ export default function AppRouter() {
           <Route path="/categorys" element={<DispalyCategory />} />
           <Route path="/categorys/create" element={<CreateCategory />} />
           <Route path="/categorys/:id" element={<UpdateCategory />} />
+          {/* Managment Category */}
+          <Route path="/Brands" element={<DispalyBrand />} />
+          <Route path="/Brands/create" element={<CreateBrand />} />
+          <Route path="/Brands/:id" element={<UpdateBrand />} />
+            {/* Managment Size */}
+            <Route path="/Sizes" element={<DispalySize />} />
+          <Route path="/Size/create" element={<CreateSize />} />
+          <Route path="/Size/:id" element={<UpdateSize />} />
           {/* Management WhareHouse */}
           <Route path="/wareHouses" element={<DispalyWareHouse />} />
           <Route path="/wareHouse/create" element={<CreateWareHouse />} />

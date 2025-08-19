@@ -17,6 +17,7 @@ import {
 import { Link } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Dashboard from "@mui/icons-material/Dashboard";
 import { AuthContext } from "../../context/AuthContext"; // تأكد من المسار الصحيح
 import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
@@ -44,6 +45,7 @@ export default function ManageDashboard() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorElang, setAnchorElang] = useState(null);
   const [anchorElProducts, setAnchorElProducts] = useState(null);
+  const [anchorElWarehouses, setAnchorElWarehouses] = useState(null);
   const [anchorElUsers, setAnchorElUsers] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
   // to cahange langueg
@@ -82,6 +84,13 @@ export default function ManageDashboard() {
   const handleCloseProducts = () => {
     setAnchorElProducts(null);
   };
+  const handleOpenWarehouses = (event) => {
+    setAnchorElWarehouses(event.currentTarget);
+  };
+
+  const handleCloseWarehouses = () => {
+    setAnchorElWarehouses(null);
+  };
 
   const handleOpenUsers = (event) => {
     setAnchorElUsers(event.currentTarget);
@@ -93,7 +102,7 @@ export default function ManageDashboard() {
   return (
     <div>
       {/* headar 1 section  */}
-      <Box id="Box_header_1" sx={{}}>
+      <Box id="Box_header_1">
         <List id="EN_AR_List" aria-label="Device settings">
           <ListItemButton
             id="lock-button"
@@ -127,175 +136,199 @@ export default function ManageDashboard() {
           ))}
         </Menu>
       </Box>
-      <AppBar className="AppBarHeader" position="static">
-        <Toolbar>
+      <AppBar className="AppBarDashBoard" position="static">
+        <Toolbar sx={{ display: "flex", justifyContent:"space-between", alignItems: "center", gap: 2 }}>
           {/* الشعار */}
-          <Typography
-            variant="h6"
-            component={Link}
-            to="/"
-            sx={{ textDecoration: "none", color: "white", flexGrow: 1 }}
-          >
-            🛒 {t("Home")}
-          </Typography>
-          {/* إدارة المنتجات */}
-          <Button color="inherit" onClick={handleOpenProducts}>
-            {t("Manage Product")}
+          <Button   startIcon={<Dashboard/>} variant="h6" component={Link} to="/">
+             {t("Home")}
           </Button>
-          <Menu
-            anchorEl={anchorElProducts}
-            open={Boolean(anchorElProducts)}
-            onClose={handleCloseProducts}
-          >
-                        <MenuItem
-              component={Link}
-              to="/products"
-              onClick={handleCloseProducts}
-            >
-              {t("Display Products")}
-            </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/product/create"
-              onClick={handleCloseProducts}
-            >
-              {t("Create Product")}
-            </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/categorys"
-              onClick={handleCloseProducts}
-            >
-              {t("Display Category")}
-            </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/categorys/create"
-              onClick={handleCloseProducts}
-            >
-              {t("Create Category")}
-            </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/wareHouses"
-              onClick={handleCloseProducts}
-            >
-              {t("Display WareHouse")}
-            </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/wareHouse/create"
-              onClick={handleCloseProducts}
-            >
-              {t("Create WareHouse")}
-            </MenuItem>
+            <Box>
+                        {/* إدارة المنتجات */}
+                        <Button color="inherit" onClick={handleOpenProducts}>
+                          {t("Products")}
+                        </Button>
+                        <Menu
+                          anchorEl={anchorElProducts}
+                          open={Boolean(anchorElProducts)}
+                          onClose={handleCloseProducts}
+                        >
+                          <MenuItem
+                            component={Link}
+                            to="/products"
+                            onClick={handleCloseProducts}
+                          >
+                            {t("Display Products")}
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/product/create"
+                            onClick={handleCloseProducts}
+                          >
+                            {t("Create Product")}
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/categorys"
+                            onClick={handleCloseProducts}
+                          >
+                            {t("Display Category")}
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/categorys/create"
+                            onClick={handleCloseProducts}
+                          >
+                            {t("Create Category")}
+                          </MenuItem>
 
-            <MenuItem
-              component={Link}
-              to="/inventorys"
-              onClick={handleCloseProducts}
-            >
-              {t("Display Inventory")}
-            </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/inventory/create"
-              onClick={handleCloseProducts}
-            >
-              {t("Create Inventory")}
-            </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/Brands"
+                            onClick={handleCloseProducts}
+                          >
+                            {t("Display Brand")}
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/Brands/create"
+                            onClick={handleCloseProducts}
+                          >
+                            {t("Create Brand")}
+                          </MenuItem>
 
-          </Menu>
+                          <MenuItem
+                            component={Link}
+                            to="/Sizes"
+                            onClick={handleCloseProducts}
+                          >
+                            {t("Display Size")}
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/Size/create"
+                            onClick={handleCloseProducts}
+                          >
+                            {t("Create Size")}
+                          </MenuItem>
+                        </Menu>
+                        {/* ادارة المستودع والمخزون  */}
+              
+                        <Button color="inherit" onClick={handleOpenWarehouses}>
+                          {t("Warehouses")}
+                        </Button>
+                        <Menu
+                          anchorEl={anchorElWarehouses}
+                          open={Boolean(anchorElWarehouses)}
+                          onClose={handleCloseWarehouses}
+                        >
+                          <MenuItem
+                            component={Link}
+                            to="/wareHouses"
+                            onClick={handleCloseWarehouses}
+                          >
+                            {t("Display WareHouse")}
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/wareHouse/create"
+                            onClick={handleCloseWarehouses}
+                          >
+                            {t("Create WareHouse")}
+                          </MenuItem>
+              
+                          <MenuItem
+                            component={Link}
+                            to="/inventorys"
+                            onClick={handleCloseWarehouses}
+                          >
+                            {t("Display Inventory")}
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/inventory/create"
+                            onClick={handleCloseWarehouses}
+                          >
+                            {t("Create Inventory")}
+                          </MenuItem>
+                        </Menu>
+              
+                        {/* إدارة المستخدمين */}
+                        <Button color="inherit" onClick={handleOpenUsers}>
+                          {t("Users")}
+                        </Button>
+                        <Menu
+                          anchorEl={anchorElUsers}
+                          open={Boolean(anchorElUsers)}
+                          onClose={handleCloseUsers}
+                        >
+                          <MenuItem component={Link} to="/users" onClick={handleCloseUsers}>
+                            {t("Display Users")}
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/users/create"
+                            onClick={handleCloseUsers}
+                          >
+                            {t("Create User")}
+                          </MenuItem>
+                          <MenuItem component={Link} to="/role" onClick={handleCloseUsers}>
+                            {t("Display Role")}
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/role/create"
+                            onClick={handleCloseUsers}
+                          >
+                            {t("Create Role")}
+                          </MenuItem>
+              
+                          <MenuItem component={Link} to="/groups" onClick={handleCloseUsers}>
+                            {t("Display Groups")}
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/group/create"
+                            onClick={handleCloseUsers}
+                          >
+                            {t("Create Group")}
+                          </MenuItem>
+                        </Menu>
+              
+            </Box>
 
-          {/* إدارة المستخدمين */}
-          <Button color="inherit" onClick={handleOpenUsers}>
-            {t("Manage Users")}
-          </Button>
-          <Menu
-            anchorEl={anchorElUsers}
-            open={Boolean(anchorElUsers)}
-            onClose={handleCloseUsers}
-          >
-            <MenuItem component={Link} to="/users" onClick={handleCloseUsers}>
-              {t("Display Users")}
-            </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/users/create"
-              onClick={handleCloseUsers}
-            >
-              {t("Create User")}
-            </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/role"
-              onClick={handleCloseUsers}
-            >
-              {t("Display Role")}
-            </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/role/create"
-              onClick={handleCloseUsers}
-            >
-              {t("Create Role")}
-            </MenuItem>
-
-            <MenuItem
-              component={Link}
-              to="/groups"
-              onClick={handleCloseUsers}
-            >
-              {t("Display Groups")}
-            </MenuItem>
-            <MenuItem
-              component={Link}
-              to="/group/create"
-              onClick={handleCloseUsers}
-            >
-              {t("Create Group")}
-            </MenuItem>
-
-
-          </Menu>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            {/* صورة المستخدم وقائمة */}
-            {user ? (
-              <>
-                <IconButton onClick={handleMenu} size="large" sx={{ p: 0 }}>
-                  <Avatar
-                    alt={user.name}
-                    src={
-                      user.image
-                        ? `https://localhost:7137/images/Users/${user.image}`
-                        : "/user-avatar.jpg"
-                    }
-                  />
-                </IconButton>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  <MenuItem
-                    component={Link}
-                    to="/profile"
-                    onClick={handleClose}
-                  >
-                    {t("Profile")}
-                  </MenuItem>
-                  <MenuItem onClick={handleLogout}> {t("Logout")}</MenuItem>
-                </Menu>
-              </>
-            ) : (
-              <Link
-                to="/login"
-                style={{ color: "white", textDecoration: "none" }}
-              >
-                {t("Login")}
-              </Link>
-            )}
-          </Box>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                {/* صورة المستخدم وقائمة */}
+                {user ? (
+                  <>
+                    <IconButton onClick={handleMenu} size="large" sx={{ p: 0 }}>
+                      <Avatar
+                        alt={user.name}
+                        src={
+                          user.image
+                            ? `https://localhost:7137/images/Users/${user.image}`
+                            : "/user-avatar.jpg"
+                        }
+                      />
+                    </IconButton>
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={handleClose}
+                    >
+                      <MenuItem
+                        component={Link}
+                        to="/profile"
+                        onClick={handleClose}
+                      >
+                        {t("Profile")}
+                      </MenuItem>
+                      <MenuItem onClick={handleLogout}> {t("Logout")}</MenuItem>
+                    </Menu>
+                  </>
+                ) : (
+                  <Link to="/login">{t("Login")}</Link>
+                )}
+              </Box>
         </Toolbar>
       </AppBar>
     </div>

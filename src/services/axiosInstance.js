@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-
+let isRedirecting = false;
 const instance = axios.create({
   baseURL: 'https://localhost:7137/api',
 });
@@ -17,11 +17,14 @@ instance.interceptors.request.use(config => {
 instance.interceptors.response.use(
   response => response,
   error => {
-    if (error.response && error.response.status === 401) {
-      // توكن منتهي أو غير صالح
-      isRedirecting = true;  // منع التوجيه المتكرر
-      Cookies.remove("token"); // مسح التوكن
-      window.location.href = "/login"; // إعادة توجيه لتسجيل الدخول
+  
+    if (error.response && error.response.status === 401 && !isRedirecting) {
+      console.log(error.response.status)
+      if (window.location.pathname !== "/login") {
+        isRedirecting = true;
+        Cookies.remove("token");
+        window.location.href = "/login";
+      }
     }
     return Promise.reject(error);
   }

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Box, TextField, Button, CircularProgress, Alert, Select ,MenuItem,Card} from "@mui/material";
 import { addProduct ,getCategories} from "../../../services/productService";
+import { GetBrands} from "../../../services/BransService";
+import { GetTargetGroup} from "../../../services/TargetGroupService";
 
 import Avatar from "@mui/material/Avatar";
 
@@ -17,31 +19,38 @@ export default function AddProductForm() {
     Price: "",
     CostPrice: "",
     CategoryId: "",
+    BrandId:"",
     SupplierId: "",
+    TargetGroupId:"",
     clientFile: null,
   });
 
   const [preview, setPreview] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [brandsRes, setbrands] = useState([]);
+  const [TargetGroupRes, setTargetGroup] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  useEffect(() => {
     // تحميل القوائم من الـ API
-    async function fetchData() {
-      try {
-        const catRes = await getCategories();
-        setCategories(catRes.data)
-
-
-      } catch {
-        setError("فشل في تحميل البيانات المساعدة.");
+    useEffect(() => {
+      async function fetchData() {
+        try {
+          const catRes = await getCategories();
+          setCategories(catRes.data);
+          const brandsRes = await GetBrands();
+          setbrands(brandsRes.data.items);
+          const TargetGroup = await GetTargetGroup();
+          setTargetGroup(TargetGroup.data);
+        } catch {
+          setError("فشل في تحميل البيانات المساعدة.");
+        }
       }
-    }
-    fetchData();
-  }, []);
+      fetchData();
+    }, []);
+    
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -75,8 +84,13 @@ export default function AddProductForm() {
     try {
       const data = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
+        if(value !== null && value !== undefined && value !== "")
         data.append(key, value);
       });
+      for (let [key, value] of data.entries()) {
+        console.log(key, value);
+      }
+      
 
       await addProduct(data);
 
@@ -87,7 +101,9 @@ export default function AddProductForm() {
         Price: "",
         CostPrice: "",
         CategoryId: "",
+        BrandId:"",
         SupplierId: "",
+        TargetGroupId:"",
         clientFile: null,
       });
       setPreview(null);
@@ -178,9 +194,40 @@ export default function AddProductForm() {
     ))}
   </Select>
         </FormControl>
+
+        <FormControl>
+        <Select 
+    name="BrandId" 
+    value={formData.BrandId} 
+    onChange={handleChange} 
+    fullWidth 
+    sx={{ mb: 2 }}
+  >
+    <MenuItem value="">اختر الفئة</MenuItem>
+    {(brandsRes ||[]).map((B) => (
+      <MenuItem key={B.id} value={B.id}>{B.name}</MenuItem>
+    ))}
+  </Select>
+        </FormControl>
+      
+
+<FormControl>
+<Select 
+name="TargetGroupId" 
+value={formData.TargetGroupId} 
+onChange={handleChange} 
+fullWidth 
+sx={{ mb: 2 }}
+>
+<MenuItem value="">اختر الفئة</MenuItem>
+{(TargetGroupRes ||[]).map((t) => (
+<MenuItem key={t.id} value={t.id}>{t.name}</MenuItem>
+))}
+</Select>
+</FormControl>
         <select name="SupplierId" value={formData.SupplierId} onChange={handleChange} style={{ width: "100%", padding: 10, marginBottom: 20 }}>
           <option value="">اختر المورد</option>
-          {suppliers.map((sup) => (
+          {(suppliers || []).map((sup) => (
             <option key={sup.id} value={sup.id}>{sup.name}</option>
           ))}
         </select>
