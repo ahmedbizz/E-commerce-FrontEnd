@@ -91,45 +91,20 @@ const DispalyGroup = () => {
     fetchGroups(currentPage);
   }, [currentPage]);
 
-  const Refresh = async (page = currentPage) => {
-    setLoading(true);
-    try {
-      const res = await GetGroups(page);
-      if (!res.data.items || res.data.items.length === 0) {
-        // إذا الصفحة أصبحت فارغة بعد الحذف
-        const newPage = page > 1 ? page - 1 : 1;
-        if (newPage !== page) {
-          setCurrentPage(newPage);
-          return Refresh(newPage); // إعادة المحاولة بالصفحة الجديدة
-        } else {
-          setGroups([]);
-          setEmpty(true);
-        }
-      } else {
-        setGroups(res.data.items);
-        setCurrentPage(res.data.currentPage);
-        setTotalPages(res.data.totalPages);
-        setEmpty(false);
-      }
-    } catch (err) {
-      if (err.response?.status === 404) {
-        notifyErorr("لا يوجد مستودعات في هذه الصفحة.");
-        setEmpty(true);
-      } else {
-        notifyErorr("حدث خطأ أثناء جلب البيانات.");
-        setError(true);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+
 
   // for delete WareHouse
   const deleteByID = async (id) => {
     try {
       const res = await DeleteGroupByID(id);
       notify(res.data.message);
-      Refresh(currentPage); // تحديث الصفحة بعد الحذف
+      // تحديث القائمة بدون إعادة تحميل
+      const updatedList = Groups.filter((g) => g.id !== id);
+      setGroups(updatedList);
+      setFilter(updatedList);
+      if (updatedList.length === 0) {
+        setEmpty(true);
+      }
     } catch (err) {
       notifyErorr(err.message);
     }
@@ -236,7 +211,7 @@ const DispalyGroup = () => {
           variant="contained"
           className="create-button"
         >
-          {t("new_item")}
+          {t("new")}
         </Button>
         {/* البحث */}
         <TextField

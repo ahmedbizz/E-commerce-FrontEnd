@@ -56,6 +56,9 @@
     "Add product to WareHouse":"Add product to WareHouse",
     "Display Inventory":"Display Inventory",
     "Create Inventory":"Create Inventory",
-    "update_success":"updateing successfully"
+    "update_success":"updateing successfully",
+    "new":  "New",
+    "shop_Item":"Shop Our Icons",
+    "shop":"Shop"
   
   }

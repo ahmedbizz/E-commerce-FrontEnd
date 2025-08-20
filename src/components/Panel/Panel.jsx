@@ -1,13 +1,22 @@
 import { Box ,Button} from '@mui/material';
-import React from 'react';
+import {useState ,useEffect}from 'react';
+import {GetBrands} from "../../services/BransService"
 
 const Panel = () => {
-  const images = [
-    "../../public/Images/pexels-avneet-kaur-669191817-19294576.jpg",
-    "../../public/Images/pexels-craytive-1503009.jpg",
-    "../../public/Images/pexels-marcus-queiroga-silva-86421404-12363437.jpg",
-    "../../public/Images/pexels-wesleydavi-15336560.jpg",
-  ];
+  const [brandsRes, setbrands] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {  
+        const brandsRes = await GetBrands();
+        setbrands(brandsRes.data.items);
+      } catch(err) {
+        setbrands([]);
+      }
+    }
+    fetchData();
+  }, []);
+
   return (
 <Box className="Panel-container">
       <Box
@@ -16,25 +25,20 @@ const Panel = () => {
 
         }}
       >
-        {images.map((img, index) => (
+        {brandsRes.map((brand, index) => (
           <Box
           className='ImageBox'
             key={index}
-            sx={{
-              width: "100%",
-              height: "100%",
-              overflow: "hidden",      
-              boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-            }}
+
           >
             <Box
         
               component="img"
-              src={img}
+              src={`https://localhost:7137/images/Brands/${brand.imageUrl}`}
               alt={`Image ${index + 1}`}
               sx={{
                 width: "100%",
-                height: "100%",
+                height: "70vh",
                 objectFit: "cover",
               }}
             />

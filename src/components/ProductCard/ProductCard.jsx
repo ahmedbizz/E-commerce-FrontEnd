@@ -33,7 +33,7 @@ export default function ProductCard({ product }) {
 
 
   return (
-    <Card sx={{ maxWidth: 300, borderRadius: 2, boxShadow: 3 }}>
+    <Card className='Card'>
       <CardMedia
         component="img"
         height="200"

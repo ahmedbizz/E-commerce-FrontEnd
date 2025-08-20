@@ -9,25 +9,28 @@ import {
   IconButton,
   Typography,
   Button,
-  Pagination,  TextField,
+  Pagination,
+  TextField,
   InputAdornment,
 } from "@mui/material";
+
+import SearchIcon from "@mui/icons-material/Search";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
 import {
-  GetWareHouses,
-  DeleteWareHouseByID,
-} from "../../../services/WareHouseService";
+  GetTargetGroups,
+  DeleteTargetGroupByID,
+} from "../../../services/TargetGroupService";
 import { useState, useEffect } from "react";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import EditNote from "@mui/icons-material/EditNote";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import Avatar from "@mui/material/Avatar";
 import Add from "@mui/icons-material/Add";
-import SearchIcon from "@mui/icons-material/Search";
 
-const DispalyWareHouse = () => {
+const DispalyTargetGroup = () => {
   const navigete = useNavigate();
   const { t } = useTranslation();
   const notify = (value) => {
@@ -54,31 +57,29 @@ const DispalyWareHouse = () => {
       theme: "light",
     });
   };
-  // for get all WareHouse in list
-  const [WareHouses, setWareHouses] = useState([]);
+  // for get all TargetGroup in list
+  const [TargetGroups, setTargetGroups] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [isEmpty, setEmpty] = useState(false);
   const [Filter, setFilter] = useState([]);
-
-  const fetchWarehouses = async (page = 1) => {
-    GetWareHouses(page)
+  const fetchTargetGroups = async (page = 1) => {
+    GetTargetGroups((page = 1))
       .then((res) => {
-        setWareHouses(res.data.items);
-        setFilter(res.data.items);
-        if (res.data?.items.length <= 0) {
+      
+        setTargetGroups(res.data);
+        setFilter(res.data);
+        if (res.data?.length <= 0) {
           setEmpty(true);
         }
         setCurrentPage(res.data.currentPage);
         setTotalPages(res.data.totalPages);
       })
-
       .catch((err) => {
         if (err.response?.status === 404) {
           notifyErorr("لا يوجد مستخدمين في هذه المجموعة.");
-
           setEmpty(true);
         } else {
           notifyErorr("حدث خطأ أثناء جلب البيانات.");
@@ -88,53 +89,28 @@ const DispalyWareHouse = () => {
       .finally(() => setLoading(false));
   };
   useEffect(() => {
-    fetchWarehouses(currentPage);
+    fetchTargetGroups(currentPage);
   }, [currentPage]);
 
-  const Refresh = async (page = currentPage) => {
-    setLoading(true);
-    try {
-      const res = await GetWareHouses(page);
-      if (!res.data.items || res.data.items.length === 0) {
-        // إذا الصفحة أصبحت فارغة بعد الحذف
-        const newPage = page > 1 ? page - 1 : 1;
-        if (newPage !== page) {
-          setCurrentPage(newPage);
-          return Refresh(newPage); // إعادة المحاولة بالصفحة الجديدة
-        } else {
-          setWareHouses([]);
-          setEmpty(true);
-        }
-      } else {
-        setWareHouses(res.data.items);
-        setCurrentPage(res.data.currentPage);
-        setTotalPages(res.data.totalPages);
-        setEmpty(false);
-      }
-    } catch (err) {
-      if (err.response?.status === 404) {
-        notifyErorr("لا يوجد مستودعات في هذه الصفحة.");
-        setEmpty(true);
-      } else {
-        notifyErorr("حدث خطأ أثناء جلب البيانات.");
-        setError(true);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  // for delete WareHouse
+
+  // for delete TargetGroup
   const deleteByID = async (id) => {
     try {
-      const res = await DeleteWareHouseByID(id);
+      const res = await DeleteTargetGroupByID(id);
+      console.log(res)
       notify(res.data.message);
-      Refresh(currentPage); // تحديث الصفحة بعد الحذف
+      // تحديث القائمة بدون إعادة تحميل
+      const updatedList = TargetGroups.filter((g) => g.id !== id);
+      setTargetGroups(updatedList);
+      setFilter(updatedList);
+      if (updatedList.length === 0) {
+        setEmpty(true);
+      }
     } catch (err) {
       notifyErorr(err.message);
     }
   };
-
 
   // sraech
 
@@ -143,17 +119,15 @@ const DispalyWareHouse = () => {
   const handleSearch = (event) => {
     const query = event.target.value;
     if (!query) {
-      setFilter(WareHouses); // إذا خانة البحث فارغة، نعرض كل العناصر
+      setFilter(TargetGroups); // إذا خانة البحث فارغة، نعرض كل العناصر
       return;
     }
 
-    const filtered = WareHouses.filter((us) =>
-      us.name.toLowerCase().includes(query.toLowerCase())||
-      us.location.toLowerCase().includes(query.toLowerCase())
-      );
+    const filtered = TargetGroups.filter((Cat) =>
+      Cat.name.toLowerCase().includes(query.toLowerCase())
+    );
     setFilter(filtered);
   };
-
 
   if (Loading) {
     return (
@@ -167,14 +141,11 @@ const DispalyWareHouse = () => {
       >
         <CircularProgress
           sx={{ animation: "rotate 1.5s linear infinite" }}
-          size={80}
+          TargetGroup={80}
         />
       </Box>
     );
   }
-
-
-
   if (isEmpty) {
     return (
       <Box
@@ -188,7 +159,7 @@ const DispalyWareHouse = () => {
           textAlign: "center",
         }}
       >
-        <InventoryOutlinedIcon sx={{ fontSize: 80, color: "text.secondary" }} />
+        <InventoryOutlinedIcon sx={{ fontTargetGroup: 80, color: "text.secondary" }} />
         <Typography variant="h6" color="text.secondary">
           {t("There are no item added yet.")}
         </Typography>
@@ -198,7 +169,7 @@ const DispalyWareHouse = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => navigete("/wareHouse/create")} // أو أي مسار إضافة المنتج
+          onClick={() => navigete("/TargetGroups/create")} // أو أي مسار إضافة المنتج
         >
           {t("new_item")}
         </Button>
@@ -232,14 +203,13 @@ const DispalyWareHouse = () => {
     );
   }
   return (
-    <Box   className="Display-Item-Continer">
-    
-      <ToastContainer/>
+    <Box className="Display-Item-Continer">
+      <ToastContainer />
       <Box className="Button_Search_Panel">
         <Button
           startIcon={<Add />}
           component={Link}
-          to={`/wareHouse/create`}
+          to={`/TargetGroup/create`}
           variant="contained"
           className="create-button"
         >
@@ -261,34 +231,26 @@ const DispalyWareHouse = () => {
           }}
         />
       </Box>
-
       <Table className="Table">
-        <TableHead   className="TableHead">
+        <TableHead className="TableHead">
           <TableRow>
-            <TableCell>{t("ID")}</TableCell>
+
             <TableCell>{t("Name")}</TableCell>
-            <TableCell>{t("Location")}</TableCell>
-            <TableCell>{t("Capacity")}</TableCell>
-            <TableCell align="left">{t("Create At")}</TableCell>
+
             <TableCell>{t("Action")}</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody >
-          {(Filter.length?Filter:[]).map((item, index) => {
+        <TableBody>
+          {(Filter?.length ? Filter : []).map((item, index) => {
             return (
-              <TableRow
-                key={index}
-    className="TableRow"
-              >
-                <TableCell>{item.id}</TableCell>
+              <TableRow key={index} className="TableRow">
+
                 <TableCell>{item.name}</TableCell>
-                <TableCell align="left">{item.location}</TableCell>
-                <TableCell align="left">{item.capacity}</TableCell>
-                <TableCell align="left">{item.createdAt}</TableCell>
+
                 <TableCell align="left">
                   <IconButton
                     component={Link}
-                    to={`/wareHouse/${item.id}`}
+                    to={`/TargetGroup/${item.id}`}
                     sx={{ color: "green" }}
                   >
                     <EditNote />
@@ -314,11 +276,10 @@ const DispalyWareHouse = () => {
           count={totalPages}
           page={currentPage}
           onChange={(e, page) => setCurrentPage(page)}
-          color="primary"
         />
       </Box>
     </Box>
   );
 };
 
-export default DispalyWareHouse;
+export default DispalyTargetGroup;

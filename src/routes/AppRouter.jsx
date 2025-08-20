@@ -46,6 +46,10 @@ import UpdateProduct from "../pages/Management/ProductManagment/UpdateProduct";
 import CreateSize from "../pages/Management/ManagmentSize/CreateSize";
 import DispalySize from "../pages/Management/ManagmentSize/DispalySizes";
 import UpdateSize from "../pages/Management/ManagmentSize/UpdateSize";
+// Managment TargetGroup
+import CreateTargetGroup from "../pages/Management/ManagmentTargetGroup/CreateTargetGroup";
+import DisplayTargetGroup from  "../pages/Management/ManagmentTargetGroup/DisplayTargetGroup";
+import UpdateTargetGroup from "../pages/Management/ManagmentTargetGroup/UpdateTargetGroup";
 // Managment inventory
 import CreateInventory from "../pages/Management/ManagmentInventory/CreateInventory";
 import DispalyInventory from "../pages/Management/ManagmentInventory/DisplayInventory";
@@ -94,6 +98,11 @@ export default function AppRouter() {
             <Route path="/Sizes" element={<DispalySize />} />
           <Route path="/Size/create" element={<CreateSize />} />
           <Route path="/Size/:id" element={<UpdateSize />} />
+          {/* Managment TargetGroup */}
+          <Route path="/TargetGroups" element={<DisplayTargetGroup />} />
+          <Route path="/TargetGroup/create" element={<CreateTargetGroup />} />
+          <Route path="/TargetGroup/:id" element={<UpdateTargetGroup />} />
+
           {/* Management WhareHouse */}
           <Route path="/wareHouses" element={<DispalyWareHouse />} />
           <Route path="/wareHouse/create" element={<CreateWareHouse />} />

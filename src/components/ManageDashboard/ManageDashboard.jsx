@@ -210,6 +210,20 @@ export default function ManageDashboard() {
                           >
                             {t("Create Size")}
                           </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/TargetGroups"
+                            onClick={handleCloseProducts}
+                          >
+                            {t("Display TargetGroup")}
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/TargetGroup/create"
+                            onClick={handleCloseProducts}
+                          >
+                            {t("Create TargetGroup")}
+                          </MenuItem>
                         </Menu>
                         {/* ادارة المستودع والمخزون  */}
               

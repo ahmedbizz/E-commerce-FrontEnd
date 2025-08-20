@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, TextField, Button, CircularProgress, Alert, Select ,MenuItem,Card} from "@mui/material";
 import { addProduct ,getCategories} from "../../../services/productService";
 import { GetBrands} from "../../../services/BransService";
-import { GetTargetGroup} from "../../../services/TargetGroupService";
+import { GetTargetGroups} from "../../../services/TargetGroupService";
 
 import Avatar from "@mui/material/Avatar";
 
@@ -42,7 +42,7 @@ export default function AddProductForm() {
           setCategories(catRes.data);
           const brandsRes = await GetBrands();
           setbrands(brandsRes.data.items);
-          const TargetGroup = await GetTargetGroup();
+          const TargetGroup = await GetTargetGroups();
           setTargetGroup(TargetGroup.data);
         } catch {
           setError("فشل في تحميل البيانات المساعدة.");
@@ -87,9 +87,7 @@ export default function AddProductForm() {
         if(value !== null && value !== undefined && value !== "")
         data.append(key, value);
       });
-      for (let [key, value] of data.entries()) {
-        console.log(key, value);
-      }
+
       
 
       await addProduct(data);
@@ -108,8 +106,8 @@ export default function AddProductForm() {
       });
       setPreview(null);
     } catch (err) {
-      console.error(err);
-      setError("حدث خطأ أثناء إضافة المنتج، يرجى المحاولة لاحقاً.");
+  
+      setError(err.response.data.message);
     } finally {
       setLoading(false);
     }

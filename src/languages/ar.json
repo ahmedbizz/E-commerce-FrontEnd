@@ -61,7 +61,10 @@
   "Add product to WareHouse":"اضافة منتج الى المستودع ",
   "Display Inventory":"عرض المخزون ",
   "Create Inventory":"اضافة مخزون ",
-  "update_success":"تم التحديث بنجاع "
+  "update_success":"تم التحديث بنجاع ",
+  "new":"جديد",
+  "shop_Item":"تسوق منتجاتنا",
+  "shop":"تسوق"  
   
 
 

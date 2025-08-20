@@ -236,7 +236,7 @@ const DispalyBrand = () => {
           variant="contained"
           className="create-button"
         >
-          {t("new_item")}
+          {t("new")}
         </Button>
         {/* البحث */}
         <TextField

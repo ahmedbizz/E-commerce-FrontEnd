@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, TextField, Button, CircularProgress, Alert, Select ,MenuItem,Card} from "@mui/material";
 import { GetProductById ,UpdateProductById,getCategories} from "../../../services/productService";
-import MuiCard from "@mui/material/Card";
 import Avatar from "@mui/material/Avatar";
-import { styled } from "@mui/material/styles";
 import { ToastContainer, toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import FormControl from "@mui/material/FormControl";
@@ -11,6 +9,8 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { useTranslation } from "react-i18next";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import { Link } from "react-router-dom";
+import { GetBrands} from "../../../services/BransService";
+import { GetTargetGroups} from "../../../services/TargetGroupService";
 
 export default function UpdateProduct() {
   const { id } = useParams();
@@ -22,6 +22,8 @@ export default function UpdateProduct() {
     CostPrice: "",
     CategoryId: "",
     SupplierId: "",
+    BrandId:"",
+    TargetGroupId:"",
     clientFile: null,
     imageUrl:""
   });
@@ -36,6 +38,8 @@ export default function UpdateProduct() {
           Price: res.data.price || "",
           CostPrice: res.data.costPrice ||"", 
           CategoryId: res.data.categoryId || "",
+          BrandId:res.data.brandId ||"",
+          TargetGroupId: res.data.targetGroupId || "",
           imageUrl: res.data.imageUrl,
           clientFile: null,
           SupplierId:""
@@ -50,6 +54,8 @@ export default function UpdateProduct() {
 
   const [preview, setPreview] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [brandsRes, setbrands] = useState([]);
+  const [TargetGroupRes, setTargetGroup] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -61,6 +67,10 @@ export default function UpdateProduct() {
       try {
         const catRes = await getCategories();
         setCategories(catRes.data)
+        const brandsRes = await GetBrands();
+        setbrands(brandsRes.data.items);
+        const TargetGroup = await GetTargetGroups();
+        setTargetGroup(TargetGroup.data);
 
 
       } catch {
@@ -88,21 +98,14 @@ export default function UpdateProduct() {
     setError("");
     setSuccess("");
 
-    if (!formData.Name || !formData.Price || !formData.clientFile) {
-      setError("يرجى ملء الحقول المطلوبة (الاسم، السعر، والصورة).");
-      return;
-    }
-
-    if (isNaN(formData.Price) || Number(formData.Price) <= 0) {
-      setError("السعر يجب أن يكون رقماً أكبر من الصفر.");
-      return;
-    }
 
     setLoading(true);
     try {
       const data = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
-        data.append(key, value);
+        if (value !== "" && value !== null) {
+          data.append(key, value);
+        }
       });
 
       await UpdateProductById(data,id);
@@ -119,8 +122,7 @@ export default function UpdateProduct() {
       });
       setPreview(null);
     } catch (err) {
-      console.error(err);
-      setError(t("errorr_message"));
+      setError(err.response.data.message);
     } finally {
       setLoading(false);
     }
@@ -208,6 +210,39 @@ export default function UpdateProduct() {
     ))}
   </Select>
         </FormControl>
+
+
+        <FormControl>
+        <Select 
+    name="BrandId" 
+    value={formData.BrandId} 
+    onChange={handleChange} 
+    fullWidth 
+    sx={{ mb: 2 }}
+  >
+    <MenuItem value="">اختر الفئة</MenuItem>
+    {(brandsRes ||[]).map((B) => (
+      <MenuItem key={B.id} value={B.id}>{B.name}</MenuItem>
+    ))}
+  </Select>
+        </FormControl>
+      
+
+<FormControl>
+<Select 
+name="TargetGroupId" 
+value={formData.TargetGroupId} 
+onChange={handleChange} 
+fullWidth 
+sx={{ mb: 2 }}
+>
+<MenuItem value="">اختر الفئة</MenuItem>
+{(TargetGroupRes ||[]).map((t) => (
+<MenuItem key={t.id} value={t.id}>{t.name}</MenuItem>
+))}
+</Select>
+</FormControl>
+
         <select name="SupplierId" value={formData.SupplierId} onChange={handleChange} style={{ width: "100%", padding: 10, marginBottom: 20 }}>
           <option value="">اختر المورد</option>
           {suppliers.map((sup) => (
