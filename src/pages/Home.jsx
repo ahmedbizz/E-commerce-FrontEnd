@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { GetProducts } from "../services/productService";
-import ProductCard from "../components/ProductCard/ProductCard";
+import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import { useTranslation } from "react-i18next";
 import {
@@ -61,19 +61,11 @@ export default function Home() {
                 <img src={`https://localhost:7137/images/Products/${item.imageUrl}`} alt={`Ad ${index + 1}`} />
                 <Button
                   variant="contained"
+                  component={Link}
+                  to={'/products/all'}
                   className="GO_TO_SHOP_BT"
-                  onClick={() => {
-                    const scrollHeight = document.documentElement.scrollHeight; // طول الصفحة
-                    const viewportHeight = window.innerHeight; // طول الشاشة
-                    const targetPosition = scrollHeight - viewportHeight * 0.75; // قبل النهاية بـ 3/4 الشاشة
-
-                    window.scrollTo({
-                      top: targetPosition,
-                      behavior: "smooth", // نزول سلس
-                    });
-                  }}
                 >
-                  Go To Shoping
+                  Go  Shoping
                 </Button>
               </Box>
             ))}

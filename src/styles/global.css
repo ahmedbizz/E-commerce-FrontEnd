@@ -486,6 +486,24 @@ body.dark .Card {
   padding: 0;
 }
 
+.Box-Products {
+  width: 90%;
+  min-height: calc(100vh - 40px);
+  /* 100vh ناقص margin-top + margin-bottom */
+  margin: 20px 0;
+  margin-left: 5%;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+  -ms-grid-rows: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+  gap: 10px;
+}
+
 .ImageBox {
   position: relative;
   width: 100%;
@@ -526,11 +544,30 @@ a {
   color: inherit;
 }
 
+.MuiPopper-root .MuiPaper-root {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background: rgba(30, 30, 30, 0.7) !important;
+  backdrop-filter: blur(12px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  overflow: hidden !important;
+  -webkit-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35) !important;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35) !important;
+  -webkit-animation: fadeInScale 0.25s ease !important;
+          animation: fadeInScale 0.25s ease !important;
+}
+
 /* hedear 1 in Nave page section  */
-#Box_header_1 {
-  color: "inherit";
-  border: "2px solid red";
-  max-height: "50px";
+.Box_header_1 {
+  background-color: #1a1b1b50;
+  color: inherit;
+  max-height: 50px;
 }
 
 #EN_AR_List {

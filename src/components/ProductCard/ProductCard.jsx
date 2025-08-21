@@ -36,7 +36,11 @@ export default function ProductCard({ product }) {
     <Card className='Card'>
       <CardMedia
         component="img"
-        height="200"
+        width="100%"
+        sx={{
+          maxHeight:"400px",
+          objectFit:"cover"
+        }}
         image={`https://localhost:7137/images/Products/${product.imageUrl}`}
         alt={product.name}
       />

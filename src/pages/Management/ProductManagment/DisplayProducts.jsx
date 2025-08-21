@@ -332,7 +332,7 @@ const DisplayProducts = () => {
                   </IconButton>
                   <IconButton
                     component={Link}
-                    to={`/product/${item.id}`}
+                    to={`/product/edit/${item.id}`}
                     sx={{ color: "green" }}
 
                   >

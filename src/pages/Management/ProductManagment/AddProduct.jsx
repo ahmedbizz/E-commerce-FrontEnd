@@ -106,7 +106,7 @@ export default function AddProductForm() {
       });
       setPreview(null);
     } catch (err) {
-  
+      console.log(err)
       setError(err.response.data.message);
     } finally {
       setLoading(false);

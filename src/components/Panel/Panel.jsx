@@ -1,8 +1,10 @@
 import { Box ,Button} from '@mui/material';
 import {useState ,useEffect}from 'react';
-import {GetBrands} from "../../services/BransService"
+import {GetBrands ,GetProductsByBrand} from "../../services/BransService"
+import { useNavigate } from 'react-router-dom';
 
 const Panel = () => {
+  const navigate = useNavigate();
   const [brandsRes, setbrands] = useState([]);
 
   useEffect(() => {
@@ -16,6 +18,13 @@ const Panel = () => {
     }
     fetchData();
   }, []);
+
+    // Function to handle product click
+    const handleBransClick = (brand) => {
+    
+      navigate(`/products/${brand.name}/${brand.id}`, {
+      });
+    };
 
   return (
 <Box className="Panel-container">
@@ -44,14 +53,8 @@ const Panel = () => {
             />
             <div className="overlay"></div>
              <Button variant="contained" className="GO_TO_SHOP_BT" onClick={()=>{
-                  const scrollHeight = document.documentElement.scrollHeight; // طول الصفحة
-                  const viewportHeight = window.innerHeight; // طول الشاشة
-                  const targetPosition = scrollHeight - viewportHeight * 0.75; // قبل النهاية بـ 3/4 الشاشة
+                  handleBransClick(brand);
               
-                  window.scrollTo({
-                    top: targetPosition,
-                    behavior: "smooth", // نزول سلس
-                  });
              }} >Shop</Button>
           </Box>
         ))}

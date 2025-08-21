@@ -28,6 +28,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { AuthContext } from "../../context/AuthContext"; // تأكد من المسار الصحيح
 import { useTranslation } from "react-i18next";
 import { GetTargetGroups } from "../../services/TargetGroupService";
+import { GetBrandByType} from "../../services/BransService"
 import Cookies from "js-cookie";
 // ==== تنسيقات مخصصة للبحث ====
 const Search = styled("div")(({ theme }) => ({
@@ -54,6 +55,7 @@ export default function Navbar() {
   const [anchorElang, setAnchorElang] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
   const [TargetGroupRes, setTargetGroup] = useState([]);
+  const [Brands, setBrands] = useState([]);
 
   //  for loadeing Tagrget Group List
   useEffect(() => {
@@ -102,8 +104,25 @@ export default function Navbar() {
   const [hoveredGroup, setHoveredGroup] = useState(null);
 
   const handleOpenMNI = (event, group) => {
+
+    const getBrans = async ()=>{
+      var res = await GetBrandByType(group.id)
+      try {
+        var res = await GetBrandByType(group.id)
+        setBrands(res.data.brands)
+
+      } catch(err){
+
+        setBrands([]);
+      }
+    
+    }
     setAnchorElMNI(event.currentTarget);
     setHoveredGroup(group);
+    getBrans();
+    console.log(Brands)
+
+
   };
 
   const handleCloseMNI = () => {
@@ -114,7 +133,7 @@ export default function Navbar() {
   return (
     <Box>
       {/* headar 1 section  */}
-      <Box id="Box_header_1" sx={{ height: "65px" }}></Box>
+      <Box className="Box_header_1" sx={{ height: "65px" }}></Box>
       <AppBar className="AppBarHeader" position="fixed">
         <Toolbar
           sx={{
@@ -199,7 +218,7 @@ export default function Navbar() {
                 <Box
                   key={index}
                   onMouseEnter={(e) => handleOpenMNI(e, group)}
-                  onMouseLeave={handleCloseMNI}
+              
                   sx={{ display: "inline-block", mx: 1 }}
                 >
                   <Button
@@ -216,12 +235,28 @@ export default function Navbar() {
                     anchorEl={anchorElMNI}
                     placement="bottom-start"
                     style={{ width: "100%" }}
+              
                   >
                     <ClickAwayListener onClickAway={handleCloseMNI}>
                       <Paper elevation={3}>
-                        <MenuList>
-                          <MenuItem>{t("options")}</MenuItem>
-                        </MenuList>
+                        {(Brands ||[]).map((item , index)=>(                        
+                        <MenuList  key={index}>
+                          <MenuItem>{item.name}</MenuItem>
+                          {(item.categories || []).map((cate,index)=>(
+                              <MenuList sx={{
+                                paddingLeft:"30px",
+                                "& .MuiMenuItem-root":{
+                                  display: "list-item",
+                                  listStyleType:"circle",
+                                  marginInline: "20px"
+                                  
+                                }
+                              }} key={index}>
+                              <MenuItem>{cate.name}</MenuItem>
+                              </MenuList>
+                          ))}
+                        </MenuList>))}
+
                       </Paper>
                     </ClickAwayListener>
                   </Popper>

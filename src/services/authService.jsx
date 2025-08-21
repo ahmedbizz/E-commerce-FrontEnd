@@ -8,7 +8,6 @@ export const login = async (data) =>{
   const token  = res.data.token
   
   if(token){
-    //localStorage.setItem('token',token);
     Cookies.set("token", token, { expires: 3 });
   }
   return res.data

@@ -3,6 +3,7 @@ import Home from "../pages/Home";
 import AdsPanel from "../pages/AdsPanel";
 import Panel from "../components/Panel/Panel";
 import ProductDetails from "../pages/ProductDetails";
+import Products from "../pages/Products";
 import Cart from "../pages/Cart";
 import NotFound from "../pages/NotFound";
 import MainLayout from "../layouts/MainLayout";
@@ -11,15 +12,13 @@ import SignUp from "../pages/SignUp";
 import PrivateRoute from "./PrivateRoute";
 
 import Main from "../pages/Management/Main";
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
 // Role Management
 import CreateRoleUi from "../pages/Management/RoleManagment/CreateRoleUi";
 import DispalyRole from "../pages/Management/RoleManagment/DispalyRole";
 // Group Managment
 import DispalyGroup from "../pages/Management/GroupManagment/DisplayGroups";
 import CreateGroup from "../pages/Management/GroupManagment/CreateGroup";
-import UpdateGroup from "../pages/Management/GroupManagment/UpdateGrop"
+import UpdateGroup from "../pages/Management/GroupManagment/UpdateGrop";
 // User Managment
 import DisplayUsers from "../pages/Management/UserMangment/DisplayUsers";
 import CreateUser from "../pages/Management/UserMangment/CreateUser";
@@ -48,56 +47,86 @@ import DispalySize from "../pages/Management/ManagmentSize/DispalySizes";
 import UpdateSize from "../pages/Management/ManagmentSize/UpdateSize";
 // Managment TargetGroup
 import CreateTargetGroup from "../pages/Management/ManagmentTargetGroup/CreateTargetGroup";
-import DisplayTargetGroup from  "../pages/Management/ManagmentTargetGroup/DisplayTargetGroup";
+import DisplayTargetGroup from "../pages/Management/ManagmentTargetGroup/DisplayTargetGroup";
 import UpdateTargetGroup from "../pages/Management/ManagmentTargetGroup/UpdateTargetGroup";
 // Managment inventory
 import CreateInventory from "../pages/Management/ManagmentInventory/CreateInventory";
 import DispalyInventory from "../pages/Management/ManagmentInventory/DisplayInventory";
 import UpdateInventory from "../pages/Management/ManagmentInventory/UpdateInventory";
 export default function AppRouter() {
-  const { user } = useContext(AuthContext);
-
-  const isAdmin = Array.isArray(user?.role) 
-  ? user.role.some(r => r.toLowerCase() === "admin") 
-  : typeof user?.role === "string" && user?.role.toLowerCase() === "admin";
-
   return (
     <Routes>
-      <Route path="/login" element={<SignInSide />} />
-      <Route path="/SignUp" element={<SignUp />} />
-      {isAdmin ? (
+      <Route element={<PrivateRoute isPublic={true} />}>
+        <Route path="/" element={<MainLayout />}>
+          <Route
+            index
+            element={
+              <>
+                <AdsPanel />
+                <Panel />
+                <Home />
+              </>
+            }
+          />
+          <Route path="product/:id" element={<ProductDetails />} />
+          <Route path="products/all" element={<Products />} />
+          <Route path="products/:brand/:brandId" element={<Products />} />
+        </Route>
+        <Route path="/login" element={<SignInSide />} />
+        <Route path="/SignUp" element={<SignUp />} />
+      </Route>
+
+      <Route element={<PrivateRoute isPublic={false} />}>
+        <Route path="/" element={<MainLayout />}>
+          <Route
+            index
+            element={
+              <>
+                <AdsPanel />
+                <Panel />
+                <Home />
+              </>
+            }
+          />
+          <Route path="product/:id" element={<ProductDetails />} />
+          <Route path="/products/all" element={<Products/>} />
+          <Route path="products/:brand/:brandId" element={<Products />} />
+          <Route path="cart" element={<Cart />} />
+        </Route>
+      </Route>
+      <Route element={<PrivateRoute role={"admin"} isPublic={false} />}>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Main />} />
           {/* Managment Product */}
           <Route path="/product/create" element={<AddProduct />} />
           <Route path="/products" element={<DisplayProducts />} />
-          <Route path="/product/:id" element={<UpdateProduct />} />
+          <Route path="/product/edit/:id" element={<UpdateProduct />} />
           {/* Role Managment */}
           <Route path="/role/create" element={<CreateRoleUi />} />
           <Route path="/role" element={<DispalyRole />} />
           {/* // Group Managment */}
           <Route path="/groups" element={<DispalyGroup />} />
           <Route path="/group/create" element={<CreateGroup />} />
-          <Route path="/group/:id" element={<UpdateGroup />} />
+          <Route path="/group/edit/:id" element={<UpdateGroup />} />
           <Route path="/assgin/users/:id" element={<AssginUserToGroupUI />} />
           <Route path="/assgin/roles/:id" element={<AssginRoleToGroupUI />} />
           {/* // User Managment */}
           <Route path="/users" element={<DisplayUsers />} />
           <Route path="/users/create" element={<CreateUser />} />
-          <Route path="/user/:id" element={<UpdateUser />} />
+          <Route path="/user/edit/:id" element={<UpdateUser />} />
           <Route path="*" element={<NotFound />} />
           {/* Managment Category */}
           <Route path="/categorys" element={<DispalyCategory />} />
           <Route path="/categorys/create" element={<CreateCategory />} />
-          <Route path="/categorys/:id" element={<UpdateCategory />} />
+          <Route path="/categorys/edit/:id" element={<UpdateCategory />} />
           {/* Managment Category */}
           <Route path="/Brands" element={<DispalyBrand />} />
           <Route path="/Brands/create" element={<CreateBrand />} />
-          <Route path="/Brands/:id" element={<UpdateBrand />} />
-            {/* Managment Size */}
-            <Route path="/Sizes" element={<DispalySize />} />
+          <Route path="/Brands/edit/:id" element={<UpdateBrand />} />
+          {/* Managment Size */}
+          <Route path="/Sizes" element={<DispalySize />} />
           <Route path="/Size/create" element={<CreateSize />} />
-          <Route path="/Size/:id" element={<UpdateSize />} />
+          <Route path="/Size/edit/:id" element={<UpdateSize />} />
           {/* Managment TargetGroup */}
           <Route path="/TargetGroups" element={<DisplayTargetGroup />} />
           <Route path="/TargetGroup/create" element={<CreateTargetGroup />} />
@@ -111,22 +140,9 @@ export default function AppRouter() {
           <Route path="/inventorys" element={<DispalyInventory />} />
           <Route path="/inventory/create" element={<CreateInventory />} />
           <Route path="/inventory/:id" element={<UpdateInventory />} />
-
-      
-          
         </Route>
-      ) : (
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<div>
-            <AdsPanel/><Panel/><Home />
-          </div>} />
-          <Route path="product/:id" element={<ProductDetails />} />
-          <Route element={<PrivateRoute />}>  
-            <Route path="cart" element={<Cart />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      )}
+      </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

@@ -19,11 +19,9 @@ instance.interceptors.response.use(
   error => {
   
     if (error.response && error.response.status === 401 && !isRedirecting) {
-      console.log(error.response.status)
       if (window.location.pathname !== "/login") {
         isRedirecting = true;
         Cookies.remove("token");
-        window.location.href = "/login";
       }
     }
     return Promise.reject(error);

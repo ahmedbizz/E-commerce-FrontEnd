@@ -7,7 +7,6 @@ export function CartProvider({ children }) {
   const fetchCart = async () => {
     GetCart()
       .then((res) => {
-    console.log(res)
         setCartItems(res.data.items);
       })
       .catch((err) => {
@@ -27,7 +26,6 @@ const IncreaseItemById = async (id) => {
   try {
   
     var res =  await IncreaseItem(id);
-    console.log(res.data)
     setCartItems(res.data.items)
   } catch (err) {
     console.error("خطأ في زيادة العنصر:", err);
@@ -40,7 +38,6 @@ const IncreaseItemById = async (id) => {
   try {
 
     var res = await DecreaseItem(id);
-    console.log(res.data)
     setCartItems(res.data.items)
   } catch (err) {
     console.error("خطأ في نقص العنصر:", err);
