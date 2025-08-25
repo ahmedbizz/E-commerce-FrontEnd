@@ -44,31 +44,39 @@ export default function ProductDetails() {
     );
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 4 }}>
-      <Card sx={{ boxShadow: 4, borderRadius: 3 }}>
-        <CardMedia
+    <Box className="ProductDetailsContainer">
+      <Box className="ImageSide">
+        <img
           component="img"
-          height="350"
-          image={`https://localhost:7137/images/Products/${product.imageUrl}`}
+          src={`https://localhost:7137/images/Products/${product.imageUrl}`}
           alt={product.name}
-          sx={{ objectFit: "cover" }}
         />
-        <CardContent>
-          <Typography variant="h5" fontWeight="bold" gutterBottom>
+      </Box>
+      <Box className="DetailsSide">
+        <Box className="Title">
+        <Typography variant="h5" fontWeight="bold" gutterBottom>
             {product.name}
           </Typography>
-          <Typography
+
+          <Typography variant="h6" color="primary" fontWeight="bold">
+            السعر: {product.price} ريال
+          </Typography>
+        </Box>
+        <Box className="ColorOptions"></Box>
+        <Box className="SizeOptions"></Box>
+        <Box className="ActionButtons"></Box>
+        <Box className="ExtraInfos">
+        <Typography
             variant="body1"
             color="text.secondary"
             sx={{ mb: 2, whiteSpace: "pre-line" }}
           >
             {product.description || "لا يوجد وصف متاح لهذا المنتج."}
           </Typography>
-          <Typography variant="h6" color="primary" fontWeight="bold">
-            السعر: {product.price} ريال
-          </Typography>
-        </CardContent>
-      </Card>
-    </Container>
+        </Box>
+      </Box>
+      <Box className="YouWillLike"></Box>
+
+    </Box>
   );
 }

@@ -30,9 +30,6 @@ const Panel = () => {
 <Box className="Panel-container">
       <Box
       className="Box-Panel"
-        sx={{
-
-        }}
       >
         {brandsRes.map((brand, index) => (
           <Box

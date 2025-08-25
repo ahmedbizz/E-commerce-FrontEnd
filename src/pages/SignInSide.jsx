@@ -1,7 +1,7 @@
 import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Stack from '@mui/material/Stack';
-
+import Panel from '../components/Panel/Panel';
 import SignInCard from '../components/SignInComponents/SignInCard';
 import Content from '../components/SignInComponents/Content';
 
@@ -46,6 +46,7 @@ export default function SignInSide(props) {
             mx: 'auto',
           }}
         >
+        
           <Stack
             direction={{ xs: 'column-reverse', md: 'row' }}
             sx={{

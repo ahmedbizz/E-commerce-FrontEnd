@@ -33,7 +33,7 @@ export default function ProductCard({ product }) {
 
 
   return (
-    <Card className='Card'>
+    <Card className='Card-Product'>
       <CardMedia
         component="img"
         width="100%"

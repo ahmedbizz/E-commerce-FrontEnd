@@ -134,7 +134,7 @@ export default function Navbar() {
     <Box>
       {/* headar 1 section  */}
       <Box className="Box_header_1" sx={{ height: "65px" }}></Box>
-      <AppBar className="AppBarHeader" position="fixed">
+      <AppBar className="AppBarHeader" >
         <Toolbar
           sx={{
             display: "flex",

@@ -59,6 +59,10 @@
     "update_success":"updateing successfully",
     "new":  "New",
     "shop_Item":"Shop Our Icons",
-    "shop":"Shop"
+    "shop":"Shop",
+    "Sort By: Featured":"Sort By: Featured",
+    "Filters":"Filters",
+    "Low-price":"Low-price",
+    "High-price":"High-price"
   
   }

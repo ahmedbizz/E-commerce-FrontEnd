@@ -64,7 +64,12 @@
   "update_success":"تم التحديث بنجاع ",
   "new":"جديد",
   "shop_Item":"تسوق منتجاتنا",
-  "shop":"تسوق"  
+  "shop":"تسوق",
+  "Sort By: Featured":"ترتيب حسب: الخصائص",
+  "Filters":"فلتر" ,
+  "Low-price":"الأقل سعر",
+  "High-price":"الاعلى  سعر" 
+
   
 
 

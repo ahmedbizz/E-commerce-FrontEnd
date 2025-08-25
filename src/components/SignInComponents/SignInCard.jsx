@@ -18,6 +18,7 @@ import { login } from "../../services/authService";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Panel from '../Panel/Panel';
 
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -116,7 +117,7 @@ export default function SignInCard() {
   };
 
   return (
-    <Card variant="outlined">
+    <Card className='login-Card' variant="outlined">
       <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
         <SitemarkIcon />
       </Box>
