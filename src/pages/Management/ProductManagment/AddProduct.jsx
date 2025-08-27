@@ -23,9 +23,11 @@ export default function AddProductForm() {
     SupplierId: "",
     TargetGroupId:"",
     clientFile: null,
+    clientFiles: [],
   });
 
   const [preview, setPreview] = useState(null);
+  const [galleryPreview, setGalleryPreview] = useState([]);
   const [categories, setCategories] = useState([]);
   const [brandsRes, setbrands] = useState([]);
   const [TargetGroupRes, setTargetGroup] = useState([]);
@@ -56,6 +58,14 @@ export default function AddProductForm() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+  const handleGalleryChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      setFormData((prev) => ({ ...prev, clientFiles: files }));
+      setGalleryPreview(files.map((file) => URL.createObjectURL(file)));
+    }
+  };
+  
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -84,9 +94,15 @@ export default function AddProductForm() {
     try {
       const data = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
-        if(value !== null && value !== undefined && value !== "")
+        if(key !== "clientFiles" && value !== null && value !== undefined && value !== "")
         data.append(key, value);
       });
+
+      if (formData.clientFiles.length > 0) {
+        formData.clientFiles.forEach((file) => {
+          data.append("clientFiles", file); // لازم الـ API يستقبلها بنفس الاسم
+        });
+      }
 
       
 
@@ -166,6 +182,26 @@ export default function AddProductForm() {
               </label>
             </Box>
           </FormControl>
+          <FormControl>
+  <input
+    type="file"
+    accept="image/*"
+    multiple
+    onChange={handleGalleryChange}
+    style={{ margin: "10px 0" }}
+  />
+  <Box display="flex" gap={1} flexWrap="wrap">
+    {galleryPreview.map((src, index) => (
+      <Avatar
+        key={index}
+        src={src}
+        variant="square"
+        sx={{ width: 70, height: 70 }}
+      />
+    ))}
+  </Box>
+</FormControl>
+
           <FormControl>
         <TextField label="اسم المنتج" name="Name" fullWidth sx={{ mb: 2 }} value={formData.Name} onChange={handleChange} />
         </FormControl>

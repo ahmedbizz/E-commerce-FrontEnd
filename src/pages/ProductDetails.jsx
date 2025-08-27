@@ -25,6 +25,7 @@ export default function ProductDetails() {
       })
       .catch(() => setLoading(false));
   }, [id]);
+  console.log(product)
 
   if (loading)
     return (
