@@ -3,7 +3,11 @@ import { Box, TextField, Button, CircularProgress, Alert, Select ,MenuItem,Card}
 import { addProduct ,getCategories} from "../../../services/productService";
 import { GetBrands} from "../../../services/BransService";
 import { GetTargetGroups} from "../../../services/TargetGroupService";
-
+import {
+  GetSizes,
+  DeleteSizeByID,
+} from "../../../services/SizeService";
+import { useTranslation } from "react-i18next";
 import Avatar from "@mui/material/Avatar";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -13,6 +17,7 @@ import ArrowBack from "@mui/icons-material/ArrowBack";
 import { Link } from "react-router-dom";
 
 export default function AddProductForm() {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     Name: "",
     Description: "",
@@ -35,7 +40,7 @@ export default function AddProductForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
+  const [sizes, setSizes] = useState([]);
     // تحميل القوائم من الـ API
     useEffect(() => {
       async function fetchData() {
@@ -53,6 +58,19 @@ export default function AddProductForm() {
       fetchData();
     }, []);
     
+    const [availableSizes, setAvailableSizes] = useState([]);
+
+useEffect(() => {
+  const fetchSizes = async () => {
+    try {
+      const res = await GetSizes(); // خدمة API تجلب الأحجام
+      setAvailableSizes(res.data);
+    } catch (err) {
+      console.error("Error fetching sizes", err);
+    }
+  };
+  fetchSizes();
+}, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -103,7 +121,17 @@ export default function AddProductForm() {
           data.append("clientFiles", file); // لازم الـ API يستقبلها بنفس الاسم
         });
       }
+        // إضافة الأحجام
+    
+      if (sizes && sizes.length > 0) {
+        sizes.forEach((size, index) => {
+          data.append(`ProductSizes[${index}]`, size);
+        });
+      }
 
+      for (let [key, value] of data.entries()) {
+        console.log(key, value);
+      }
       
 
       await addProduct(data);
@@ -119,11 +147,29 @@ export default function AddProductForm() {
         SupplierId: "",
         TargetGroupId:"",
         clientFile: null,
+        clientFiles:[]
       });
       setPreview(null);
-    } catch (err) {
-      console.log(err)
-      setError(err.response.data.message);
+      setGalleryPreview([]);
+      setAvailableSizes([])
+    } catch (error) {
+  
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        const messages = error.response.data.message;
+        if (Array.isArray(messages)) {
+          // لو الرسائل كثيرة، اعرضهم كلهم
+          setError(messages.join("\n"));
+        } else {
+          // لو رسالة واحدة فقط
+          setError(messages);
+        }
+      } else {
+        setError(t("errorr_message"));
+      }
     } finally {
       setLoading(false);
     }
@@ -214,6 +260,30 @@ export default function AddProductForm() {
         <FormControl>
         <TextField label="سعر التكلفة" name="CostPrice" type="number" fullWidth sx={{ mb: 2 }} value={formData.CostPrice} onChange={handleChange} />
         </FormControl>
+        <FormControl>
+  <label>اختر الأحجام</label>
+  <Box  sx={{ display:"grid",
+   gridTemplateColumns:"1fr 1fr 1fr 1fr",
+   gridAutoRows:"68px"}}>
+    {availableSizes.map(size => (
+      <label key={size.id}>
+        <input
+          type="checkbox"
+          value={size.id}
+          checked={sizes.includes(size.id)}
+          onChange={(e) => {
+            const val = parseInt(e.target.value);
+            setSizes(prev =>
+              prev.includes(val) ? prev.filter(id => id !== val) : [...prev, val]
+            );
+          }}
+        />
+        {size.name}
+      </label>
+    ))}
+  </Box>
+</FormControl>
+
         <FormControl>
         <Select 
     name="CategoryId" 

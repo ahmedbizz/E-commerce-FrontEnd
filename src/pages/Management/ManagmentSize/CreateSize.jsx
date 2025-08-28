@@ -67,7 +67,7 @@ const CreateSize = () => {
   const validateInputs = () => {
     let isValid = true;
 
-    if (!name || !/^[a-zA-Z0-9 ]{3,}$/.test(name)) {
+    if (!name || !/^[a-zA-Z0-9 ]{1,}$/.test(name)) {
       setNameMessage("Please enter a valid Name (at least 3 characters).");
       isValid = false;
     } else {

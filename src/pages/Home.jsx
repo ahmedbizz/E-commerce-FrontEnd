@@ -65,7 +65,7 @@ export default function Home() {
                   to={'/products/all'}
                   className="GO_TO_SHOP_BT"
                 >
-                  Go  Shoping
+                  Go Shoping
                 </Button>
               </Box>
             ))}
