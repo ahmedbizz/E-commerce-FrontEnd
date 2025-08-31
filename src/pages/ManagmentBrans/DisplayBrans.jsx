@@ -289,7 +289,7 @@ const DispalyBrand = () => {
                 <TableCell align="left">
                   <IconButton
                     component={Link}
-                    to={`/Brands/${item.id}`}
+                    to={`/Brands/edit/${item.id}`}
                     sx={{ color: "green" }}
                   >
                     <EditNote />

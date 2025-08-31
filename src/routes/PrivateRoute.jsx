@@ -1,24 +1,39 @@
 
 import { Navigate, Outlet } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-
-export default function PrivateRoute({role,isPublic}) {
-  const { user } = useAuth();
-
-  const isHasRole = Array.isArray(user?.role) 
-  ? user.role.some(r => r.toLowerCase() === role) 
-  : typeof user?.role === "string" && user?.role.toLowerCase() === role;
-
-
+import { Box, CircularProgress } from "@mui/material";
+export default function PrivateRoute({role, isPublic = false}) {
+  const { user, roleUser ,loading} = useAuth();
+if (loading) {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <CircularProgress
+        sx={{ animation: "rotate 1.5s linear infinite" }}
+        size={80}
+      />
+    </Box>
+  );
+}
 if(isPublic){
-  return <Outlet /> 
+return <Outlet /> 
 }
 if(!user){
-  return <Navigate to="/login" replace/>
+return <Navigate to="/login" replace/>
 }
-if(role && !isHasRole){
-  return <Navigate to="/login" replace/>
+if (roleUser !== role) {
+return <Navigate to="/access-denied" replace />;
 }
+
+
+
 return <Outlet /> 
+
 
 }

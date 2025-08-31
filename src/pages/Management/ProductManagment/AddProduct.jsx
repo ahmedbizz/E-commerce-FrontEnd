@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Box, TextField, Button, CircularProgress, Alert, Select ,MenuItem,Card} from "@mui/material";
-import { addProduct ,getCategories} from "../../../services/productService";
-import { GetBrands} from "../../../services/BransService";
-import { GetTargetGroups} from "../../../services/TargetGroupService";
 import {
-  GetSizes,
-  DeleteSizeByID,
-} from "../../../services/SizeService";
+  Box,
+  TextField,
+  Button,
+  CircularProgress,
+  Alert,
+  Select,
+  MenuItem,
+  Card,
+} from "@mui/material";
+import { addProduct, getCategories } from "../../../services/productService";
+import { GetBrands } from "../../../services/BransService";
+import { GetTargetGroups } from "../../../services/TargetGroupService";
+import { GetSizes, DeleteSizeByID } from "../../../services/SizeService";
 import { useTranslation } from "react-i18next";
 import Avatar from "@mui/material/Avatar";
 
@@ -24,11 +30,13 @@ export default function AddProductForm() {
     Price: "",
     CostPrice: "",
     CategoryId: "",
-    BrandId:"",
+    BrandId: "",
     SupplierId: "",
-    TargetGroupId:"",
+    TargetGroupId: "",
     clientFile: null,
     clientFiles: [],
+    productImages: [],
+    productSizes:[]
   });
 
   const [preview, setPreview] = useState(null);
@@ -41,41 +49,67 @@ export default function AddProductForm() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [sizes, setSizes] = useState([]);
-    // تحميل القوائم من الـ API
-    useEffect(() => {
-      async function fetchData() {
-        try {
-          const catRes = await getCategories();
-          setCategories(catRes.data);
-          const brandsRes = await GetBrands();
-          setbrands(brandsRes.data.items);
-          const TargetGroup = await GetTargetGroups();
-          setTargetGroup(TargetGroup.data);
-        } catch {
-          setError("فشل في تحميل البيانات المساعدة.");
-        }
+  // تحميل القوائم من الـ API
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const catRes = await getCategories();
+        setCategories(catRes.data);
+        const brandsRes = await GetBrands();
+        setbrands(brandsRes.data.items);
+        const TargetGroup = await GetTargetGroups();
+        setTargetGroup(TargetGroup.data);
+      } catch {
+        setError("فشل في تحميل البيانات المساعدة.");
       }
-      fetchData();
-    }, []);
-    
-    const [availableSizes, setAvailableSizes] = useState([]);
-
-useEffect(() => {
-  const fetchSizes = async () => {
-    try {
-      const res = await GetSizes(); // خدمة API تجلب الأحجام
-      setAvailableSizes(res.data);
-    } catch (err) {
-      console.error("Error fetching sizes", err);
     }
-  };
-  fetchSizes();
-}, []);
+    fetchData();
+  }, []);
+
+  const fetchDataRelod = async()=>{
+    try {
+      const catRes = await getCategories();
+      setCategories(catRes.data);
+      const brandsRes = await GetBrands();
+      setbrands(brandsRes.data.items);
+      const TargetGroup = await GetTargetGroups();
+      setTargetGroup(TargetGroup.data);
+    } catch {
+      setError("فشل في تحميل البيانات المساعدة.");
+    }
+
+  }
+
+  const [availableSizes, setAvailableSizes] = useState([]);
+
+  useEffect(() => {
+    const fetchSizes = async () => {
+      try {
+        const res = await GetSizes(); // خدمة API تجلب الأحجام
+        setAvailableSizes(res.data);
+      } catch (err) {
+        console.error("Error fetching sizes", err);
+      }
+    };
+    fetchSizes();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const handelCahngeSize = (size) => {
+    setFormData((prev) => {
+      const exists = (prev.productSizes||[]).some((s) => s.id === size.id);
+      const updatedSizes = exists
+        ? (prev.productSizes||[]).filter((s) => s.id !== size.id)
+        : [...prev.productSizes, size];
+
+      return { ...prev, productSizes: updatedSizes };
+    });
+  };
+
   const handleGalleryChange = (e) => {
     const files = Array.from(e.target.files);
     if (files.length > 0) {
@@ -83,7 +117,6 @@ useEffect(() => {
       setGalleryPreview(files.map((file) => URL.createObjectURL(file)));
     }
   };
-  
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -112,8 +145,13 @@ useEffect(() => {
     try {
       const data = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
-        if(key !== "clientFiles" && value !== null && value !== undefined && value !== "")
-        data.append(key, value);
+        if (
+          key !== "clientFiles" &&
+          value !== null &&
+          value !== undefined &&
+          value !== ""
+        )
+          data.append(key, value);
       });
 
       if (formData.clientFiles.length > 0) {
@@ -121,18 +159,18 @@ useEffect(() => {
           data.append("clientFiles", file); // لازم الـ API يستقبلها بنفس الاسم
         });
       }
-        // إضافة الأحجام
-    
-      if (sizes && sizes.length > 0) {
-        sizes.forEach((size, index) => {
-          data.append(`ProductSizes[${index}]`, size);
-        });
-      }
+      // إضافة الأحجام
+
+      formData.productSizes.forEach((size, index) => {
+        console.log(size)
+        data.append(`ProductSizes[${index}].Id`, size.id); // <-- استخدم capital I إذا كانت في DTO هكذا
+      });
+      
+      
 
       for (let [key, value] of data.entries()) {
         console.log(key, value);
       }
-      
 
       await addProduct(data);
 
@@ -143,17 +181,20 @@ useEffect(() => {
         Price: "",
         CostPrice: "",
         CategoryId: "",
-        BrandId:"",
+        BrandId: "",
         SupplierId: "",
-        TargetGroupId:"",
+        TargetGroupId: "",
         clientFile: null,
-        clientFiles:[]
+        clientFiles: [],
+        productImages: [],
+        productSizes:[]
       });
       setPreview(null);
       setGalleryPreview([]);
-      setAvailableSizes([])
+      setAvailableSizes([]);
+      fetchDataRelod();
     } catch (error) {
-  
+      console.log(error)
       if (
         error.response &&
         error.response.data &&
@@ -176,18 +217,26 @@ useEffect(() => {
   };
 
   return (
-<Box className="Card-Continer" >
-      <Card className="Card"  variant="outlined">
-      <ToastContainer/>
-    
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-        {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+    <Box className="Card-Continer">
+      <Card className="Card" variant="outlined">
+        <ToastContainer />
+
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            {success}
+          </Alert>
+        )}
         <Box
           component="form"
           onSubmit={handleSubmit}
           sx={{ display: "flex", flexDirection: "column", gap: 2 }}
         >
-        <FormControl
+          <FormControl
             sx={{
               display: "flex",
               alignItems: "center",
@@ -196,16 +245,18 @@ useEffect(() => {
           >
             <Box position="relative" display="inline-block">
               {/* Hidden input */}
-              <input type="file" 
+              <input
+                type="file"
                 id="clientFile"
-              accept="image/*" 
-              onChange={handleImageChange}
-               style={{ display: "none"}} />
-  
+                accept="image/*"
+                onChange={handleImageChange}
+                style={{ display: "none" }}
+              />
+
               {/* Label acts as clickable avatar */}
               <label htmlFor="clientFile" style={{ cursor: "pointer" }}>
                 <Avatar
-                variant="square"
+                  variant="square"
                   alt="Profile"
                   src={preview || "/public/Images/AddPic.webp"}
                   sx={{
@@ -229,120 +280,166 @@ useEffect(() => {
             </Box>
           </FormControl>
           <FormControl>
-  <input
-    type="file"
-    accept="image/*"
-    multiple
-    onChange={handleGalleryChange}
-    style={{ margin: "10px 0" }}
-  />
-  <Box display="flex" gap={1} flexWrap="wrap">
-    {galleryPreview.map((src, index) => (
-      <Avatar
-        key={index}
-        src={src}
-        variant="square"
-        sx={{ width: 70, height: 70 }}
-      />
-    ))}
-  </Box>
-</FormControl>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleGalleryChange}
+              style={{ margin: "10px 0" }}
+            />
+            <Box display="flex" gap={1} flexWrap="wrap">
+              {galleryPreview.map((src, index) => (
+                <Avatar
+                  key={index}
+                  src={src}
+                  variant="square"
+                  sx={{ width: 70, height: 70 }}
+                />
+              ))}
+            </Box>
+          </FormControl>
 
           <FormControl>
-        <TextField label="اسم المنتج" name="Name" fullWidth sx={{ mb: 2 }} value={formData.Name} onChange={handleChange} />
-        </FormControl>
-        <FormControl>
-        <TextField label="الوصف" name="Description" fullWidth multiline rows={3} sx={{ mb: 2 }} value={formData.Description} onChange={handleChange} />
-        </FormControl>
-        <FormControl>
-        <TextField label="السعر" name="Price" type="number" fullWidth sx={{ mb: 2 }} value={formData.Price} onChange={handleChange} />
-        </FormControl>
-        <FormControl>
-        <TextField label="سعر التكلفة" name="CostPrice" type="number" fullWidth sx={{ mb: 2 }} value={formData.CostPrice} onChange={handleChange} />
-        </FormControl>
-        <FormControl>
-  <label>اختر الأحجام</label>
-  <Box  sx={{ display:"grid",
-   gridTemplateColumns:"1fr 1fr 1fr 1fr",
-   gridAutoRows:"68px"}}>
-    {availableSizes.map(size => (
-      <label key={size.id}>
-        <input
-          type="checkbox"
-          value={size.id}
-          checked={sizes.includes(size.id)}
-          onChange={(e) => {
-            const val = parseInt(e.target.value);
-            setSizes(prev =>
-              prev.includes(val) ? prev.filter(id => id !== val) : [...prev, val]
-            );
-          }}
-        />
-        {size.name}
-      </label>
-    ))}
-  </Box>
-</FormControl>
+            <TextField
+              label="اسم المنتج"
+              name="Name"
+              fullWidth
+              sx={{ mb: 2 }}
+              value={formData.Name}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <TextField
+              label="الوصف"
+              name="Description"
+              fullWidth
+              multiline
+              rows={3}
+              sx={{ mb: 2 }}
+              value={formData.Description}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <TextField
+              label="السعر"
+              name="Price"
+              type="number"
+              fullWidth
+              sx={{ mb: 2 }}
+              value={formData.Price}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <TextField
+              label="سعر التكلفة"
+              name="CostPrice"
+              type="number"
+              fullWidth
+              sx={{ mb: 2 }}
+              value={formData.CostPrice}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl>
+            <label>اختر الأحجام</label>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                gridAutoRows: "68px",
+              }}
+            >
+              {availableSizes.map((size) => (
+                <label key={size.id}>
+                  <input
+                    type="checkbox"
+                    value={size.id}
+                    checked={(formData.productSizes || []).some((s) => s.id === size.id)}
+                    onChange={() => handelCahngeSize(size)}
+                  />
 
-        <FormControl>
-        <Select 
-    name="CategoryId" 
-    value={formData.CategoryId} 
-    onChange={handleChange} 
-    fullWidth 
-    sx={{ mb: 2 }}
-  >
-    <MenuItem value="">اختر الفئة</MenuItem>
-    {categories.map((cat) => (
-      <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
-    ))}
-  </Select>
-        </FormControl>
+                  {size.name}
+                </label>
+              ))}
+            </Box>
+          </FormControl>
 
-        <FormControl>
-        <Select 
-    name="BrandId" 
-    value={formData.BrandId} 
-    onChange={handleChange} 
-    fullWidth 
-    sx={{ mb: 2 }}
-  >
-    <MenuItem value="">اختر الفئة</MenuItem>
-    {(brandsRes ||[]).map((B) => (
-      <MenuItem key={B.id} value={B.id}>{B.name}</MenuItem>
-    ))}
-  </Select>
-        </FormControl>
-      
+          <FormControl>
+            <Select
+              name="CategoryId"
+              value={formData.CategoryId}
+              onChange={handleChange}
+              fullWidth
+              sx={{ mb: 2 }}
+            >
+              <MenuItem value="">اختر الفئة</MenuItem>
+              {categories.map((cat) => (
+                <MenuItem key={cat.id} value={cat.id}>
+                  {cat.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-<FormControl>
-<Select 
-name="TargetGroupId" 
-value={formData.TargetGroupId} 
-onChange={handleChange} 
-fullWidth 
-sx={{ mb: 2 }}
->
-<MenuItem value="">اختر الفئة</MenuItem>
-{(TargetGroupRes ||[]).map((t) => (
-<MenuItem key={t.id} value={t.id}>{t.name}</MenuItem>
-))}
-</Select>
-</FormControl>
-        <select name="SupplierId" value={formData.SupplierId} onChange={handleChange} style={{ width: "100%", padding: 10, marginBottom: 20 }}>
-          <option value="">اختر المورد</option>
-          {(suppliers || []).map((sup) => (
-            <option key={sup.id} value={sup.id}>{sup.name}</option>
-          ))}
-        </select>
-  
-    
-  
-  
-        <Button type="submit" variant="contained" fullWidth disabled={loading}>
-          {loading ? <CircularProgress size={24} /> : "إضافة المنتج"}
-        </Button>
-        <Button
+          <FormControl>
+            <Select
+              name="BrandId"
+              value={formData.BrandId}
+              onChange={handleChange}
+              fullWidth
+              sx={{ mb: 2 }}
+            >
+              <MenuItem value="">اختر الفئة</MenuItem>
+              {(brandsRes || []).map((B) => (
+                <MenuItem key={B.id} value={B.id}>
+                  {B.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl>
+            <Select
+              name="TargetGroupId"
+              value={formData.TargetGroupId}
+              onChange={handleChange}
+              fullWidth
+              sx={{ mb: 2 }}
+            >
+              <MenuItem value="">اختر الفئة</MenuItem>
+              {(TargetGroupRes || []).map((t) => (
+                <MenuItem key={t.id} value={t.id}>
+                  {t.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <select
+            name="SupplierId"
+            value={formData.SupplierId}
+            onChange={handleChange}
+            style={{ width: "100%", padding: 10, marginBottom: 20 }}
+          >
+            <option value="">اختر المورد</option>
+            {(suppliers || []).map((sup) => (
+              <option key={sup.id} value={sup.id}>
+                {sup.name}
+              </option>
+            ))}
+          </select>
+
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            disabled={loading}
+          >
+            {loading ? <CircularProgress size={24} /> : "إضافة المنتج"}
+          </Button>
+          <Button
             startIcon={<ArrowBack />}
             component={Link}
             to={`/products`}
@@ -357,6 +454,6 @@ sx={{ mb: 2 }}
           </Button>
         </Box>
       </Card>
-</Box>
+    </Box>
   );
 }

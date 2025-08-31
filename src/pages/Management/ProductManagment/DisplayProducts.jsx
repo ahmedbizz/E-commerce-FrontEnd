@@ -105,6 +105,7 @@ const DisplayProducts = () => {
             setEmpty(true);
           }
     } catch (err) {
+      console.log(err)
       if (err.response?.status === 401) {
         notifyErorr("Access denied 401 Unauthorized");
       }
@@ -273,7 +274,7 @@ const DisplayProducts = () => {
 
       <Table className="Table">
         <TableHead   className="TableHead">
-          <TableRow className="TableRow">
+          <TableRow >
             <TableCell>{t("Image")}</TableCell>
             <TableCell>{t("Name")}</TableCell>
             <TableCell>{t("price")}</TableCell>
@@ -290,12 +291,7 @@ const DisplayProducts = () => {
             return (
               <TableRow
                 key={index}
-                sx={{
-                  ":hover": {
-                    backgroundColor: "rgb(141, 189, 189)",
-                    boxShadow: " 0px 6px 0px rgb(240, 240, 175, 1)",
-                  },
-                }}
+                className="TableRow"
               >
                 <TableCell>
                   {" "}

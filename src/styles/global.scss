@@ -1,7 +1,7 @@
 html, body, #root  {
-  height: 100%;
-  margin: 0 auto;
-  padding: 0;
+min-height: 100vh; 
+margin: 0 auto;
+padding: 0;
 
   background: linear-gradient(135deg, #f3fffd, #f6f8f8, #e3ecee);
 
@@ -800,12 +800,13 @@ a {
 
 
     .SizeOptions {
-
+   
       gap: 10px;
       display: grid;
       grid-template-columns: repeat(auto-fill, 128px);
       grid-auto-rows: 58px;
       .SizeButton {
+        border: 2px solid red;
         padding: 6px 12px;
         background-color: #fff;
         border: 1px solid #ccc;

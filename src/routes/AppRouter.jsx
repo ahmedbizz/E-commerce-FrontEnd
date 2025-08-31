@@ -53,6 +53,7 @@ import UpdateTargetGroup from "../pages/Management/ManagmentTargetGroup/UpdateTa
 import CreateInventory from "../pages/Management/ManagmentInventory/CreateInventory";
 import DispalyInventory from "../pages/Management/ManagmentInventory/DisplayInventory";
 import UpdateInventory from "../pages/Management/ManagmentInventory/UpdateInventory";
+import {ROLES} from "../utils/Role" 
 export default function AppRouter() {
   return (
     <Routes>
@@ -76,7 +77,7 @@ export default function AppRouter() {
         <Route path="/SignUp" element={<SignUp />} />
       </Route>
 
-      <Route element={<PrivateRoute isPublic={false} />}>
+      <Route element={<PrivateRoute role={ROLES.USER} />}>
         <Route path="/" element={<MainLayout />}>
           <Route
             index
@@ -94,7 +95,7 @@ export default function AppRouter() {
           <Route path="cart" element={<Cart />} />
         </Route>
       </Route>
-      <Route element={<PrivateRoute role={"admin"} isPublic={false} />}>
+      <Route element={<PrivateRoute role={ROLES.ADMIN} />}>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Main />} />
           {/* Managment Product */}

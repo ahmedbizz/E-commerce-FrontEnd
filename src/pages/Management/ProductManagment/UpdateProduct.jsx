@@ -47,7 +47,6 @@ export default function UpdateProduct() {
       setLoading(true);
       try {
         const res = await GetProductById(id);
-
         setFormData({
           Name: res.data.name || "",
           Description: res.data.description || "",
@@ -61,12 +60,11 @@ export default function UpdateProduct() {
           clientFile: null,
           clientFiles: [],
           productImages: res.data.productImages || [],
-          productSizes: res.data.productSizes
-          ? res.data.productSizes
-              .map(ps => ps.sizeId) // أو ps.SizeId حسب الـ backend
-              .filter(id => id != null) // تصفية null
-          : [],
+          productSizes: res.data.productSizes||[]
         });
+        console.log("البيانات الكاملة من السيرفر:", res.data);
+
+        console.log(res.data.productSizes)
 
         setPreview(
           res.data.imageUrl
@@ -119,7 +117,20 @@ export default function UpdateProduct() {
       setFormData(prev => ({ ...prev, clientFile: file }));
     }
   };
-
+ 
+  const handelCahngeSize = (size) => {
+    setFormData(prev => {
+      const exists = prev.productSizes.some(s => s.id === size.id);
+      const updatedSizes = exists
+        ? prev.productSizes.filter(s => s.id !== size.id)
+        : [...prev.productSizes, size];
+  
+      return { ...prev, productSizes: updatedSizes };
+    });
+  };
+  
+ 
+ 
   const handleGalleryChange = (e) => {
     const files = Array.from(e.target.files);
     if (files.length > 0) {
@@ -153,11 +164,13 @@ export default function UpdateProduct() {
       }
 
       // الأحجام بشكل صحيح
-      formData.productSizes.filter(id => id != null).forEach((sizeId, index) => {
-        
-        data.append(`ProductSizes`, sizeId);
-      });
-      console.log(formData.productSizes)
+      data.append("ProductSizes", JSON.stringify(formData.productSizes));
+
+
+      for (let pair of data.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+      
 
       await UpdateProductById(data, id);
       setSuccess(t("update_success"));
@@ -217,19 +230,13 @@ export default function UpdateProduct() {
             <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gridAutoRows: "68px" }}>
               {availableSizes.map(size => (
                 <label key={size.id}>
-                  <input
-                    type="checkbox"
-                    value={size.id}
-                    checked={formData.productSizes.includes(size.id)}
-                    onChange={() => {
-                      setFormData(prev => ({
-                        ...prev,
-                        productSizes: prev.productSizes.includes(size.id)
-                          ? prev.productSizes.filter(id => id !== size.id)
-                          : [...prev.productSizes, size.id]
-                      }));
-                    }}
-                  />
+<input
+  type="checkbox"
+  value={size.id}
+  checked={formData.productSizes.some(s => s.id === size.id)}
+  onChange={() => handelCahngeSize(size)}
+/>
+
                   {size.name}
                 </label>
               ))}

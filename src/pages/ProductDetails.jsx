@@ -23,6 +23,7 @@ export default function ProductDetails() {
   const [currentImage, setcurrentImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
   const { t } = useTranslation();
   const [products, setProducts] = useState([]);
   const settings = {
@@ -156,12 +157,22 @@ export default function ProductDetails() {
 <Box classNam="SizeBox">
 
           <Box className="SizeOptions">
-          <Button className="SizeButton">xs</Button>
-          <Button className="SizeButton">s</Button>
-          <Button className="SizeButton">M</Button>
-            <Button className="SizeButton">L</Button>
-            <Button className="SizeButton">XL</Button>
-            <Button className="SizeButton">XXL</Button>
+          {(product.productSizes||[]).map((size, index) => {
+                return (
+                  <Button
+                    key={index}
+                    className={`SizeButton ${selectedSize === size.id ? "selected" : ""}`}
+                    transition={{ type: "spring", stiffness: 300 }}
+                    onClick={() => {
+                      setSelectedSize(size.id)}}
+  
+                  >
+    {size.name}
+                  </Button>
+                );
+              })}
+      
+   
             </Box>
 </Box>
         <Box className="ActionButtons">

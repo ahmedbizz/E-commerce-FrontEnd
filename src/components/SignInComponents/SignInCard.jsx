@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Alert} from '@mui/material'
+import {Alert,CircularProgress} from '@mui/material'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import MuiCard from '@mui/material/Card';
@@ -46,6 +46,7 @@ export default function SignInCard() {
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
   const { loginUser } = useAuth();
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ export default function SignInCard() {
         Email,
         Password
     };
-    
+    setLoading(true);
     try {
         const res = await login(data);
       
@@ -85,6 +86,8 @@ export default function SignInCard() {
       } catch (err) {
     
         setError("Email or password failed")
+      }finally {
+        setLoading(false);
       }
   };
 
@@ -191,8 +194,8 @@ export default function SignInCard() {
           label="Remember me"
         />
         <ForgotPassword open={open} handleClose={handleClose} />
-        <Button type="submit" fullWidth variant="contained" onClick={validateInputs}>
-          Sign in
+        <Button type="submit" fullWidth variant="contained" onClick={validateInputs} disabled={loading}  >
+        {loading ? <CircularProgress size={24} /> :"Sign in"}
         </Button>
         <Typography sx={{ textAlign: 'center' }}>
           Don&apos;t have an account?{' '}
