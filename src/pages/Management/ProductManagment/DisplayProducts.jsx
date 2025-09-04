@@ -26,6 +26,7 @@ import AccessAlarm from "@mui/icons-material/AccessAlarm";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import Add from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
+import { debounce } from "lodash";
 
 const DisplayProducts = () => {
   const navigete = useNavigate();
@@ -63,33 +64,61 @@ const DisplayProducts = () => {
   const [isEmpty , setEmpty]=useState(false)
   const [isAccess , setAccess]=useState(false)
   const [Filter, setFilter] = useState([]);
-  const fetchProducts = async (page = 1) => {
-    GetProducts(page =1)
-      .then((res) => {setProducts(res.data.items)
-        setFilter(res.data.items)
-        if(res.data?.items.length <=0){
-          setEmpty(true);
+  const [query, setQuery] = useState("");
+  const [filters, setFilters] = useState({
+    searchTerm: "",
+    brandId: null,
+    groupId: null,
+    categoryId: null,
+    minPrice: null,
+    maxPrice: null,
+  });
+
+
+
+  const fetchProducts = async (page = 1 ) => {
+    setLoading(true);
+    try {
+      const params = { page: Number(page) };
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== null && value !== "") {
+          params[key] = value;
         }
-        setCurrentPage(res.data.currentPage);
-        setTotalPages(res.data.totalPages);})
-      .catch((err) => {
-        if (err.response?.status === 404) {
-          notifyErorr("لا يوجد مستخدمين في هذه المجموعة.");
-          
-          setEmpty(true);
+      });
       
-        } else {
-          notifyErorr("حدث خطأ أثناء جلب البيانات.");
-          setError(true);
-        }
-      })
-      .finally(() => setLoading(false));
-  }
+      const res = await GetProducts(params);
+      
+
+      setProducts(res.data.items);
+      setFilter(res.data.items);
+  
+      if (res.data?.items.length <= 0) {
+        setEmpty(true);
+      } else {
+        setEmpty(false);
+      }
+  
+      setCurrentPage(res.data.currentPage);
+      setTotalPages(res.data.totalPages);
+    } catch (err) {
+      console.log(err)
+      if (err.response?.status === 404) {
+        notifyErorr("لا يوجد منتجات.");
+        setEmpty(true);
+      } else {
+        notifyErorr("حدث خطأ أثناء جلب البيانات.");
+        setError(true);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  
 
   useEffect(() => {
     fetchProducts(currentPage);
   }, [currentPage]);
-
+  
 
 
   // for delete WareHouse
@@ -105,7 +134,6 @@ const DisplayProducts = () => {
             setEmpty(true);
           }
     } catch (err) {
-      console.log(err)
       if (err.response?.status === 401) {
         notifyErorr("Access denied 401 Unauthorized");
       }
@@ -114,30 +142,29 @@ const DisplayProducts = () => {
         
       } else {
         notifyErorr("حدث خطأ أثناء جلب البيانات.");
-        setError(true);
+    
       }
       notifyErorr(err.message);
     }
   };
 
-      // sraech
+// debounce لتحديث filters فقط
+const debouncedUpdateFilter = debounce((searchTerm) => {
+  setFilters(prev => ({ ...prev, searchTerm }));
+  setCurrentPage(1); // إعادة تعيين الصفحة للبحث الجديد
+}, 500);
 
-  // function for sreash on the site
+const handleSearch = (event) => {
+  const value = event.target.value;
+  setQuery(value); // يحافظ على النص في الـ input
+  debouncedUpdateFilter(value);
+};
 
-  const handleSearch = (event) => {
-    const query = event.target.value;
-    if (!query) {
-      setFilter(Products); // إذا خانة البحث فارغة، نعرض كل العناصر
-      return;
-    }
-
-    const filtered = Products.filter((us) =>
-      us.name.toLowerCase().includes(query.toLowerCase())
-
-    );
-    setFilter(filtered);
-  };
-
+// useEffect لمراقبة filters و currentPage
+useEffect(() => {
+  fetchProducts(currentPage);
+}, [currentPage, filters]);
+  
 
   if (Loading) {
     return (
@@ -345,7 +372,7 @@ const DisplayProducts = () => {
           className="Pagination"
           count={totalPages}
           page={currentPage}
-          onChange={(e, page) => setCurrentPage(page)}
+          onChange={(e, page) =>  setCurrentPage(page)}
           color="primary"
         />
       </Box>

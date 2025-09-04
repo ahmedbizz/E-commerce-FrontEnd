@@ -1,9 +1,8 @@
-import React, { use, useContext, useState } from "react";
+import React, {  useContext, useState } from "react";
 import {
   AppBar,
   Toolbar,
   IconButton,
-  Typography,
   InputBase,
   Menu,
   MenuItem,
@@ -14,7 +13,7 @@ import {
   ListItemText,
   Button,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Dashboard from "@mui/icons-material/Dashboard";
@@ -40,6 +39,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function ManageDashboard() {
   const { i18n } = useTranslation();
+  const navigator = useNavigate();
   const { t } = useTranslation();
   const { user, logoutUser } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -76,6 +76,7 @@ export default function ManageDashboard() {
   const handleLogout = () => {
     logoutUser();
     handleClose();
+    navigator("/login");
   };
   const handleOpenProducts = (event) => {
     setAnchorElProducts(event.currentTarget);

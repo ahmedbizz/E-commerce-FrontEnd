@@ -72,6 +72,9 @@ export default function AppRouter() {
           <Route path="product/:id" element={<ProductDetails />} />
           <Route path="products/all" element={<Products />} />
           <Route path="products/:brand/:brandId" element={<Products />} />
+          <Route path="products/:group/:groupId" element={<Products />} />
+          <Route path="products/:group/:groupId/:brand/:brandId" element={<Products />} />
+          <Route path="products/:group/:groupId/:brand/:brandId/:category/:categoryId" element={<Products />} />
         </Route>
         <Route path="/login" element={<SignInSide />} />
         <Route path="/SignUp" element={<SignUp />} />
@@ -92,6 +95,8 @@ export default function AppRouter() {
           <Route path="product/:id" element={<ProductDetails />} />
           <Route path="/products/all" element={<Products/>} />
           <Route path="products/:brand/:brandId" element={<Products />} />
+          <Route path="products/:group/:groupId/:brand/:brandId" element={<Products />} />
+          <Route path="products/:group/:groupId/:brand/:brandId/:category/:categoryId" element={<Products />} />
           <Route path="cart" element={<Cart />} />
         </Route>
       </Route>

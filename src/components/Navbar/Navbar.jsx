@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { Link } from "react-router-dom";
+
 import {
   AppBar,
   Toolbar,
@@ -29,6 +29,7 @@ import { AuthContext } from "../../context/AuthContext"; // تأكد من الم
 import { useTranslation } from "react-i18next";
 import { GetTargetGroups } from "../../services/TargetGroupService";
 import { GetBrandByType} from "../../services/BransService"
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import Cookies from "js-cookie";
 // ==== تنسيقات مخصصة للبحث ====
 const Search = styled("div")(({ theme }) => ({
@@ -49,6 +50,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function Navbar() {
   const { i18n } = useTranslation();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { user, logoutUser } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -69,6 +71,23 @@ export default function Navbar() {
     }
     fetchData();
   }, []);
+
+  const handleBransClick = (group,brand) => {
+    
+    const params = new URLSearchParams();
+    params.set("brandId", brand.id);
+    params.set("groupId", group.id);
+    navigate(`products/all?${params.toString()}`);
+  };
+
+  const handleCartegoryClick = (cate,group,brand) => {
+    
+    const params = new URLSearchParams();
+    params.set("brandId", brand.id);
+    params.set("groupId", group.id);
+    params.set("categoryId", cate.id);
+    navigate(`products/all?${params.toString()}`);
+  };
 
   // to cahange langueg
   const options = ["AR", "ENG"];
@@ -98,6 +117,7 @@ export default function Navbar() {
   const handleLogout = () => {
     logoutUser();
     handleClose();
+    navigate("/login");
   };
 
   const [anchorElMNI, setAnchorElMNI] = useState(null);
@@ -106,7 +126,7 @@ export default function Navbar() {
   const handleOpenMNI = (event, group) => {
 
     const getBrans = async ()=>{
-      var res = await GetBrandByType(group.id)
+    
       try {
         var res = await GetBrandByType(group.id)
         setBrands(res.data.brands)
@@ -120,7 +140,7 @@ export default function Navbar() {
     setAnchorElMNI(event.currentTarget);
     setHoveredGroup(group);
     getBrans();
-    console.log(Brands)
+  
 
 
   };
@@ -241,7 +261,7 @@ export default function Navbar() {
                       <Paper elevation={3}>
                         {(Brands ||[]).map((item , index)=>(                        
                         <MenuList  key={index}>
-                          <MenuItem>{item.name}</MenuItem>
+                          <MenuItem onClick={()=>handleBransClick(group,item)}>{item.name}</MenuItem>
                           {(item.categories || []).map((cate,index)=>(
                               <MenuList sx={{
                                 paddingLeft:"30px",
@@ -252,7 +272,7 @@ export default function Navbar() {
                                   
                                 }
                               }} key={index}>
-                              <MenuItem>{cate.name}</MenuItem>
+                              <MenuItem onClick={()=>handleCartegoryClick(cate,group,item)}>{cate.name}</MenuItem>
                               </MenuList>
                           ))}
                         </MenuList>))}

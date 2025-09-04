@@ -1,78 +1,46 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   CardMedia,
   CardContent,
-  Typography,
-  CardActions,
-  Button,
+  Typography
 } from '@mui/material';
 import {formatPrice} from "/src/utils/formatPrice"
-import {AddToCart} from "../../services/CartService"
+
 
 
 export default function ProductCard({ product }) {
-
-
-  const handelCart = async(produtc)=>{
-    console.log(product.price)
-    const data ={
-    
-      "productId": produtc.id,
-      "quantity": 1,
-      "unitPrice": product.price
-    }
-    const res = await AddToCart(data);
-    if(res){
-      console.log(res)
-    }
-
-  }
-
-
+  const navigate = useNavigate();
 
   return (
-    <Card className='Card-Product'>
+    <Card  className='Card-Product'>
       <CardMedia
+      
+      onClick={()=>navigate(`/product/${product.id}`)}
+              
         component="img"
         width="100%"
         sx={{
           maxHeight:"400px",
-          objectFit:"cover"
+          objectFit:"cover",
+          cursor:"pointer"
         }}
         image={`https://localhost:7137/images/Products/${product.imageUrl}`}
         alt={product.name}
       />
-      <CardContent>
-        <Typography gutterBottom variant="h6" component="div" noWrap>
+      <CardContent className='CardContent'>
+        <Typography gutterBottom variant="h6" component="div" noWrap className='title'>
           {product.name}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" className='Description'>
           {product.description?.slice(0, 50)}...
         </Typography>
-        <Typography variant="subtitle1" color="primary" mt={1}>
+        <Typography variant="subtitle1" color="primary" mt={1} className='Price'>
           {formatPrice(product.price)} 
         </Typography>
       </CardContent>
-      <CardActions>
-        <Button
-          component={Link}
-          to={`/product/${product.id}`}
-          size="small"
-          variant="outlined"
-        >
-          عرض التفاصيل
-        </Button>
-        <Button
-          component={Link}
-          onClick={()=> handelCart(product)}
-          size="small"
-          variant="outlined"
-        >
-        اضف الى السله 
-        </Button>
-      </CardActions>
+
     </Card>
   );
 }

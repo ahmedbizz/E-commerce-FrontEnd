@@ -1,7 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
-import { GetProducts } from "../services/productService";
+import React, { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard/ProductCard";
-import { GetProductsByBrand } from "../services/BransService";
 import {
   Box,
   Paper,
@@ -15,28 +13,76 @@ import {
   Menu,
   MenuItem,
   Button,
+  Pagination,
 } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useParams } from "react-router-dom";
-import FilterListIcon from "@mui/icons-material/FilterList";
+import { useSearchParams, useNavigate, useParams } from "react-router-dom";
+import { GetTargetGroups } from "../services/TargetGroupService";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import {GetBrands} from "../services/BransService";
 import { useTranslation } from "react-i18next";
-
+import { GetProducts } from "../services/productService";
 const Products = ({ productsAPI }) => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const { t } = useTranslation();
-  const { brandId } = useParams();
+  const { brandId, groupId, categoryId } = useParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const [openPrice, setOpenPrice] = useState(false);
   const [openBrand, setOpenBrand] = useState(false);
-  const [openCategory, setOpenCategory] = useState(false);
+  const [openGroup, setOpenGroup] = useState(false);
   const [Filter, setFilter] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [brandsRes, setbrands] = useState([]);
+  const [TargetGroupRes, setTargetGroup] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [filters, setFilters] = useState({
+    searchTerm: "",
+    brandId: null,
+    groupId: null,
+    categoryId: null,
+    minPrice: null,
+    maxPrice: null,
+  });
 
+  useEffect(() => {
+    const initialFilters = {
+      searchTerm: searchParams.get("searchTerm") || "",
+      brandId: searchParams.get("brandId") || null,
+      groupId: searchParams.get("groupId") || null,
+      categoryId: searchParams.get("categoryId") || null,
+    };
+    setFilters(initialFilters);
+  }, [searchParams]);
+  //  for loadeing Tagrget Group List
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const TargetGroup = await GetTargetGroups();
+        setTargetGroup(TargetGroup.data);
+      } catch {
+        setTargetGroup([]);
+      }
+    }
+    fetchData();
+  }, []);
+  // To fetch all brands
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const brandsRes = await GetBrands();
+        setbrands(brandsRes.data.items);
+      } catch (err) {
+        setbrands([]);
+      }
+    }
+    fetchData();
+  }, []);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -46,25 +92,42 @@ const Products = ({ productsAPI }) => {
   const toggleDrawer = (state) => () => {
     setOpen(!open);
   };
-
-  // fetch products from API
   useEffect(() => {
-    if (brandId) {
-      GetProductsByBrand(brandId)
-        .then((res) => {
-          setProducts(res.data.products);
-          setFilter(res.data.products);
-        })
-        .finally(() => setLoading(false));
-    } else {
-      GetProducts()
-        .then((res) => {
-          setProducts(res.data.items);
-          setFilter(res.data.items);
-        })
-        .finally(() => setLoading(false));
+    fetchProducts(currentPage);
+  }, [currentPage, filters]);
+  // fetch products from API
+  const fetchProducts = async (page = 1) => {
+    setLoading(true);
+    try {
+      const params = { page };
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== null && value !== "") {
+          params[key] = value;
+        }
+      });
+
+      const res = await GetProducts(params);
+      setProducts(res.data.items);
+      setFilter(res.data.items);
+      setCurrentPage(res.data.currentPage);
+      setTotalPages(res.data.totalPages);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
     }
-  }, []);
+  };
+
+  const handleFilterChange = (newFilters) => {
+    setFilters((prev) => ({ ...prev, ...newFilters }));
+
+    // تحديث الـ URL
+    const searchParams = new URLSearchParams();
+    Object.entries({ ...filters, ...newFilters }).forEach(([key, value]) => {
+      if (value) searchParams.set(key, value);
+    });
+    navigate(`?${searchParams.toString()}`, { replace: true });
+  };
 
   // Sort by price lower and higher
   const sortByPrice = (order) => {
@@ -82,22 +145,6 @@ const Products = ({ productsAPI }) => {
 
     const [min, max] = newValue;
     const filtered = products.filter((p) => p.price >= min && p.price <= max);
-    setFilter(filtered);
-  };
-
-  const HandelFilters = (event) => {
-    const query = event.target.value;
-    if (!query) {
-      setFilter(products); // إذا خانة البحث فارغة، نعرض كل العناصر
-      return;
-    }
-    const filtered = products.filter(
-      (pro) =>
-        pro.name.toLowerCase().includes(query.toLowerCase()) ||
-        pro.brandId.toString().includes(query) ||
-        pro.targetGroupId.toString().includes(query) ||
-        pro.categoryId.toString().includes(query)
-    );
     setFilter(filtered);
   };
 
@@ -183,39 +230,38 @@ const Products = ({ productsAPI }) => {
 
               {/* فلترة بالماركة */}
               <ListItemButton onClick={() => setOpenBrand(!openBrand)}>
-                <ListItemText primary="فلترة بالماركة" />
+                <ListItemText primary={t("BrandFilter")} />
                 {openBrand ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
               <Collapse in={openBrand} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemText primary="Nike" />
-                  </ListItemButton>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemText primary="Adidas" />
-                  </ListItemButton>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemText primary="Puma" />
-                  </ListItemButton>
+                  {brandsRes.map((item, index) => (
+                    <ListItemButton
+                      key={index}
+                      onClick={() => handleFilterChange({ brandId: item.id })}
+                      sx={{ pl: 4 }}
+                    >
+                      <ListItemText primary={item.name} />
+                    </ListItemButton>
+                  ))}
                 </List>
               </Collapse>
 
-              {/* فلترة بالفئة */}
-              <ListItemButton onClick={() => setOpenCategory(!openCategory)}>
-                <ListItemText primary="فلترة بالفئة" />
-                {openCategory ? <ExpandLess /> : <ExpandMore />}
+              <ListItemButton onClick={() => setOpenGroup(!openGroup)}>
+                <ListItemText primary={t("GroupFilter")} />
+                {openGroup ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
-              <Collapse in={openCategory} timeout="auto" unmountOnExit>
+              <Collapse in={openGroup} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemText primary="رجالي" />
-                  </ListItemButton>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemText primary="نسائي" />
-                  </ListItemButton>
-                  <ListItemButton sx={{ pl: 4 }}>
-                    <ListItemText primary="ولادي" />
-                  </ListItemButton>
+                  {TargetGroupRes.map((item, index) => (
+                    <ListItemButton
+                      key={index}
+                      onClick={() => handleFilterChange({ groupId: item.id })}
+                      sx={{ pl: 4 }}
+                    >
+                      <ListItemText primary={item.name} />
+                    </ListItemButton>
+                  ))}
                 </List>
               </Collapse>
             </List>
@@ -224,10 +270,18 @@ const Products = ({ productsAPI }) => {
 
         <Box className="Box-Products">
           {(productsAPI ? productsAPI : Filter || []).map((item, index) => (
-            <Box>
-              <ProductCard product={item} key={index} />
+            <Box key={index}>
+              <ProductCard product={item} />
             </Box>
           ))}
+          <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={(e, page) => setCurrentPage(page)}
+              color="primary"
+            />
+          </Box>
         </Box>
       </Box>
     </Box>

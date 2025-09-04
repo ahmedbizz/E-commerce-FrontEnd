@@ -28,7 +28,7 @@ if(!user){
 return <Navigate to="/login" replace/>
 }
 if (roleUser !== role) {
-return <Navigate to="/access-denied" replace />;
+return <Navigate to="*" replace />;
 }
 
 

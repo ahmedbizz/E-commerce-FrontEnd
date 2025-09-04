@@ -64,6 +64,11 @@
     "Filters":"Filters",
     "Low-price":"Low-price",
     "High-price":"High-price",
-    "price":"price"
+    "price":"price",
+    "unauth":"you are not login , try to login",
+    "size-error":"Select size please",
+    "erorr":"An unknown error has occurred",
+    "BrandFilter":"Filter by Brand ",
+    "GroupFilter":"Filter by SEX "
   
   }

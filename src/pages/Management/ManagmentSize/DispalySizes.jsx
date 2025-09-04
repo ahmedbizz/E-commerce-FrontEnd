@@ -68,7 +68,6 @@ const DispalySize = () => {
   const fetchSizes = async (page = 1) => {
     GetSizes((page = 1))
       .then((res) => {
-        console.log(res)
         setSizes(res.data);
         setFilter(res.data);
         if (res.data?.length <= 0) {
@@ -92,46 +91,21 @@ const DispalySize = () => {
     fetchSizes(currentPage);
   }, [currentPage]);
 
-  const Refresh = async (page = currentPage) => {
-    setLoading(true);
-    try {
-      const res = await GetSizes(page);
-      if (!res.data.items || res.data.items.length === 0) {
-        // إذا الصفحة أصبحت فارغة بعد الحذف
-        const newPage = page > 1 ? page - 1 : 1;
-        if (newPage !== page) {
-          setCurrentPage(newPage);
-          return Refresh(newPage); // إعادة المحاولة بالصفحة الجديدة
-        } else {
-          setSizes([]);
-          setEmpty(true);
-        }
-      } else {
-        setSizes(res.data.items);
-        setCurrentPage(res.data.currentPage);
-        setTotalPages(res.data.totalPages);
-        setEmpty(false);
-      }
-    } catch (err) {
-      if (err.response?.status === 404) {
-        notifyErorr("لا يوجد مستودعات في هذه الصفحة.");
-        setEmpty(true);
-      } else {
-        notifyErorr("حدث خطأ أثناء جلب البيانات.");
-        setError(true);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+
 
   // for delete Size
   const deleteByID = async (id) => {
     try {
       const res = await DeleteSizeByID(id);
       notify(res.data.message);
-      Refresh(currentPage); // تحديث الصفحة بعد الحذف
+      const updatedList = Sizes.filter((g) => g.id !== id);
+      setSizes(updatedList);
+      setFilter(updatedList);
+      if (updatedList.length === 0) {
+        setEmpty(true);
+      }
     } catch (err) {
+  
       notifyErorr(err.message);
     }
   };
@@ -276,7 +250,7 @@ const DispalySize = () => {
                 <TableCell align="left">
                   <IconButton
                     component={Link}
-                    to={`/Size/${item.id}`}
+                    to={`/Size/edit/${item.id}`}
                     sx={{ color: "green" }}
                   >
                     <EditNote />

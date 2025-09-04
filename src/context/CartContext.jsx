@@ -44,17 +44,20 @@ const IncreaseItemById = async (id) => {
   }
 };
 
- // حذف عنصر في السلة
- const DeleteItemById = async (id) => {
-  try {
 
-    var res = await DeleteItem(id);
-    if(res.data.items){setCartItems(res.data.items)}
-  
-  } catch (err) {
-    console.error("خطأ في حذف العنصر:", err);
-  }
-};
+
+    // for delete Category
+    const DeleteItemById = async (id) => {
+      try {
+        const res = await DeleteItem(id);
+        
+        const updatedList = cartItems.filter((g) => g.id !== id);
+        setCartItems(updatedList);
+      
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
 
 
 

@@ -207,6 +207,84 @@ body.dark .Card {
   padding: 5%;
 }
 
+.Card-Continer-Dialog {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-box-pack: center !important;
+      -ms-flex-pack: center !important;
+          justify-content: center !important;
+  -webkit-box-align: center !important;
+      -ms-flex-align: center !important;
+          align-items: center !important;
+  padding: 5%;
+}
+
+.Card-Continer-Dialog .Card {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-item-align: center;
+      align-self: center;
+  width: 100%;
+  padding: 32px;
+  gap: 16px;
+  /* Dark mode */
+}
+
+@media (min-width: 600px) {
+  .Card-Continer-Dialog .Card {
+    width: 450px;
+  }
+}
+
+body.dark .Card-Continer-Dialog .Card {
+  background: rgba(0, 0, 0, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.Card-Continer-Dialog .Card .DialogTitle {
+  color: white;
+  font-size: xx-large;
+}
+
+.Card-Continer-Dialog .Card .DialogContent {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-item-align: center;
+      align-self: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 15px;
+  color: white;
+  font-weight: bold;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.Card-Continer-Dialog .Card .DialogContent .login-button {
+  background-color: #020202;
+  color: white;
+  border-radius: 20px;
+  width: 50%;
+}
+
+.Card-Continer-Dialog .Card .DialogContent .login-button:hover {
+  background-color: #757474;
+}
+
 .TableHead {
   width: auto;
   background-color: rgba(9, 11, 17, 0.05);
@@ -386,34 +464,40 @@ body.dark .Card {
 .ads-container-home .slide {
   position: relative;
   width: 100%;
-  height: 100vh;
+  /* عرض كامل حسب الحاوية */
+  height: auto;
+  /* الارتفاع يتغير حسب محتوى الصورة */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  cursor: pointer;
 }
 
 .ads-container-home .slide img {
   width: 100%;
-  height: 70vh;
+  /* يتناسب مع عرض السلايد */
+  height: auto;
+  /* يحافظ على نسبة الصورة */
   -o-object-fit: cover;
      object-fit: cover;
-  display: block;
   border-radius: 10px;
 }
 
-.ads-container-home .slide .overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-}
-
-.ads-container-home .slide .GO_TO_SHOP_BT {
-  position: absolute;
-  top: 50%;
-  left: 45%;
-  background: rgba(0, 0, 0, 0.4);
-  width: 200px;
-  height: 70px;
+@media (max-width: 600px) {
+  .ads-container-home .slide {
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+  }
+  .ads-container-home .slide img {
+    width: 90%;
+    /* أصغر قليلاً على الشاشات الصغيرة */
+  }
 }
 
 .ads-container {
@@ -497,15 +581,38 @@ body.dark .Card {
           flex-direction: column;
   -ms-flex-item-align: center;
       align-self: center;
-  width: 100%;
-  gap: 16px;
+  width: 300px;
   -webkit-box-shadow: rgba(9, 11, 17, 0.05) 0px 5px 15px 0px, rgba(19, 23, 32, 0.05) 0px 15px 35px -5px;
           box-shadow: rgba(9, 11, 17, 0.05) 0px 5px 15px 0px, rgba(19, 23, 32, 0.05) 0px 15px 35px -5px;
 }
 
-@media (min-width: 600px) {
+.Card-Product .CardContent {
+  height: 100px;
+}
+
+.Card-Product .CardContent .title {
+  height: 30%;
+}
+
+.Card-Product .CardContent .Description {
+  height: 30%;
+}
+
+.Card-Product .CardContent .Price {
+  height: 20%;
+}
+
+@media (max-width: 1100px) and (min-width: 600px) {
   .Card-Product {
-    width: 450px;
+    width: 350px;
+    height: 580px;
+  }
+}
+
+@media (max-width: 600px) {
+  .Card-Product {
+    width: 250px;
+    height: 480px;
   }
 }
 
@@ -612,13 +719,12 @@ body.dark .Card-Product {
       -ms-flex: 1;
           flex: 1;
   min-height: calc(100vh - 90px);
-  margin: 0;
-  padding: 20px;
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 1fr 1fr 1fr;
-      grid-template-columns: 1fr 1fr 1fr;
-  grid-auto-rows: minmax(200px, auto);
+  margin: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   gap: 10px;
   overflow-y: auto;
 }
@@ -916,7 +1022,6 @@ a {
 }
 
 .ProductDetailsContainer .DetailsSide .SizeOptions .SizeButton {
-  border: 2px solid red;
   padding: 6px 12px;
   background-color: #fff;
   border: 1px solid #ccc;

@@ -207,7 +207,6 @@ export default function SignUp(props) {
       const res = await register(formDataToSend);
       setOpen(true);
       event.target.reset();
-      console.log(res)
       setsuccess( res.data.message);
       setTimeout(() => {
         navigate("/login"); // الصفحة التي تريدها

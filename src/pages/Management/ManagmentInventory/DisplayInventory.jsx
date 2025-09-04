@@ -132,7 +132,12 @@ const DispalyInventory = () => {
     try {
       const res = await DeleteInventoryByID(id);
       notify(res.data.message);
-      Refresh(currentPage); // تحديث الصفحة بعد الحذف
+      const updatedList = Inventorys.filter((g) => g.id !== id);
+      setCategorys(updatedList);
+      setFilter(updatedList);
+      if (updatedList.length === 0) {
+        setEmpty(true);
+      }
     } catch (err) {
       notifyErorr(err.message);
     }

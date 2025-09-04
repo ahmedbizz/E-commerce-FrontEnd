@@ -22,7 +22,7 @@ import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import { useTranslation } from "react-i18next";
 export default function Cart() {
   const { t } = useTranslation();
-  const { cartItems, fetchCart, DeleteItemById ,IncreaseItemById ,DecreaseItemById} = useContext(CartContext);
+  const { cartItems, fetchCart, DeleteItemById ,IncreaseItemById ,DecreaseItemById } = useContext(CartContext);
   const [paymentMethod, setPaymentMethod] = useState("cash");
 
   const totalPrice = cartItems.reduce(
@@ -33,6 +33,7 @@ export default function Cart() {
   useEffect(() => {
     fetchCart();
   }, []);
+
   return (
     <Box sx={{ maxWidth: "1000px", margin: "auto", padding: 3 }}>
       <Typography variant="h4" fontWeight="bold" gutterBottom>

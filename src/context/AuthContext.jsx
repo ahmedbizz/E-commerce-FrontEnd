@@ -13,6 +13,7 @@ export function AuthProvider({ children }) {
     const token = Cookies.get("token");
     if (token) {
       try {
+
         const decoded = jwtDecode(token);
         setRole(decoded.role?.toLowerCase());
         setUser(decoded);

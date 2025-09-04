@@ -126,7 +126,12 @@ const DisplayUsers = () => {
     try {
       const res = await DeleteUserByID(id);
       notify(res.data.message);
-      Refresh(currentPage); // تحديث الصفحة بعد الحذف
+      const updatedList = Users.filter((g) => g.id !== id);
+      setCategorys(updatedList);
+      setFilter(updatedList);
+      if (updatedList.length === 0) {
+        setEmpty(true);
+      }
     } catch (err) {
       notifyErorr(err.message);
     }

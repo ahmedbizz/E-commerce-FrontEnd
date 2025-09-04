@@ -65,8 +65,8 @@ const DispalyCategory = () => {
   const [error, setError] = useState(false);
   const [isEmpty, setEmpty] = useState(false);
   const [Filter, setFilter] = useState([]);
-  const fetchCategorys = async (page = 1) => {
-    GetCategorys((page = 1))
+  const fetchCategorys = async () => {
+    GetCategorys((currentPage))
       .then((res) => {
         setCategorys(res.data.items);
         setFilter(res.data.items);
@@ -129,7 +129,12 @@ const DispalyCategory = () => {
     try {
       const res = await DeleteCategoryByID(id);
       notify(res.data.message);
-      Refresh(currentPage); // تحديث الصفحة بعد الحذف
+      const updatedList = Categorys.filter((g) => g.id !== id);
+      setCategorys(updatedList);
+      setFilter(updatedList);
+      if (updatedList.length === 0) {
+        setEmpty(true);
+      }
     } catch (err) {
       notifyErorr(err.message);
     }
@@ -291,7 +296,7 @@ const DispalyCategory = () => {
                 <TableCell align="left">
                   <IconButton
                     component={Link}
-                    to={`/categorys/${item.id}`}
+                    to={`/categorys/edit/${item.id}`}
                     sx={{ color: "green" }}
                   >
                     <EditNote />
