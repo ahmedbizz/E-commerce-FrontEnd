@@ -76,8 +76,6 @@ export default function AppRouter() {
           <Route path="products/:group/:groupId/:brand/:brandId" element={<Products />} />
           <Route path="products/:group/:groupId/:brand/:brandId/:category/:categoryId" element={<Products />} />
         </Route>
-        <Route path="/login" element={<SignInSide />} />
-        <Route path="/SignUp" element={<SignUp />} />
       </Route>
 
       <Route element={<PrivateRoute role={ROLES.USER} />}>
@@ -148,6 +146,8 @@ export default function AppRouter() {
           <Route path="/inventory/:id" element={<UpdateInventory />} />
         </Route>
       </Route>
+        <Route path="/login" element={<SignInSide />} />
+        <Route path="/SignUp" element={<SignUp />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

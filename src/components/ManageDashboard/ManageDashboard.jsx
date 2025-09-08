@@ -39,7 +39,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function ManageDashboard() {
   const { i18n } = useTranslation();
-  const navigator = useNavigate();
+
   const { t } = useTranslation();
   const { user, logoutUser } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -76,7 +76,7 @@ export default function ManageDashboard() {
   const handleLogout = () => {
     logoutUser();
     handleClose();
-    navigator("/login");
+  
   };
   const handleOpenProducts = (event) => {
     setAnchorElProducts(event.currentTarget);

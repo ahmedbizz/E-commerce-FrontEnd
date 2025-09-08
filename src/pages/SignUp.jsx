@@ -198,10 +198,7 @@ export default function SignUp(props) {
       formDataToSend.append("clientFile", formData.clientFile);
     }
 
-    // طباعة محتوى formDataToSend
-    for (let pair of formDataToSend.entries()) {
-      console.log(`${pair[0]}: ${pair[1]}`);
-    }
+
 
     try {
       const res = await register(formDataToSend);

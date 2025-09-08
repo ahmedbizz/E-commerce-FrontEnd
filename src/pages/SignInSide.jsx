@@ -1,66 +1,52 @@
-import * as React from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
-import Stack from '@mui/material/Stack';
-import Panel from '../components/Panel/Panel';
-import SignInCard from '../components/SignInComponents/SignInCard';
-import Content from '../components/SignInComponents/Content';
+import { useState, useEffect } from "react";
+import CssBaseline from "@mui/material/CssBaseline";
+import { Box } from "@mui/material";
+import Panel from "../components/Panel/Panel";
+import SignInCard from "../components/SignInComponents/SignInCard";
+import Content from "../components/SignInComponents/Content";
+import Slider from "react-slick";
+
+import { GetProducts } from "../services/productService";
+import { GetBrands } from "../services/BransService";
 
 export default function SignInSide(props) {
+  const [images, setimages] = useState([]);
+
+  const fetchProducts = async (page = 1) => {
+    try {
+      const res = await GetBrands();
+      setimages(res.data.items);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+  const settings = {
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1, // عدد الصور الظاهرة في الشريحة
+    slidesToScroll: 1,
+    vertical: false, // إذا true تكون الشرايح طالعة ونازلة
+    autoplay: true,
+    autoplaySpeed: 3000,
+  };
   return (
-
-
-      <Stack
-        direction="column"
-        component="main"
-        sx={[
-          {
-            justifyContent: 'center',
-            height: 'calc((1 - var(--template-frame-height, 0)) * 100%)',
-            marginTop: 'max(40px - var(--template-frame-height, 0px), 0px)',
-            minHeight: '100%',
-          },
-          (theme) => ({
-            '&::before': {
-              content: '""',
-              display: 'block',
-              position: 'absolute',
-              zIndex: -1,
-              inset: 0,
-              backgroundImage:
-                'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
-              backgroundRepeat: 'no-repeat',
-              ...theme.applyStyles('dark', {
-                backgroundImage:
-                  'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
-              }),
-            },
-          }),
-        ]}
-      >
-        <Stack
-          direction={{ xs: 'column-reverse', md: 'row' }}
-          sx={{
-            justifyContent: 'center',
-            gap: { xs: 6, sm: 12 },
-            p: 2,
-            mx: 'auto',
-          }}
-        >
-        
-          <Stack
-            direction={{ xs: 'column-reverse', md: 'row' }}
-            sx={{
-              justifyContent: 'center',
-              gap: { xs: 6, sm: 12 },
-              p: { xs: 2, sm: 4 },
-              m: 'auto',
-            }}
-          >
-            <Content />
-            <SignInCard />
-          </Stack>
-        </Stack>
-      </Stack>
-
+    <Box className="SignBoxContiner">
+      <Slider {...settings}>
+        {(images || []).map((img, index) => (
+          <Box className="slide" key={index}>
+            <img
+              src={`https://localhost:7137/images/Brands/${img.imageUrl}`}
+              alt={`Ad ${index + 1}`}
+              style={{ width: "100%", height: "100%" }}
+            />
+            <div className="overlay"></div>
+          </Box>
+        ))}
+      </Slider>
+      <SignInCard />
+    </Box>
   );
 }

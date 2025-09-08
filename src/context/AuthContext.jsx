@@ -2,13 +2,14 @@ import { createContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import {ROLES} from "../utils/Role" 
+import {useNavigate} from "react-router-dom";
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [roleUser, setRole] = useState(ROLES.GUEST);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const token = Cookies.get("token");
     if (token) {
@@ -35,7 +36,9 @@ export function AuthProvider({ children }) {
 
   const logoutUser = () => {
     Cookies.remove("token");
+    setUser(null); 
     setRole(ROLES.GUEST);
+    navigate("/login");
   };
 
   return (

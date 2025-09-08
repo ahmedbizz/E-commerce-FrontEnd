@@ -19,11 +19,13 @@ const Panel = () => {
     fetchData();
   }, []);
 
-    // Function to handle product click
+
+
     const handleBransClick = (brand) => {
     
-      navigate(`/products/${brand.name}/${brand.id}`, {
-      });
+      const params = new URLSearchParams();
+      params.set("brandId", brand.id);
+      navigate(`products/all?${params.toString()}`);
     };
 
   return (

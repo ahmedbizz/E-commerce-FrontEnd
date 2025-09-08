@@ -78,17 +78,14 @@ const DisplayProducts = () => {
 
   const fetchProducts = async (page = 1 ) => {
     setLoading(true);
-    try {
+    try { 
       const params = { page: Number(page) };
       Object.entries(filters).forEach(([key, value]) => {
         if (value !== null && value !== "") {
           params[key] = value;
         }
-      });
-      
+      });     
       const res = await GetProducts(params);
-      
-
       setProducts(res.data.items);
       setFilter(res.data.items);
   
@@ -101,7 +98,7 @@ const DisplayProducts = () => {
       setCurrentPage(res.data.currentPage);
       setTotalPages(res.data.totalPages);
     } catch (err) {
-      console.log(err)
+    
       if (err.response?.status === 404) {
         notifyErorr("لا يوجد منتجات.");
         setEmpty(true);
@@ -115,9 +112,6 @@ const DisplayProducts = () => {
   };
   
 
-  useEffect(() => {
-    fetchProducts(currentPage);
-  }, [currentPage]);
   
 
 
@@ -151,7 +145,7 @@ const DisplayProducts = () => {
 // debounce لتحديث filters فقط
 const debouncedUpdateFilter = debounce((searchTerm) => {
   setFilters(prev => ({ ...prev, searchTerm }));
-  setCurrentPage(1); // إعادة تعيين الصفحة للبحث الجديد
+
 }, 500);
 
 const handleSearch = (event) => {
@@ -159,6 +153,9 @@ const handleSearch = (event) => {
   setQuery(value); // يحافظ على النص في الـ input
   debouncedUpdateFilter(value);
 };
+
+
+
 
 // useEffect لمراقبة filters و currentPage
 useEffect(() => {
@@ -286,6 +283,7 @@ useEffect(() => {
         <TextField
           variant="outlined"
           placeholder={"Type.."}
+          value={query}
           onChange={(e) => handleSearch(e)}
           fullWidth
           InputProps={{

@@ -23,6 +23,7 @@ import {
 import { ArrowForward, ArrowBack } from "@mui/icons-material";
 import { AddToCart } from "../services/CartService";
 import { AuthContext } from "../context/AuthContext";
+import { CartContext } from "../context/CartContext";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
@@ -32,6 +33,7 @@ const CustomAlert = React.forwardRef(function CustomAlert(props, ref) {
 export default function ProductDetails() {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
+  const { cartItems, fetchCart} = useContext(CartContext);
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [currentImage, setcurrentImage] = useState(null);
@@ -105,9 +107,10 @@ export default function ProductDetails() {
         unitPrice: product.price,
         SelectedSize: selectedSize.name,
       };
+      console.log(data)
       const res = await AddToCart(data);
 
-      console.log(res);
+      fetchCart();
       setsuccess(res.data.message);
       setOpenNotifcation(true);
     } catch (error) {

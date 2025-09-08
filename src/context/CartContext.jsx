@@ -1,8 +1,9 @@
-import { createContext, useState ,useEffect} from "react";
+import { createContext, useState ,useEffect ,useContext } from "react";
 import {GetCart ,IncreaseItem,DecreaseItem,DeleteItem} from "../services/CartService"
+import { AuthContext } from "../context/AuthContext";
 export const CartContext = createContext();
-
 export function CartProvider({ children }) {
+  const { user} = useContext(AuthContext);
   const [cartItems, setCartItems] = useState([]);
   const fetchCart = async () => {
     GetCart()
@@ -17,7 +18,8 @@ export function CartProvider({ children }) {
 
   useEffect(() => {
     fetchCart();
-  }, []);
+  }, [user]);
+
 
 // Increase Item in Cart
 

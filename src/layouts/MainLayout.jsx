@@ -1,4 +1,5 @@
 import Navbar from "../components/Navbar/Navbar";
+import Footer from "../components/Footer/Footer";
 import ManageDashboard from "../components/ManageDashboard/ManageDashboard";
 import { Outlet } from "react-router-dom";
 import { useContext } from "react";
@@ -39,6 +40,7 @@ export default function MainLayout() {
       <main style={{ padding: 20 }}>
         <Outlet />
       </main>
+      <Footer/>
     </>
   );
 }

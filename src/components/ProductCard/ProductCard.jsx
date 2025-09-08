@@ -10,7 +10,7 @@ import {formatPrice} from "/src/utils/formatPrice"
 
 
 
-export default function ProductCard({ product }) {
+const ProductCard = React.memo(({ product }) =>{
   const navigate = useNavigate();
 
   return (
@@ -28,6 +28,7 @@ export default function ProductCard({ product }) {
         }}
         image={`https://localhost:7137/images/Products/${product.imageUrl}`}
         alt={product.name}
+        loading="lazy"
       />
       <CardContent className='CardContent'>
         <Typography gutterBottom variant="h6" component="div" noWrap className='title'>
@@ -43,4 +44,5 @@ export default function ProductCard({ product }) {
 
     </Card>
   );
-}
+});
+export default ProductCard;

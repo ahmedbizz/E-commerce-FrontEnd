@@ -27,7 +27,6 @@ const Products = ({ productsAPI }) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { brandId, groupId, categoryId } = useParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(true);
@@ -53,12 +52,13 @@ const Products = ({ productsAPI }) => {
   useEffect(() => {
     const initialFilters = {
       searchTerm: searchParams.get("searchTerm") || "",
-      brandId: searchParams.get("brandId") || null,
-      groupId: searchParams.get("groupId") || null,
-      categoryId: searchParams.get("categoryId") || null,
+      brandId: searchParams.get("brandId") ? Number(searchParams.get("brandId")) : null,
+      groupId: searchParams.get("groupId") ? Number(searchParams.get("groupId")) : null,
+      categoryId: searchParams.get("categoryId") ? Number(searchParams.get("categoryId")) : null,
     };
     setFilters(initialFilters);
   }, [searchParams]);
+  
   //  for loadeing Tagrget Group List
   useEffect(() => {
     async function fetchData() {
@@ -119,15 +119,27 @@ const Products = ({ productsAPI }) => {
   };
 
   const handleFilterChange = (newFilters) => {
-    setFilters((prev) => ({ ...prev, ...newFilters }));
-
-    // تحديث الـ URL
+  
+    const clearedFilters = {
+      searchTerm: "",
+      brandId: null,
+      groupId: null,
+      categoryId: null,
+      minPrice: null,
+      maxPrice: null,
+      ...newFilters, 
+    };
+  
+    setFilters(clearedFilters);
+  
+  
     const searchParams = new URLSearchParams();
-    Object.entries({ ...filters, ...newFilters }).forEach(([key, value]) => {
+    Object.entries(clearedFilters).forEach(([key, value]) => {
       if (value) searchParams.set(key, value);
     });
     navigate(`?${searchParams.toString()}`, { replace: true });
   };
+  
 
   // Sort by price lower and higher
   const sortByPrice = (order) => {
@@ -268,21 +280,24 @@ const Products = ({ productsAPI }) => {
           </Paper>
         </Slide>
 
-        <Box className="Box-Products">
-          {(productsAPI ? productsAPI : Filter || []).map((item, index) => (
-            <Box key={index}>
-              <ProductCard product={item} />
-            </Box>
-          ))}
-          <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={(e, page) => setCurrentPage(page)}
-              color="primary"
-            />
+<Box className="Main-Box-Products">
+          <Box className="Box-Products">
+            {(productsAPI ? productsAPI : Filter || []).map((item, index) => (
+              <Box key={index}>
+                <ProductCard product={item} />
+              </Box>
+            ))}
+
           </Box>
-        </Box>
+          <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={(e, page) => setCurrentPage(page)}
+                color="primary"
+              />
+            </Box>
+</Box>
       </Box>
     </Box>
   );

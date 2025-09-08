@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Alert,CircularProgress} from '@mui/material'
+import {Alert,CircularProgress,Card} from '@mui/material'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import MuiCard from '@mui/material/Card';
@@ -18,36 +18,25 @@ import { login } from "../../services/authService";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Panel from '../Panel/Panel';
+import { useTranslation } from 'react-i18next';
 
 
-const Card = styled(MuiCard)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignSelf: 'center',
-  width: '100%',
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
-  boxShadow:
-    'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
-  [theme.breakpoints.up('sm')]: {
-    width: '450px',
-  },
-  ...theme.applyStyles('dark', {
-    boxShadow:
-      'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
-  }),
-}));
+
 
 export default function SignInCard() {
+  const {t} =useTranslation();
+  const [formData, setFormData] = useState({
+    Email: "",
+    Password: "",
+  });
 
   const [error, setError] = useState('');
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+  const [emailError, setEmailError] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const { loginUser } = useAuth();
   const navigate = useNavigate();
 
@@ -59,13 +48,24 @@ export default function SignInCard() {
     setOpen(false);
   };
 
+  const handleChange = (e) => {
+    setEmailError(false);
+    setEmailErrorMessage('');
+    setPasswordError(false);
+    setPasswordErrorMessage('');
+    setError('')
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit =async (event) => {
     event.preventDefault();
-    if (emailError || passwordError) {
-      return;
-    }
-    const Email = document.getElementById('Email').value;
-    const Password = document.getElementById('Password').value;
+    if (!validateInputs()) return;
+    const Email = formData.Email;
+    const Password = formData.Password;
     
     const data = {
         Email,
@@ -92,12 +92,11 @@ export default function SignInCard() {
   };
 
   const validateInputs = () => {
-    const email = document.getElementById('Email');
-    const password = document.getElementById('Password');
+
 
     let isValid = true;
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+    if (!formData.Email || !/\S+@\S+\.\S+/.test(formData.Email)) {
       setEmailError(true);
       setEmailErrorMessage('Please enter a valid email address.');
       isValid = false;
@@ -106,7 +105,7 @@ export default function SignInCard() {
       setEmailErrorMessage('');
     }
 
-    if (!password.value || password.value.length < 6) {
+    if (!formData.Password || formData.Password.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage('Password must be at least 6 characters long.');
       isValid = false;
@@ -129,7 +128,7 @@ export default function SignInCard() {
         variant="h4"
         sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
       >
-        Sign in
+        {t("login")}
       </Typography>
       <Box
         component="form"
@@ -145,7 +144,7 @@ export default function SignInCard() {
         )}
         </FormControl>
         <FormControl>
-          <FormLabel htmlFor="Email">Email</FormLabel>
+          <FormLabel htmlFor="Email">{t("email")}</FormLabel>
           <TextField
             error={emailError}
             helperText={emailErrorMessage}
@@ -159,19 +158,20 @@ export default function SignInCard() {
             fullWidth
             variant="outlined"
             color={emailError ? 'error' : 'primary'}
+            onChange={handleChange}
           />
         </FormControl>
         <FormControl>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <FormLabel htmlFor="Password">Password</FormLabel>
+            <FormLabel htmlFor="Password">{t("password")}</FormLabel>
             <Link
               component="button"
               type="button"
               onClick={handleClickOpen}
               variant="body2"
-              sx={{ alignSelf: 'baseline' }}
+              className='ForgotPassword'
             >
-              Forgot your password?
+              {t("ForgotPassword")}
             </Link>
           </Box>
           <TextField
@@ -187,30 +187,26 @@ export default function SignInCard() {
             fullWidth
             variant="outlined"
             color={passwordError ? 'error' : 'primary'}
+            onChange={handleChange}
           />
         </FormControl>
         <FormControlLabel
-          control={<Checkbox value="remember" color="primary" />}
+          control={<Checkbox value="remember" color="default" />}
           label="Remember me"
         />
         <ForgotPassword open={open} handleClose={handleClose} />
-        <Button type="submit" fullWidth variant="contained" onClick={validateInputs} disabled={loading}  >
+        <Button className='loginButton' type="submit" fullWidth variant="contained" onClick={validateInputs} disabled={loading}  >
         {loading ? <CircularProgress size={24} /> :"Sign in"}
         </Button>
-        <Typography sx={{ textAlign: 'center' }}>
-          Don&apos;t have an account?{' '}
-          <span>
-            <Link
-              href="/SignUp"
-              variant="body2"
-              sx={{ alignSelf: 'center' }}
-            >
-              Sign up
-            </Link>
-          </span>
-        </Typography>
+        <Button  className='SingupButton' fullWidth variant="contained" onClick={()=> navigate("/SignUp")} disabled={loading}  >
+        {t("Singup")}
+        </Button>
+      
+        
+
+
       </Box>
-      <Divider>or</Divider>
+      {/* <Divider>or</Divider>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <Button
           fullWidth
@@ -228,7 +224,7 @@ export default function SignInCard() {
         >
           Sign in with Facebook
         </Button>
-      </Box>
+      </Box> */}
     </Card>
   );
 }

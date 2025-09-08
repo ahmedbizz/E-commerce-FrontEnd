@@ -7,7 +7,7 @@ import ConstructionRoundedIcon from '@mui/icons-material/ConstructionRounded';
 import SettingsSuggestRoundedIcon from '@mui/icons-material/SettingsSuggestRounded';
 import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
 import { SitemarkIcon } from './CustomIcons';
-import Panel from '../Panel/Panel';
+import AdsPanel from '../../pages/AdsPanel';
 const items = [
   {
     icon: <SettingsSuggestRoundedIcon sx={{ color: 'text.secondary' }} />,
@@ -36,12 +36,10 @@ const items = [
 ];
 
 export default function Content() {
+  
   return (
-    <Box sx={{
-      height:"100%"
-    }}>
-
-      <Panel/>
+    <Box >
+      <AdsPanel/>
     </Box>
   );
 }

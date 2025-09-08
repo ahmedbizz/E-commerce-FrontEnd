@@ -1,7 +1,7 @@
 {
 
   "title-header1":"Fast deliver every where",
-  "login":"Login",
+  "login":"Sing in",
   "Categoryies":"Categoryies",
   "SubCategoryies":"SubCategoryies",
   "Products":"Products",
@@ -69,6 +69,7 @@
     "size-error":"Select size please",
     "erorr":"An unknown error has occurred",
     "BrandFilter":"Filter by Brand ",
-    "GroupFilter":"Filter by SEX "
+    "GroupFilter":"Filter by SEX ",
+    "ForgotPassword":"Forgot your Password ?"
   
   }

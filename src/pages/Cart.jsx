@@ -72,8 +72,9 @@ export default function Cart() {
           <Table sx={{ borderRadius: 3, boxShadow: 3, overflow: "hidden" }}>
             <TableHead sx={{ bgcolor: "grey.200" }}>
               <TableRow>
-                <TableCell align="center">الصورة</TableCell>
-                <TableCell>اسم المنتج</TableCell>
+                <TableCell align="center">{t("Image")}</TableCell>
+                <TableCell>{t("Name")}</TableCell>
+                <TableCell>Size</TableCell>
                 <TableCell align="center">السعر</TableCell>
                 <TableCell align="center">الكمية</TableCell>
                 <TableCell align="center">الإجمالي</TableCell>
@@ -96,7 +97,10 @@ export default function Cart() {
                     />
                   </TableCell>
                   <TableCell>
-                    <Typography fontWeight="500">{item.name}</Typography>
+                    <Typography fontWeight="500">{item.productName}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography fontWeight="500">{item.selectedSize}</Typography>
                   </TableCell>
                   <TableCell align="center">{item.unitPrice} ريال</TableCell>
                   <TableCell align="center">
