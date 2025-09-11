@@ -251,7 +251,7 @@ const DispalyGroup = () => {
                 <TableCell align="left">
                   <IconButton
                     component={Link}
-                    to={`/group/${item.id}`}
+                    to={`/group/edit/${item.id}`}
                     sx={{ color: "green" }}
                   >
                     <EditNote />

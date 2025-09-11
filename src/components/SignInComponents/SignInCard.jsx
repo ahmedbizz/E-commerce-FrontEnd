@@ -78,7 +78,7 @@ export default function SignInCard() {
         if(res.token){
         
         loginUser(res.token); // نفترض أن الـ API يرجع { token: "..." }
-        navigate("/");}
+      }
         else{
       
           setError(res.message ||"Email or password failed")

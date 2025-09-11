@@ -312,7 +312,7 @@ const DisplayUsers = () => {
                   </IconButton>
                   <IconButton
                     component={Link}
-                    to={`/user/${item.id}`}
+                    to={`/user/edit/${item.id}`}
                     sx={{ color: "green" }}
 
                   >
@@ -326,7 +326,7 @@ const DisplayUsers = () => {
       </Table>
       <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
         <Pagination
-className="Pagination"
+          className="Pagination"
           count={totalPages}
           page={currentPage}
           onChange={(e, page) => setCurrentPage(page)}

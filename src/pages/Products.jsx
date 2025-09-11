@@ -57,7 +57,8 @@ const Products = ({ productsAPI }) => {
       categoryId: searchParams.get("categoryId") ? Number(searchParams.get("categoryId")) : null,
     };
     setFilters(initialFilters);
-  }, [searchParams]);
+    fetchProducts(currentPage, initialFilters);
+  }, [searchParams, currentPage]);
   
   //  for loadeing Tagrget Group List
   useEffect(() => {
@@ -92,15 +93,13 @@ const Products = ({ productsAPI }) => {
   const toggleDrawer = (state) => () => {
     setOpen(!open);
   };
-  useEffect(() => {
-    fetchProducts(currentPage);
-  }, [currentPage, filters]);
+
   // fetch products from API
-  const fetchProducts = async (page = 1) => {
+  const fetchProducts = async (page = 1,filtersArg = filters) => {
     setLoading(true);
     try {
       const params = { page };
-      Object.entries(filters).forEach(([key, value]) => {
+      Object.entries(filtersArg).forEach(([key, value]) => {
         if (value !== null && value !== "") {
           params[key] = value;
         }

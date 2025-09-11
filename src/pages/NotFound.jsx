@@ -2,8 +2,10 @@ import React from "react";
 import { Box, Typography, Button } from "@mui/material";
 import NotAccessible from "@mui/icons-material/DoNotDisturb";
 import { useTranslation } from "react-i18next";
+import {useNavigate} from "react-router-dom";
 export default function NotFound() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -27,7 +29,7 @@ export default function NotFound() {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => navigete("/login")} // أو أي مسار إضافة المنتج
+          onClick={() => navigate("/login")} // أو أي مسار إضافة المنتج
         >
           {t("Access_logout")}
         </Button>

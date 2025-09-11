@@ -6,29 +6,24 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  IconButton,
-  Avatar,
-  Typography,Button,Pagination , TextField,
+  Typography,
+  Button,
+  Pagination,
+  TextField,
   InputAdornment,
 } from "@mui/material";
-import { Link ,useNavigate} from 'react-router-dom';
+import {  useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
-import {
-  GetProducts,
-  DeleteProductByID,
-  } from "../../../services/productService";
+import { GetOrder ,UpdateOrderById} from "../../../services/OrederService";
 import { useState, useEffect } from "react";
-import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import EditNote from "@mui/icons-material/EditNote";
 import { ToastContainer, toast } from "react-toastify";
 import AccessAlarm from "@mui/icons-material/AccessAlarm";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
-import Add from "@mui/icons-material/Add";
+import { formatPrice } from "/src/utils/formatPrice";
 import SearchIcon from "@mui/icons-material/Search";
-import { debounce } from "lodash";
 
-const DisplayProducts = () => {
+const DisplayOrders = () => {
   const navigete = useNavigate();
   const { t } = useTranslation();
   const notify = (value) => {
@@ -56,13 +51,13 @@ const DisplayProducts = () => {
     });
   };
   // for get all Role in list
-  const [Products, setProducts] = useState([]);
+  const [Orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [isEmpty , setEmpty]=useState(false)
-  const [isAccess , setAccess]=useState(false)
+  const [isEmpty, setEmpty] = useState(false);
+  const [isAccess, setAccess] = useState(false);
   const [Filter, setFilter] = useState([]);
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState({
@@ -74,9 +69,7 @@ const DisplayProducts = () => {
     maxPrice: null,
   });
 
-
-
-  const fetchProducts = async (page = 1 ) => {
+  const fetchOrders = async (page = 1) => {
     setLoading(true);
     try {
       const params = { page: Number(page) };
@@ -85,23 +78,23 @@ const DisplayProducts = () => {
           params[key] = value;
         }
       });
-      
-      const res = await GetProducts(params);
-      
 
-      setProducts(res.data.items);
+      const res = await GetOrder(params);
+
+      console.log(res.data.items);
+      setOrders(res.data.items);
       setFilter(res.data.items);
-  
+
       if (res.data?.items.length <= 0) {
         setEmpty(true);
       } else {
         setEmpty(false);
       }
-  
+
       setCurrentPage(res.data.currentPage);
       setTotalPages(res.data.totalPages);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       if (err.response?.status === 404) {
         notifyErorr("لا يوجد منتجات.");
         setEmpty(true);
@@ -113,36 +106,42 @@ const DisplayProducts = () => {
       setLoading(false);
     }
   };
+  const handleUpdateStatus = async (order, status) => {
+    try {
+      // order.id هو المهم هنا وليس الكائن كله
+      await UpdateOrderById(order.id, status); // يجب أن يكون await
+      notify(`Order status updated to ${status}`);
+      fetchOrders(currentPage); // إعادة جلب البيانات بعد التحديث
+    } catch (err) {
+      console.error(err);
+      notifyErorr("Can't update order. Call Administrator.");
+    }
+  };
   
-
   useEffect(() => {
-    fetchProducts(currentPage);
+    fetchOrders(currentPage);
   }, [currentPage]);
-  
-
 
   // for delete WareHouse
   const deleteByID = async (id) => {
     try {
-      const res = await DeleteProductByID(id);
+      const res = await DeleteOrderByID(id);
       notify(res.data.message);
-          // تحديث القائمة بدون إعادة تحميل
-          const updatedList = Products.filter((g) => g.id !== id);
-          setProducts(updatedList);
-          setFilter(updatedList);
-          if (updatedList.length === 0) {
-            setEmpty(true);
-          }
+      // تحديث القائمة بدون إعادة تحميل
+      const updatedList = Orders.filter((g) => g.id !== id);
+      setOrders(updatedList);
+      setFilter(updatedList);
+      if (updatedList.length === 0) {
+        setEmpty(true);
+      }
     } catch (err) {
       if (err.response?.status === 401) {
         notifyErorr("Access denied 401 Unauthorized");
       }
       if (err.response?.status === 404) {
         notifyErorr("لا يوجد منتجات في هذه الصفحة.");
-        
       } else {
         notifyErorr("حدث خطأ أثناء جلب البيانات.");
-    
       }
       notifyErorr(err.message);
     }
@@ -150,15 +149,22 @@ const DisplayProducts = () => {
   const handleSearch = (event) => {
     const query = event.target.value;
     if (!query) {
-      setFilter(Products); // إذا خانة البحث فارغة، نعرض كل العناصر
+      setFilter(Orders); // إذا خانة البحث فارغة، نعرض كل العناصر
       return;
     }
 
-    const filtered = Products.filter((us) =>
+    const filtered = Orders.filter((us) =>
       us.name.toLowerCase().includes(query.toLowerCase())
-    
-      );
+    );
     setFilter(filtered);
+  };
+
+  const statusButtonsMap = {
+    Pending: ["Processing", "Cancelled"], 
+    Processing: ["Shipped", "Cancelled"], 
+    Shipped: ["Delivered"], 
+    Delivered: [],
+    Cancelled: [], 
   };
 
   if (Loading) {
@@ -231,7 +237,7 @@ const DisplayProducts = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => navigete("/product/create")} // أو أي مسار إضافة المنتج
+          onClick={() => navigete("/Order/create")} // أو أي مسار إضافة المنتج
         >
           {t("new_item")}
         </Button>
@@ -264,19 +270,9 @@ const DisplayProducts = () => {
     );
   }
   return (
-    <Box   className="Display-Item-Continer">
-    
-      <ToastContainer/>
+    <Box className="Display-Item-Continer">
+      <ToastContainer />
       <Box className="Button_Search_Panel">
-        <Button
-          startIcon={<Add />}
-          component={Link}
-          to={`/product/create`}
-          variant="contained"
-          className="create-button"
-        >
-          {t("new")}
-        </Button>
         {/* البحث */}
         <TextField
           variant="outlined"
@@ -295,67 +291,49 @@ const DisplayProducts = () => {
       </Box>
 
       <Table className="Table">
-        <TableHead   className="TableHead">
-          <TableRow >
-            <TableCell>{t("Image")}</TableCell>
+        <TableHead className="TableHead">
+          <TableRow>
+            <TableCell>{t("#")}</TableCell>
+            <TableCell>{t("orderNumber")}</TableCell>
             <TableCell>{t("Name")}</TableCell>
-            <TableCell>{t("price")}</TableCell>
-            <TableCell>{t("costPrice")}</TableCell>
-            <TableCell>{t("stockQuantity")}</TableCell>
-            <TableCell>{t("categoryId")}</TableCell>
+            <TableCell>{t("email")}</TableCell>
+            <TableCell>{t("status")}</TableCell>
+            <TableCell>{t("Amount")}</TableCell>
             <TableCell align="left">{t("isActive")}</TableCell>
             <TableCell>{t("Action")}</TableCell>
-
           </TableRow>
         </TableHead>
-        <TableBody >
-          {(Filter.length?Filter:[]).map((item, index) => {
+        <TableBody>
+          {(Filter.length ? Filter : []).map((item, index) => {
             return (
-              <TableRow
-                key={index}
-                className="TableRow"
-              >
-                <TableCell>
-                  {" "}
-                  <Avatar
-                    alt={item.name}
-                    variant="square"
-                    sx={{
-                      width:"100px",
-                      height:"100px",
-                      borderRadius:"10px"
-                    }}
-                    src={
-                      item.imageUrl
-                        ? `https://localhost:7137/images/Products/${item.imageUrl}`
-                        : "/Product-avatar.jpg"
-                    }
-                  />
-                </TableCell>
-                <TableCell>{item.name}</TableCell>
-                <TableCell align="left">{item.price}</TableCell>
-                <TableCell align="left">{item.costPrice}</TableCell>
-                <TableCell align="left">{item.stockQuantity}</TableCell>
-                <TableCell align="left">{item.categoryId}</TableCell>
-      
-                <TableCell align="left">{item.isActive}</TableCell>
-                <TableCell align="left">
-                  <IconButton
-                    sx={{ color: "red" }}
-                    onClick={() => {
-                      deleteByID(item.id);
-                    }}
-                  >
-                    <DeleteRoundedIcon />
-                  </IconButton>
-                  <IconButton
-                    component={Link}
-                    to={`/product/edit/${item.id}`}
-                    sx={{ color: "green" }}
+              <TableRow key={index} className="TableRow">
+                <TableCell>{item.id}</TableCell>
+                <TableCell align="left">{item.orderNumber}</TableCell>
+                <TableCell align="left">{item.userName}</TableCell>
+                <TableCell align="left">{item.email}</TableCell>
+                <TableCell align="left">{item.status}</TableCell>
 
-                  >
-                    <EditNote />
-                  </IconButton>
+                <TableCell align="left">
+                  {formatPrice(item.totalAmount)}
+                </TableCell>
+                <TableCell align="left">
+                  {statusButtonsMap[item.status]?.map((nextStatus) => (
+                    <Button
+                      key={nextStatus}
+                      variant="contained"
+                      color={
+                        nextStatus === "Cancelled"
+                          ? "error"
+                          : nextStatus === "Delivered"
+                          ? "success"
+                          : "primary"
+                      }
+                      onClick={() => handleUpdateStatus(item,nextStatus)}
+                      sx={{ mr: 1,width:"110px" }}
+                    >
+                      {nextStatus}
+                    </Button>
+                  ))}
                 </TableCell>
               </TableRow>
             );
@@ -367,7 +345,7 @@ const DisplayProducts = () => {
           className="Pagination"
           count={totalPages}
           page={currentPage}
-          onChange={(e, page) =>  setCurrentPage(page)}
+          onChange={(e, page) => setCurrentPage(page)}
           color="primary"
         />
       </Box>
@@ -375,4 +353,4 @@ const DisplayProducts = () => {
   );
 };
 
-export default DisplayProducts;
+export default DisplayOrders;

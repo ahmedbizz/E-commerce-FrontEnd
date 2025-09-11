@@ -16,8 +16,15 @@ export function AuthProvider({ children }) {
       try {
 
         const decoded = jwtDecode(token);
-        setRole(decoded.role?.toLowerCase());
-        setUser(decoded);
+        const currentTime = Date.now() / 1000;
+      
+        if (decoded.exp && decoded.exp < currentTime) {
+          logoutUser();
+        } else {
+          setUser(decoded);
+          setRole(decoded.role?.toLowerCase());
+
+        }
       } catch {
         Cookies.remove("token");
         setRole(ROLES.GUEST);
@@ -30,8 +37,14 @@ export function AuthProvider({ children }) {
   const loginUser = (token) => {
     Cookies.set("token", token, { expires: 7 });
     const decoded = jwtDecode(token);
+    (decoded)
     setUser(decoded);
     setRole(decoded.role?.toLowerCase());
+    if (decoded.role?.toLowerCase() == ROLES.ADMIN) {
+      navigate("/System", { replace: true });
+    } else {
+      navigate("/", { replace: true });
+    }
   };
 
   const logoutUser = () => {

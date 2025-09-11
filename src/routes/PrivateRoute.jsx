@@ -3,7 +3,10 @@ import { Navigate, Outlet } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { Box, CircularProgress } from "@mui/material";
 export default function PrivateRoute({role, isPublic = false}) {
-  const { user, roleUser ,loading} = useAuth();
+  const { user, roleUser ,logoutUser,loading} = useAuth();
+
+
+
 if (loading) {
   return (
     <Box
@@ -21,16 +24,16 @@ if (loading) {
     </Box>
   );
 }
-if(isPublic){
-return <Outlet /> 
-}
+
 if(!user){
 return <Navigate to="/login" replace/>
 }
-if (roleUser !== role) {
-return <Navigate to="*" replace />;
+if(isPublic){
+  return <Outlet /> 
+  }
+if (role && roleUser !== role.toLowerCase()) {
+  return <Navigate to="*" replace />;
 }
-
 
 
 return <Outlet /> 

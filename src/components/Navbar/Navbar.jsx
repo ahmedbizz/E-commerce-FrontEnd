@@ -10,7 +10,6 @@ import {
   MenuItem,
   Avatar,
   Box,
-  List,
   ListItemButton,
   ListItemText,
   TextField,
@@ -20,6 +19,7 @@ import {
   Paper,
   ClickAwayListener,
   MenuList,
+  List,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -33,8 +33,9 @@ import { GetProducts } from "../../services/productService";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import Close from "@mui/icons-material/Close";
 import Check from "@mui/icons-material/Check";
-import CircularProgress from "@mui/material/CircularProgress";
+import { useMemo } from 'react';
 import Cookies from "js-cookie";
+
 
 export default function Navbar() {
   const { i18n } = useTranslation();
@@ -49,45 +50,36 @@ export default function Navbar() {
   const [TargetGroupRes, setTargetGroup] = useState([]);
   const [Brands, setBrands] = useState([]);
   const [Filter, setFilter] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
 
   const [query, setQuery] = useState("");
 
-
-
-
-
   const fetchProducts = async (value) => {
-  
     try {
-      const res = await GetProducts({ searchTerm: value });
-      setFilter(res.data.items);
-
+      const res = await GetProducts();
+      console.log(res.data.items);
+      setAllProducts(res.data.items); 
+      setFilter([]);
     } catch (err) {
       console.log(err);
-    } 
+    }
   };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
 
   const handleSearch = (event) => {
     setQuery(event.target.value);
   };
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      if (query.trim() !== "") {
-        fetchProducts(query);
-      } else {
-        setFilter([]);
-      }
-    }, 500); // نصف ثانية تأخير
-
-    return () => clearTimeout(handler); // تنظيف المؤقت عند كل تغيير
-  }, [query]);
 
   //  for loadeing Tagrget Group List
   useEffect(() => {
     async function fetchData() {
       try {
         const TargetGroup = await GetTargetGroups();
+      
         setTargetGroup(TargetGroup.data);
       } catch {
         setTargetGroup([]);
@@ -166,16 +158,38 @@ export default function Navbar() {
     setHoveredGroup(null);
   };
 
+
+  const visibleProducts = useMemo(() => {
+    if (!query) return []; // لا شيء قبل الكتابة
+    return allProducts.filter(product =>
+      product.name.toLowerCase().includes(query.toLowerCase())
+    );
+  }, [query, allProducts]);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <Box>
       {/* headar 1 section  */}
       <Box className="Box_header_1" sx={{ height: "65px" }}></Box>
-      <AppBar className="AppBarHeader" position="fixed"   sx={{
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1500,       // فوق باقي العناصر
-  }}>
+      <AppBar
+        className="AppBarHeader"
+        position={isScrolled ? "fixed" : "static"}
+
+      >
         <Toolbar
           sx={{
             display: anchorSearch ? "none" : "flex",
@@ -416,17 +430,21 @@ export default function Navbar() {
               </Box>
 
               {/* هنا تقدر تعرض نتائج البحث */}
-              <Box className="Box-Products">
+              <Box
+  sx={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+    gap: 16,
+    width: '100%',
+    maxHeight: 600,
+    overflowY: 'auto',
+  }}
+>
+  {visibleProducts.map((product) => (
+    <ProductCard key={product.id} product={product} />
+  ))}
+</Box>
 
-              
-                    {(Filter || []).map((item, index) => (
-                      <Box key={index} onClick={handleCloseSearch}>
-                        <ProductCard product={item} />
-                      </Box>
-                    ))}
-              
-            
-              </Box>
             </Paper>
           </ClickAwayListener>
         </Popper>

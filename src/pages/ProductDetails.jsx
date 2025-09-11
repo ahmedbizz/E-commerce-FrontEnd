@@ -107,11 +107,12 @@ export default function ProductDetails() {
         unitPrice: product.price,
         SelectedSize: selectedSize.name,
       };
-      console.log(data)
+
       const res = await AddToCart(data);
 
       fetchCart();
       setsuccess(res.data.message);
+      setSelectedSize({});
       setOpenNotifcation(true);
     } catch (error) {
       if (

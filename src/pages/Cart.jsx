@@ -1,5 +1,6 @@
 import { useContext, useState , useEffect } from "react";
 import { CartContext } from "../context/CartContext";
+import { AuthContext } from "../context/AuthContext";
 import {
   Box,
   Typography,
@@ -20,9 +21,11 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import { useTranslation } from "react-i18next";
+import {AddToOrder} from "../services/OrederService"
 export default function Cart() {
   const { t } = useTranslation();
   const { cartItems, fetchCart, DeleteItemById ,IncreaseItemById ,DecreaseItemById } = useContext(CartContext);
+  const { user} = useContext(AuthContext);
   const [paymentMethod, setPaymentMethod] = useState("cash");
 
   const totalPrice = cartItems.reduce(
@@ -33,6 +36,26 @@ export default function Cart() {
   useEffect(() => {
     fetchCart();
   }, []);
+
+
+
+  const handelOrder = ()=>{
+    const data ={
+      TotalAmount: totalPrice,
+      PaymentId: 1,
+      DeliveryRequestId: 1,
+      OrderItems: cartItems
+    }
+    console.log(data)
+    try{
+      const res= AddToOrder(data);
+      console.log(res)
+
+    }catch(err){
+      console.log(err)
+    }
+
+  }
 
   return (
     <Box sx={{ maxWidth: "1000px", margin: "auto", padding: 3 }}>
@@ -201,6 +224,7 @@ export default function Cart() {
               color="primary"
               size="large"
               sx={{ borderRadius: 3, px: 5 }}
+              onClick={()=>handelOrder()}
             >
               إتمام الطلب
             </Button>
