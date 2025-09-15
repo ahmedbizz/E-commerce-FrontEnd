@@ -138,7 +138,7 @@ const UpdateTargetGroup = () => {
 
           {/* Buttons */}
           <Box sx={{ display: "flex", gap: 1 }}>
-            <Button startIcon={<ArrowBack />} component={Link} to="/TargetGroups" variant="contained" fullWidth sx={{ backgroundColor: "rgb(200,122,122)" }}>
+            <Button startIcon={<ArrowBack />} component={Link} to="/System/TargetGroups" variant="contained" fullWidth sx={{ backgroundColor: "rgb(200,122,122)" }}>
               {t("Back")}
             </Button>
             <Button type="submit" variant="contained" fullWidth sx={{ backgroundColor: "rgb(56,122,122)" }}>

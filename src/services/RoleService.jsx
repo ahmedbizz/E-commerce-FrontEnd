@@ -4,5 +4,12 @@ export const CreateRole  = (data)=> axios.post(`/Role`, data, {
     "Content-Type": "application/json"
   }
 });
-export const GetRoles = ()=>axios.get(`/Role`);
+export const GetRoles = (page) =>
+  axios.get(`/Role`, {
+    params: {
+      page: page,
+
+    }
+  });
+
 export const DeleteRoleByID = (id)=> axios.delete(`/Role/${id}`)

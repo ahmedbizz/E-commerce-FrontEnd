@@ -11,6 +11,7 @@ import {
   Pagination,
   TextField,
   InputAdornment,
+  Avatar
 } from "@mui/material";
 import {  useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -22,34 +23,18 @@ import AccessAlarm from "@mui/icons-material/AccessAlarm";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import { formatPrice } from "/src/utils/formatPrice";
 import SearchIcon from "@mui/icons-material/Search";
-
+import { Chip } from "@mui/material";
+import Check from "@mui/icons-material/Check";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import Dialog from "@mui/material/Dialog";
+const CustomAlert = React.forwardRef(function CustomAlert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 const DisplayOrders = () => {
   const navigete = useNavigate();
   const { t } = useTranslation();
-  const notify = (value) => {
-    toast.success(`${value} `, {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-  };
-  const notifyErorr = (value) => {
-    toast.error(`${value} `, {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-  };
+
   // for get all Role in list
   const [Orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,6 +53,10 @@ const DisplayOrders = () => {
     minPrice: null,
     maxPrice: null,
   });
+  const [open, setOpen] = useState(false);
+  const [openNotifcation, setOpenNotifcation] = useState(false);
+  const [openErorrNotifcation, setOpenErorrNotifcation] = useState(false);
+  const [success, setsuccess] = useState("");
 
   const fetchOrders = async (page = 1) => {
     setLoading(true);
@@ -81,7 +70,7 @@ const DisplayOrders = () => {
 
       const res = await GetOrder(params);
 
-      console.log(res.data.items);
+      
       setOrders(res.data.items);
       setFilter(res.data.items);
 
@@ -110,7 +99,8 @@ const DisplayOrders = () => {
     try {
       // order.id هو المهم هنا وليس الكائن كله
       await UpdateOrderById(order.id, status); // يجب أن يكون await
-      notify(`Order status updated to ${status}`);
+      setOpenNotifcation(true);
+      setsuccess(`Order status updated to ${status}`);
       fetchOrders(currentPage); // إعادة جلب البيانات بعد التحديث
     } catch (err) {
       console.error(err);
@@ -154,10 +144,40 @@ const DisplayOrders = () => {
     }
 
     const filtered = Orders.filter((us) =>
-      us.name.toLowerCase().includes(query.toLowerCase())
+      us.orderNumber.toLowerCase().includes(query.toLowerCase())||
+      us.userName.toLowerCase().includes(query.toLowerCase())||
+      us.email.toLowerCase().includes(query.toLowerCase())||
+      us.createdAt.toLowerCase().includes(query.toLowerCase())
+
     );
     setFilter(filtered);
   };
+const [items, setitems] = useState([]);
+  const handleOpen = (values) => {
+    setOpen(true);
+    setitems(values);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+const getStatusChip = (status) => {
+  switch (status) {
+    case "Pending":
+      return <Chip label="Pending" color="warning"  sx={{width:"110px"}}/>;
+    case "Processing":
+      return <Chip label="Processing" color="info" sx={{width:"110px"}}/>;
+    case "Shipped":
+      return <Chip label="Shipped" color="primary"sx={{width:"110px"}} />;
+    case "Delivered":
+      return <Chip label="Delivered" color="success"  icon={<Check/>} sx={{width:"110px"}}/>;
+    case "Cancelled":
+      return <Chip label="Cancelled" color="error" sx={{width:"110px"}}/>;
+    default:
+      return <Chip label={status} variant="outlined" />;
+  }
+};
 
   const statusButtonsMap = {
     Pending: ["Processing", "Cancelled"], 
@@ -272,6 +292,79 @@ const DisplayOrders = () => {
   return (
     <Box className="Display-Item-Continer">
       <ToastContainer />
+      <Snackbar
+        open={openNotifcation}
+        autoHideDuration={1000}
+        onClose={() => setOpenNotifcation(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <CustomAlert severity="success">{success}</CustomAlert>
+      </Snackbar>
+
+      <Snackbar
+        open={openErorrNotifcation}
+        autoHideDuration={1000}
+        onClose={() => setOpenErorrNotifcation(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <CustomAlert severity="error">{"Error"}</CustomAlert>
+      </Snackbar>
+
+
+      <Dialog
+        className="Card-Continer-Dialog-Orders"
+        open={open}
+        onClose={handleClose}
+
+      >
+      
+        <Table className="Table" >
+        <TableHead className="TableHead">
+          <TableRow>
+            <TableCell>{t("productImage")}</TableCell>
+            <TableCell>{t("productName")}</TableCell>
+            <TableCell>{t("quantity")}</TableCell>
+            <TableCell>{t("selectedSize")}</TableCell>
+            <TableCell>{t("unitPrice")}</TableCell>
+            <TableCell>{t("Amount")}</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {(items.length ? items : []).map((item, index) => {
+            return (
+              <TableRow key={index} className="TableRow" onClick={()=>setOpen(true)}>
+                                <TableCell>
+                  {" "}
+                  <Avatar
+                    alt={item.name}
+                    variant="square"
+                    sx={{
+                      width:"100px",
+                      height:"100px",
+                      borderRadius:"10px"
+                    }}
+                    src={
+                      item.productImage
+                        ? `https://localhost:7137/images/Products/${item.productImage}`
+                        : "/Product-avatar.jpg"
+                    }
+                  /></TableCell>
+                <TableCell align="left">{item.productName}</TableCell>
+                <TableCell align="left">{item.quantity}</TableCell>
+                <TableCell align="left">{item.selectedSize}</TableCell>
+                <TableCell align="left">{formatPrice(item.unitPrice)}</TableCell>
+                <TableCell align="left">
+                  {formatPrice(item.unitPrice*item.quantity)}
+                </TableCell>
+
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    
+      </Dialog>
+
       <Box className="Button_Search_Panel">
         {/* البحث */}
         <TextField
@@ -295,29 +388,33 @@ const DisplayOrders = () => {
           <TableRow>
             <TableCell>{t("#")}</TableCell>
             <TableCell>{t("orderNumber")}</TableCell>
+            <TableCell>{t("createdAt")}</TableCell>
             <TableCell>{t("Name")}</TableCell>
             <TableCell>{t("email")}</TableCell>
             <TableCell>{t("status")}</TableCell>
             <TableCell>{t("Amount")}</TableCell>
-            <TableCell align="left">{t("isActive")}</TableCell>
             <TableCell>{t("Action")}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {(Filter.length ? Filter : []).map((item, index) => {
             return (
-              <TableRow key={index} className="TableRow">
+              <TableRow key={index} className="TableRow" onClick={()=>handleOpen(item.orderItems)}>
                 <TableCell>{item.id}</TableCell>
                 <TableCell align="left">{item.orderNumber}</TableCell>
+                <TableCell align="left">{item.createdAt}</TableCell>
                 <TableCell align="left">{item.userName}</TableCell>
                 <TableCell align="left">{item.email}</TableCell>
-                <TableCell align="left">{item.status}</TableCell>
+                <TableCell align="left">
+                  {getStatusChip(item.status)}
+                </TableCell>
+
 
                 <TableCell align="left">
                   {formatPrice(item.totalAmount)}
                 </TableCell>
                 <TableCell align="left">
-                  {statusButtonsMap[item.status]?.map((nextStatus) => (
+                {statusButtonsMap[item.status]?.map((nextStatus) => (
                     <Button
                       key={nextStatus}
                       variant="contained"
@@ -335,6 +432,7 @@ const DisplayOrders = () => {
                     </Button>
                   ))}
                 </TableCell>
+                
               </TableRow>
             );
           })}

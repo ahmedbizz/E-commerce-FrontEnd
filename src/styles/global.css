@@ -12,6 +12,7 @@ main {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
+  min-height: 100vh;
 }
 
 /* headar 2 in Nave page section  */
@@ -260,7 +261,7 @@ main {
 
 .Table {
   max-width: 97vw;
-  margin: 20px;
+  margin-block: 20px;
   -webkit-box-shadow: rgba(9, 11, 17, 0.05) 0px 5px 15px 0px, rgba(19, 23, 32, 0.05) 0px 15px 35px -5px;
           box-shadow: rgba(9, 11, 17, 0.05) 0px 5px 15px 0px, rgba(19, 23, 32, 0.05) 0px 15px 35px -5px;
 }
@@ -1042,11 +1043,17 @@ a {
   -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
   border-radius: 14px !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  overflow: hidden !important;
   -webkit-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35) !important;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35) !important;
   -webkit-animation: fadeInScale 0.25s ease !important;
           animation: fadeInScale 0.25s ease !important;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.MuiPopper-root .MuiPaper-root::-webkit-scrollbar {
+  display: none;
 }
 
 /* hedear 1 in Nave page section  */
@@ -1385,5 +1392,27 @@ a {
           align-items: center;
   -ms-flex-item-align: center;
       align-self: center;
+}
+
+.Card-Continer-Dialog-Orders .MuiDialog-paper {
+  width: 100% !important;
+  max-width: 1200px !important;
+  height: auto;
+  max-height: 90vh;
+  border-radius: 14px;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.Card-Continer-Dialog-Orders .MuiDialog-paper::-webkit-scrollbar {
+  display: none;
+}
+
+.Card-Continer-Dialog-Orders .Table {
+  width: 98.5%;
+  margin: 10px;
+  -webkit-box-shadow: rgba(9, 11, 17, 0.05) 0px 5px 15px 0px, rgba(19, 23, 32, 0.05) 0px 15px 35px -5px;
+          box-shadow: rgba(9, 11, 17, 0.05) 0px 5px 15px 0px, rgba(19, 23, 32, 0.05) 0px 15px 35px -5px;
 }
 /*# sourceMappingURL=global.css.map */

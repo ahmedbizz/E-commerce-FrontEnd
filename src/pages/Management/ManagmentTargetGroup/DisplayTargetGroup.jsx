@@ -209,7 +209,7 @@ const DispalyTargetGroup = () => {
         <Button
           startIcon={<Add />}
           component={Link}
-          to={`/TargetGroup/create`}
+          to={`/System/TargetGroup/create`}
           variant="contained"
           className="create-button"
         >
@@ -250,7 +250,7 @@ const DispalyTargetGroup = () => {
                 <TableCell align="left">
                   <IconButton
                     component={Link}
-                    to={`/TargetGroup/${item.id}`}
+                    to={`/System/TargetGroup/${item.id}`}
                     sx={{ color: "green" }}
                   >
                     <EditNote />

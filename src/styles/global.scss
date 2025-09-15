@@ -11,6 +11,7 @@ body,
 
 main {
   flex: 1; 
+  min-height: 100vh;
 }
 /* headar 2 in Nave page section  */
 
@@ -240,7 +241,9 @@ main {
 
 .Table {
   max-width: 97vw;
-  margin: 20px;
+  margin-block: 20px;
+
+
   box-shadow: hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px;
 }
 
@@ -969,9 +972,15 @@ a {
     -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
     border-radius: 14px !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    overflow: hidden !important;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35) !important;
     animation: fadeInScale 0.25s ease !important;
+    overflow: auto;  // يخلي السكروول يشتغل
+    scrollbar-width: none; // يخفي السكرول في Firefox
+    -ms-overflow-style: none; // يخفيه في IE/Edge
+
+    &::-webkit-scrollbar {
+      display: none; // يخفيه في Chrome/Safari/Edge
+    }
 
   }
 
@@ -1276,4 +1285,34 @@ a {
     align-self: center;
   }
 
+}
+
+// Orders page 
+.Card-Continer-Dialog-Orders {
+
+  .MuiDialog-paper {
+  
+    width: 100% !important;   // غير النسبة اللي تعجبك
+    max-width: 1200px !important; // أو حجم ثابت
+    height: auto;            // لو عايز الطول يكون تلقائي
+    max-height: 90vh;        // عشان ما يطلعش برة الشاشة
+    border-radius: 14px;
+    overflow: auto;  // يخلي السكروول يشتغل
+    scrollbar-width: none; // يخفي السكرول في Firefox
+    -ms-overflow-style: none; // يخفيه في IE/Edge
+
+    &::-webkit-scrollbar {
+      display: none; // يخفيه في Chrome/Safari/Edge
+    }
+  }
+
+  .Table {
+  
+    width: 98.5%;
+    margin: 10px;
+
+  
+  
+    box-shadow: hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px;
+  }
 }

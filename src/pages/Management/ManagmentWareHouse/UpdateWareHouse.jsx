@@ -221,7 +221,7 @@ const UpdateWareHouse = () => {
             <Button
               startIcon={<ArrowBack />}
               component={Link}
-              to={`/WareHouses`}
+              to={`/System/WareHouses`}
               sx={{
                 backgroundColor: "rgb(200, 122, 122)",
                 boxShadow: "0px 6px 0px rgb(240, 240, 175, 1)",

@@ -243,7 +243,7 @@ const DispalyInventory = () => {
         <Button
           startIcon={<Add />}
           component={Link}
-          to={`/inventory/create`}
+          to={`/System/inventory/create`}
           variant="contained"
           className="create-button"
         >
@@ -294,7 +294,7 @@ const DispalyInventory = () => {
                 <TableCell align="left">
                   <IconButton
                     component={Link}
-                    to={`/Inventory/${item.id}`}
+                    to={`/System/Inventory/${item.id}`}
                     sx={{ color: "green" }}
                   >
                     <EditNote />

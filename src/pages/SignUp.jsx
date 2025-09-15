@@ -210,24 +210,35 @@ export default function SignUp(props) {
       }, 3000);
 
     
-    } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        const messages = error.response.data.message;
-        if (Array.isArray(messages)) {
-          // لو الرسائل كثيرة، اعرضهم كلهم
-          setError(messages.join("\n"));
-        } else {
-          // لو رسالة واحدة فقط
-          setError(messages);
-        }
-      } else {
-        setError("حدث خطأ غير معروف أثناء التسجيل.");
+
+  } catch (error) {
+    console.log(error);
+  
+    if (error.response && error.response.data) {
+      const { errors, message } = error.response.data;
+  
+      if (errors && typeof errors === "object") {
+        // نستخرج كل رسائل الأخطاء من الـ object
+        const allErrors = Object.values(errors).flat();
+        setError(allErrors.join("\n"));
+        return;
+      }
+  
+      if (Array.isArray(message)) {
+        setError(message.join("\n"));
+        return;
+      }
+  
+      if (typeof message === "string") {
+        setError(message);
+        return;
       }
     }
+  
+    setError("حدث خطأ غير معروف أثناء التسجيل.");
+
+  
+  }
   };
 
   return (

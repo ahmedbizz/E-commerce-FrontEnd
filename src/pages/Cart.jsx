@@ -1,4 +1,4 @@
-import { useContext, useState , useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { CartContext } from "../context/CartContext";
 import { AuthContext } from "../context/AuthContext";
 import {
@@ -21,12 +21,36 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import { useTranslation } from "react-i18next";
-import {AddToOrder} from "../services/OrederService"
+import { AddToOrder } from "../services/OrederService";
+import { formatPrice } from "/src/utils/formatPrice";
+import {GetPaymentMethods} from "../services/PaymentMethodService";
 export default function Cart() {
   const { t } = useTranslation();
-  const { cartItems, fetchCart, DeleteItemById ,IncreaseItemById ,DecreaseItemById } = useContext(CartContext);
-  const { user} = useContext(AuthContext);
-  const [paymentMethod, setPaymentMethod] = useState("cash");
+  const {
+    cartItems,
+    fetchCart,
+    DeleteItemById,
+    IncreaseItemById,
+    DecreaseItemById,
+  } = useContext(CartContext);
+  const { user } = useContext(AuthContext);
+  const [paymentMethod, setPaymentMethod] = useState(1);
+  const [soldOut, setsoldOut] = useState(false);
+  const [paymentMethodsList, setPaymentMethodsList] = useState([]);
+
+  useEffect(() => {
+    fetchPaymentMethods();
+  }, []);
+  
+  const fetchPaymentMethods = async () => {
+    try {
+      const res = await GetPaymentMethods();
+      setPaymentMethodsList(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
 
   const totalPrice = cartItems.reduce(
     (acc, item) => acc + item.quantity * item.unitPrice,
@@ -34,28 +58,29 @@ export default function Cart() {
   );
 
   useEffect(() => {
+    
+    const isSoldOut = cartItems.some(item => item.stockQuantity === 0);
+    setsoldOut(isSoldOut);
+  }, [cartItems]);
+
+  useEffect(() => {
     fetchCart();
   }, []);
 
-
-
-  const handelOrder = ()=>{
-    const data ={
+  const handelOrder = () => {
+    const data = {
       TotalAmount: totalPrice,
-      PaymentId: 1,
+      PaymentId: paymentMethod,
       DeliveryRequestId: 1,
-      OrderItems: cartItems
+      OrderItems: cartItems,
+    };
+    
+    try {
+      const res = AddToOrder(data);
+    } catch (err) {
+      console.log(err);
     }
-    console.log(data)
-    try{
-      const res= AddToOrder(data);
-      console.log(res)
-
-    }catch(err){
-      console.log(err)
-    }
-
-  }
+  };
 
   return (
     <Box sx={{ maxWidth: "1000px", margin: "auto", padding: 3 }}>
@@ -64,32 +89,34 @@ export default function Cart() {
       </Typography>
 
       {cartItems.length === 0 ? (
-      <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        gap: 2,
-        textAlign: "center",
-      }}
-    >
-      <InventoryOutlinedIcon sx={{ fontSize: 80, color: "text.secondary" }} />
-      <Typography variant="h6" color="text.secondary">
-        {t("There are no item added yet.")}
-      </Typography>
-      <Typography variant="body2" color="text.secondary">
-        {t("isEmpty_add")}
-      </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => navigete("/product/create")} // أو أي مسار إضافة المنتج
-      >
-        {t("new_item")}
-      </Button>
-    </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            gap: 2,
+            textAlign: "center",
+          }}
+        >
+          <InventoryOutlinedIcon
+            sx={{ fontSize: 80, color: "text.secondary" }}
+          />
+          <Typography variant="h6" color="text.secondary">
+            {t("There are no item added yet.")}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {t("isEmpty_add")}
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigete("/product/create")} // أو أي مسار إضافة المنتج
+          >
+            {t("new_item")}
+          </Button>
+        </Box>
       ) : (
         <>
           <Table sx={{ borderRadius: 3, boxShadow: 3, overflow: "hidden" }}>
@@ -108,30 +135,51 @@ export default function Cart() {
               {cartItems.map((item) => (
                 <TableRow key={item.id} hover>
                   <TableCell align="center">
-                    <img
-                      src={`https://localhost:7137/images/Products/${item.productImage}`}
-                      alt={item.name}
-                      style={{
-                        width: "70px",
-                        height: "70px",
-                        borderRadius: "8px",
-                        objectFit: "cover",
-                      }}
-                    />
+                    <Box sx={{ position: "relative", display: "inline-block" }}>
+                      <img
+                        src={`https://localhost:7137/images/Products/${item.productImage}`}
+                        alt={item.name}
+                        style={{
+                          width: "70px",
+                          height: "70px",
+                          borderRadius: "8px",
+                          objectFit: "cover",
+                        }}
+                      />
+                      {item.stockQuantity == 0?
+                                  <Box
+                                  sx={{
+                                    position: "absolute",
+                                    top: "20px",
+                                    left: "-5px",
+                                    backgroundColor: "red",
+                                    color: "white",
+                                    fontWeight: "bold",
+                                    transform: "rotate(-22deg)",
+                                    padding: "1px 6px",
+                                    textAlign: "center",
+                                    fontSize: "8px",
+                                    boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+                                    width: "70px",
+                                  }}
+                                >
+                                  Sold Out
+                                </Box>  
+                      :<></>}
+        
+                    </Box>
                   </TableCell>
                   <TableCell>
                     <Typography fontWeight="500">{item.productName}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography fontWeight="500">{item.selectedSize}</Typography>
+                    <Typography fontWeight="500">
+                      {item.selectedSize}
+                    </Typography>
                   </TableCell>
-                  <TableCell align="center">{item.unitPrice} ريال</TableCell>
+                  <TableCell align="center">{formatPrice(item.unitPrice)}</TableCell>
                   <TableCell align="center">
-                    <IconButton
-                      onClick={() =>
-                        DecreaseItemById(item.id)
-                      }
-                    >
+                    <IconButton onClick={() => DecreaseItemById(item.id)}>
                       <RemoveIcon />
                     </IconButton>
                     <Typography
@@ -142,22 +190,23 @@ export default function Cart() {
                     </Typography>
                     <IconButton
                       onClick={() => {
-                        console.log(item)
-                        IncreaseItemById(item.id)}}
+                        console.log(item);
+                        IncreaseItemById(item.id);
+                      }}
                     >
                       <AddIcon />
                     </IconButton>
-                    
                   </TableCell>
                   <TableCell align="center">
-                    {item.quantity * item.unitPrice} ريال
+                    {formatPrice(item.quantity * item.unitPrice)}
                   </TableCell>
                   <TableCell align="center">
                     <IconButton
                       color="error"
-                      onClick={() => {DeleteItemById(item.id)
-                      
-                      fetchCart();
+                      onClick={() => {
+                        DeleteItemById(item.id);
+
+                        fetchCart();
                       }}
                     >
                       <DeleteIcon />
@@ -184,21 +233,20 @@ export default function Cart() {
                 طريقة الدفع
               </Typography>
               <RadioGroup
-                row
-                value={paymentMethod}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              >
-                <FormControlLabel
-                  value="cash"
-                  control={<Radio />}
-                  label="كاش"
-                />
-                <FormControlLabel
-                  value="card"
-                  control={<Radio />}
-                  label="شبكة"
-                />
-              </RadioGroup>
+  row
+  value={paymentMethod}
+  onChange={(e) => setPaymentMethod(e.target.value)}
+>
+  {paymentMethodsList.map((method) => (
+    <FormControlLabel
+      key={method.id}
+      value={method.id}
+      control={<Radio />}
+      label={method.name}
+    />
+  ))}
+</RadioGroup>
+
             </Box>
 
             {/* الإجمالي */}
@@ -212,22 +260,23 @@ export default function Cart() {
                 fontWeight="bold"
                 sx={{ mt: 1 }}
               >
-                {totalPrice} ريال
+                {formatPrice(totalPrice)} 
               </Typography>
             </Box>
           </Box>
 
           {/* زر إتمام الشراء */}
           <Box textAlign="center" mt={3}>
-            <Button
+            {!soldOut?            <Button
               variant="contained"
               color="primary"
               size="large"
               sx={{ borderRadius: 3, px: 5 }}
-              onClick={()=>handelOrder()}
+              onClick={() => handelOrder()}
             >
               إتمام الطلب
-            </Button>
+            </Button>:<></>}
+
           </Box>
         </>
       )}

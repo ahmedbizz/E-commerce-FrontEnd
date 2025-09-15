@@ -237,7 +237,7 @@ const DispalyCategory = () => {
         <Button
           startIcon={<Add />}
           component={Link}
-          to={`/categorys/create`}
+          to={`/System/categorys/create`}
           variant="contained"
           className="create-button"
         >
@@ -296,7 +296,7 @@ const DispalyCategory = () => {
                 <TableCell align="left">
                   <IconButton
                     component={Link}
-                    to={`/categorys/edit/${item.id}`}
+                    to={`/System/categorys/edit/${item.id}`}
                     sx={{ color: "green" }}
                   >
                     <EditNote />

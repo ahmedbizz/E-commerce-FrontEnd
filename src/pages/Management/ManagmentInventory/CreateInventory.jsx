@@ -6,7 +6,9 @@ import {
   CircularProgress,
   Alert,
   Select,
-  MenuItem,Typography,Card
+  MenuItem,Typography,Card,
+  Autocomplete
+   
 } from "@mui/material";
 import { addInventory } from "../../../services/InventoryService";
 import { GetWareHouses } from "../../../services/WareHouseService";
@@ -52,20 +54,22 @@ export default function CreateInventory() {
 
   const [Warehouses, setWarehouses] = useState([]);
   const [Products, setProducts] = useState([]);
+  const [Filter, setFilter] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [options, setOptions] = useState([]);
+  const [loadingOpt, setLoadingOpt] = useState(false);
 
   useEffect(() => {
-    // تحميل القوائم من الـ API
+  
     async function fetchData() {
       try {
         const warehouses = await GetWareHouses();
       
         setWarehouses(warehouses.data.items || []);
 
-        const products = await GetProducts();
-        setProducts(products.data.items || []);
+
       } catch {
         setError(t("errorr_message"));
       }
@@ -76,6 +80,25 @@ export default function CreateInventory() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSearch = async (event) => {
+  
+      const query = event.target.value;
+      if (!query) {
+        const products = await GetProducts({SearchTerm:query});
+        console.log(products.data.items)
+        setProducts(products.data.items || []);
+        setOptions(Products); // إذا خانة البحث فارغة، نعرض كل العناصر
+        return;
+      }
+  
+      const filtered = Products.filter((us) =>
+        us.name.toLowerCase().includes(query.toLowerCase())
+      
+        );
+        setOptions(filtered);
+  
   };
 
   const handleSubmit = async (e) => {
@@ -164,27 +187,43 @@ export default function CreateInventory() {
             </Select>
           </FormControl>
   
-          <FormControl>
-            <Select
-              name="ProductId"
-              required
-              value={formData.ProductId}
-              onChange={handleChange}
-              fullWidth
-              sx={{ mb: 2 }}
-            >
-              <MenuItem value="">
-                <em>
-                  {t("Select")}-{t("Products")}
-                </em>
-              </MenuItem>
-              {(Products || []).map((p) => (
-                <MenuItem key={p.id} value={p.id}>
-                  {p.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <FormControl fullWidth>
+  <Autocomplete
+    options={options}
+    getOptionLabel={(option) => option.name || ""}
+    loading={loadingOpt}
+    onInputChange={async (_, value) => {
+      if (!value) {
+        setOptions([]);
+        return;
+      }
+      setLoadingOpt(true);
+      try {
+        const res = await GetProducts({ SearchTerm: value, Page: 1, PageSize: 20 });
+        setOptions(res.data.items || []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingOpt(false);
+      }
+    }}
+    onChange={(_, newValue) => {
+      setFormData((prev) => ({
+        ...prev,
+        ProductId: newValue ? newValue.id : "",
+      }));
+    }}
+    renderInput={(params) => (
+      <TextField
+        {...params}
+        label={t("Select Product")}
+        variant="outlined"
+        required
+      />
+    )}
+  />
+</FormControl>
+
   
           <FormControl>
             <TextField
@@ -205,7 +244,7 @@ export default function CreateInventory() {
           <Button
             startIcon={<ArrowBack />}
             component={Link}
-            to={`/inventorys`}
+            to={`/System/inventorys`}
             sx={{
               backgroundColor: "rgb(200, 122, 122)",
               boxShadow: "0px 6px 0px rgb(240, 240, 175, 1)",

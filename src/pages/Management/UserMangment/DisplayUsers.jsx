@@ -239,7 +239,7 @@ const DisplayUsers = () => {
         <Button
           startIcon={<Add />}
           component={Link}
-          to={`/users/create`}
+          to={`/System/users/create`}
           variant="contained"
           className="create-button"
         >
@@ -312,7 +312,7 @@ const DisplayUsers = () => {
                   </IconButton>
                   <IconButton
                     component={Link}
-                    to={`/user/edit/${item.id}`}
+                    to={`/System/user/edit/${item.id}`}
                     sx={{ color: "green" }}
 
                   >

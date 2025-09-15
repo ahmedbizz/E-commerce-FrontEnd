@@ -216,7 +216,7 @@ if (error) {
             <Button
               startIcon={<ArrowBack />}
               component={Link}
-              to={`/groups`}
+              to={`/System/groups`}
               sx={{
                 backgroundColor: "rgb(200, 122, 122)",
                 boxShadow: "0px 6px 0px rgb(240, 240, 175, 1)",

@@ -207,7 +207,7 @@ const DispalySize = () => {
         <Button
           startIcon={<Add />}
           component={Link}
-          to={`/Size/create`}
+          to={`/System/Size/create`}
           variant="contained"
           className="create-button"
         >
@@ -250,7 +250,7 @@ const DispalySize = () => {
                 <TableCell align="left">
                   <IconButton
                     component={Link}
-                    to={`/Size/edit/${item.id}`}
+                    to={`/System/Size/edit/${item.id}`}
                     sx={{ color: "green" }}
                   >
                     <EditNote />

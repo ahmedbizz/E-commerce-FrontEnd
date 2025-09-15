@@ -237,7 +237,7 @@ const DispalyBrand = () => {
         <Button
           startIcon={<Add />}
           component={Link}
-          to={`/Brands/create`}
+          to={`/System/Brands/create`}
           variant="contained"
           className="create-button"
         >
@@ -294,7 +294,7 @@ const DispalyBrand = () => {
                 <TableCell align="left">
                   <IconButton
                     component={Link}
-                    to={`/Brands/edit/${item.id}`}
+                    to={`/System/Brands/edit/${item.id}`}
                     sx={{ color: "green" }}
                   >
                     <EditNote />

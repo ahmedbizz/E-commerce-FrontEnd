@@ -239,7 +239,7 @@ const DispalyWareHouse = () => {
         <Button
           startIcon={<Add />}
           component={Link}
-          to={`/wareHouse/create`}
+          to={`/System/wareHouse/create`}
           variant="contained"
           className="create-button"
         >
@@ -288,7 +288,7 @@ const DispalyWareHouse = () => {
                 <TableCell align="left">
                   <IconButton
                     component={Link}
-                    to={`/wareHouse/${item.id}`}
+                    to={`/System/wareHouse/${item.id}`}
                     sx={{ color: "green" }}
                   >
                     <EditNote />

@@ -191,7 +191,7 @@ const CreateWareHouse = () => {
           <Button
             startIcon={<ArrowBack />}
             component={Link}
-            to={`/wareHouses`}
+            to={`/System/wareHouses`}
             sx={{
               backgroundColor: "rgb(200, 122, 122)",
               boxShadow: "0px 6px 0px rgb(240, 240, 175, 1)",

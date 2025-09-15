@@ -7,15 +7,19 @@ import {
   TableCell,
   TableBody,
   IconButton,
-  Typography,Button,TextField,InputAdornment
+  Typography,
+  Button,
+  TextField,
+  InputAdornment,
+  Pagination,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
-import { GetRoles ,DeleteRoleByID} from "../../../services/RoleService";
+import { GetRoles, DeleteRoleByID } from "../../../services/RoleService";
 import { useState, useEffect } from "react";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import { ToastContainer, toast } from "react-toastify";
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link } from "react-router-dom";
 import Add from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -48,66 +52,59 @@ const DispalyRole = () => {
   };
   // for get all Role in list
   const [Roles, setRoles] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [Loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [isEmpty , setEmpty]=useState(false)
+  const [isEmpty, setEmpty] = useState(false);
   const [Filter, setFilter] = useState([]);
+
   useEffect(() => {
-    GetRoles()
-      .then((res) =>{ setRoles(res.data)
-        setFilter(res.data)})
+    Refresh();
+  }, [currentPage]);
+
+  const Refresh = (page = currentPage) => {
+    GetRoles(page)
+      .then((res) => {
+
+        setRoles(res.data.items);
+        setFilter(res.data.items);
+        if (res.data?.items.length <= 0) {
+          setEmpty(true);
+        } else {
+          setEmpty(false);
+        }
+
+        setCurrentPage(res.data.currentPage);
+        setTotalPages(res.data.totalPages);
+      })
       .catch((err) => {
-        if (err.response?.status === 401) {
-        
-          
-          setEmpty(true);
-      
-        }else
-    if (err.response?.status === 404) {
+        if (err.response?.status === 404) {
           notifyErorr("لا يوجد مستخدمين في هذه المجموعة.");
-          
+
           setEmpty(true);
-      
-        }     else {
+        } else {
           notifyErorr("حدث خطأ أثناء جلب البيانات.");
           setError(true);
         }
       })
       .finally(() => setLoading(false));
-  }, []);
+  };
 
-  const Refresh =()=>{
-    GetRoles()
-    .then((res) => setRoles(res.data))
-    .catch((err) => {
-      if (err.response?.status === 404) {
-        notifyErorr("لا يوجد مستخدمين في هذه المجموعة.");
-        
-        setEmpty(true);
-    
-      } else {
-        notifyErorr("حدث خطأ أثناء جلب البيانات.");
-        setError(true);
-      }
-    })
-    .finally(() => setLoading(false));
-  }
+  // for delete Role
+  // this for delete Prodect
+  const deleteByID = (id) => {
+    DeleteRoleByID(id)
+      .then((res) => {
+        notify(res.data.message);
+        Refresh();
+      })
+      .catch((err) => {
+        notifyErorr(err.message);
+      });
+  };
 
-  // for delete Role 
-    // this for delete Prodect
-    const deleteByID = (id) => {
-      DeleteRoleByID(id)
-        .then((res) => {
-          notify(res.data.message);
-          Refresh();
-        })
-        .catch((err) => {
-          notifyErorr(err.message);
-        });
-    };
-
-
-      // sraech
+  // sraech
 
   // function for sreash on the site
 
@@ -120,75 +117,90 @@ const DispalyRole = () => {
 
     const filtered = Roles.filter((us) =>
       us.name.toLowerCase().includes(query.toLowerCase())
-
     );
     setFilter(filtered);
   };
 
-if(Loading){
-  return(
-    <Box 
-      sx={{ 
-        display: "flex", 
-        justifyContent: "center", 
-        alignItems: "center", 
-        height: "100vh" ,
-    
-        
-      }}
-    >
-    <CircularProgress sx={{ animation: 'rotate 1.5s linear infinite' }} size={80} />
-    </Box>
-  );
-}
-if (isEmpty) {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        gap: 2,
-        textAlign: "center",
-      }}
-    >
-      <InventoryOutlinedIcon sx={{ fontSize: 80, color: "text.secondary" }} />
-      <Typography variant="h6" color="text.secondary">
-        {t("There are no item added yet.")}
-      </Typography>
-      <Typography variant="body2" color="text.secondary">
-        {t("isEmpty_add")}
-      </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => navigete("/role/create")} // أو أي مسار إضافة المنتج
+  if (Loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
       >
-        {t("new_item")}
-      </Button>
-    </Box>
-  );
-}
-if (error) {
+        <CircularProgress
+          sx={{ animation: "rotate 1.5s linear infinite" }}
+          size={80}
+        />
+      </Box>
+    );
+  }
+  if (isEmpty) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          gap: 2,
+          textAlign: "center",
+        }}
+      >
+        <InventoryOutlinedIcon sx={{ fontSize: 80, color: "text.secondary" }} />
+        <Typography variant="h6" color="text.secondary">
+          {t("There are no item added yet.")}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {t("isEmpty_add")}
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigete("/role/create")} // أو أي مسار إضافة المنتج
+        >
+          {t("new_item")}
+        </Button>
+      </Box>
+    );
+  }
+  if (error) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography variant="h5" color="error">
+          Oops! Something went wrong. Please try again.
+        </Typography>
+        {/* Optionally, add a button to refresh or contact support */}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </Button>
+      </Box>
+    );
+  }
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <Typography variant="h5" color="error">Oops! Something went wrong. Please try again.</Typography>
-      {/* Optionally, add a button to refresh or contact support */}
-      <Button variant="contained" color="primary" onClick={() => window.location.reload()}>Retry</Button>
-    </Box>
-  );
-}
-  return (
-    <Box   className="Display-Item-Continer">
-    
-      <ToastContainer/>
+    <Box className="Display-Item-Continer">
+      <ToastContainer />
       <Box className="Button_Search_Panel">
         <Button
           startIcon={<Add />}
           component={Link}
-          to={`/role/create`}
+          to={`/System/role/create`}
           variant="contained"
           className="create-button"
         >
@@ -212,38 +224,48 @@ if (error) {
       </Box>
 
       <Table className="Table">
-        <TableHead   className="TableHead">
+        <TableHead className="TableHead">
           <TableRow>
+            <TableCell>{t("#")}</TableCell>
             <TableCell>{t("Name")}</TableCell>
             <TableCell>{t("ID")}</TableCell>
             <TableCell>{t("Action")}</TableCell>
-            <TableCell align="left">{t("Create At")}</TableCell>
+            
           </TableRow>
         </TableHead>
-        <TableBody sx={{backgroundColor:"rgba(255, 255, 255, 0.966)"}} >
-          {(Filter.length?Filter:[]).map((item, index) => {
-          return(     
-          <TableRow key={index} className="TableRow" >
-           <TableCell>{item.name}</TableCell>
-              <TableCell>{item.id}</TableCell>
-              <TableCell align="left" >
-                        {item.name}
-                      </TableCell>
+        <TableBody sx={{ backgroundColor: "rgba(255, 255, 255, 0.966)" }}>
+          {(Filter.length ? Filter : []).map((item, index) => {
+            return (
+              <TableRow key={index} className="TableRow">
+                <TableCell>{(currentPage - 1) * 20 + index + 1}</TableCell>
+                <TableCell>{item.name}</TableCell>
+                <TableCell>{item.id}</TableCell>
+              
 
-                      <TableCell  align="left" >
-                        <IconButton
-                        sx={{color:"red"}}
-                          onClick={() => {
-                            deleteByID(item.id);
-                          }}
-                        >
-                          <DeleteRoundedIcon />
-                        </IconButton>
-                      </TableCell>
-            </TableRow>)
+                <TableCell align="left">
+                  <IconButton
+                    sx={{ color: "red" }}
+                    onClick={() => {
+                      deleteByID(item.id);
+                    }}
+                  >
+                    <DeleteRoundedIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            );
           })}
         </TableBody>
       </Table>
+      <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
+        <Pagination
+          className="Pagination"
+          count={totalPages}
+          page={currentPage}
+          onChange={(e, page) => setCurrentPage(page)}
+          color="primary"
+        />
+      </Box>
     </Box>
   );
 };

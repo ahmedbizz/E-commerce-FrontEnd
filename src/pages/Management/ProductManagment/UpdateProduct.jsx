@@ -270,7 +270,7 @@ export default function UpdateProduct() {
             {loading ? <CircularProgress size={24} /> : t("Save")}
           </Button>
 
-          <Button startIcon={<ArrowBack />} component={Link} to="/products" fullWidth variant="contained" sx={{ backgroundColor: "rgb(200, 122, 122)" }}>
+          <Button startIcon={<ArrowBack />} component={Link} to="/System/products" fullWidth variant="contained" sx={{ backgroundColor: "rgb(200, 122, 122)" }}>
             {t("Back")}
           </Button>
 

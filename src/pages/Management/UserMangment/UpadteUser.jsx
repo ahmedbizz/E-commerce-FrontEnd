@@ -185,23 +185,32 @@ export default function UpdateUser() {
         setError(res.message || "Register Faild");
       }
     } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        const messages = error.response.data.message;
-        if (Array.isArray(messages)) {
-          // لو الرسائل كثيرة، اعرضهم كلهم
-          setError(messages.join("\n"));
-        } else {
-          // لو رسالة واحدة فقط
-          setError(messages);
+      console.log(error);
+    
+      if (error.response && error.response.data) {
+        const { errors, message } = error.response.data;
+    
+        if (errors && typeof errors === "object") {
+          // نستخرج كل رسائل الأخطاء من الـ object
+          const allErrors = Object.values(errors).flat();
+          setError(allErrors.join("\n"));
+          return;
         }
-      } else {
-        setError("حدث خطأ غير معروف أثناء التسجيل.");
+    
+        if (Array.isArray(message)) {
+          setError(message.join("\n"));
+          return;
+        }
+    
+        if (typeof message === "string") {
+          setError(message);
+          return;
+        }
       }
+    
+      setError("حدث خطأ غير معروف أثناء التسجيل.");
     }
+    
   };
   if (Loading) {
     return (
@@ -376,7 +385,7 @@ export default function UpdateUser() {
             <Button
               startIcon={<ArrowBack />}
               component={Link}
-              to={`/users`}
+              to={`/System/users`}
               sx={{
                 backgroundColor: "rgb(200, 122, 122)",
                 boxShadow: "0px 6px 0px rgb(240, 240, 175, 1)",

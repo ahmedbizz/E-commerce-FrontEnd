@@ -83,6 +83,7 @@ export default function ProductDetails() {
     GetProductById(id)
       .then((res) => {
         setProduct(res.data);
+        console.log(res.data)
         setcurrentImage(res.data.imageUrl);
         setLoading(false);
       })
@@ -106,6 +107,7 @@ export default function ProductDetails() {
         quantity: 1,
         unitPrice: product.price,
         SelectedSize: selectedSize.name,
+        StockQuantity: product.stockQuantity
       };
 
       const res = await AddToCart(data);
@@ -221,15 +223,41 @@ export default function ProductDetails() {
                     transition: "transform 0.3s ease",
                   }}
                 />
+              
               </Box>
             );
           })}
         </Box>
+        <Box sx={{ position: "relative", display: "inline-block" }}>
         <img
+          style={{
+            position:"relative"
+          }}
           component="img"
           src={`https://localhost:7137/images/Products/${currentImage}`}
           alt={product.name}
         />
+            {product.stockQuantity == 0?
+          <Box
+    sx={{
+      position: "absolute",
+      top: "20%",
+      left: "-5%",
+      backgroundColor: "red",
+      color: "white",
+      fontWeight: "bold",
+      transform: "rotate(-22deg)",
+      padding: "4px 40px",
+      textAlign: "center",
+      fontSize: "28px",
+      boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+      width:"100%",
+      height:"30px"
+    }}
+  >
+    Sold Out
+          </Box>:<></>}
+  </Box>
       </Box>
       <Box className="DetailsSide">
         <Box className="Title">
@@ -297,9 +325,19 @@ export default function ProductDetails() {
           </Box>
         </Box>
         <Box className="ActionButtons">
+          {product.stockQuantity == 0? <Box sx={{
+            display:"flex",
+            justifyContent:"center",
+            fontSize:"32px",
+            fontWeight:"bold",
+            color:"red"
+          }}>
+             <Typography variant="h6">Soled Out !!</Typography>
+          </Box >:  
           <Button className="AddToCart" onClick={() => handelCart(product)}>
             Add to bag
-          </Button>
+          </Button>}
+  
           <Button className="Faveorite">Faveorite</Button>
         </Box>
         <Box className="ExtraInfos">

@@ -207,7 +207,7 @@ const DispalyGroup = () => {
         <Button
           startIcon={<Add />}
           component={Link}
-          to={`/group/create`}
+          to={`/System/group/create`}
           variant="contained"
           className="create-button"
         >
@@ -251,21 +251,21 @@ const DispalyGroup = () => {
                 <TableCell align="left">
                   <IconButton
                     component={Link}
-                    to={`/group/edit/${item.id}`}
+                    to={`/System/group/edit/${item.id}`}
                     sx={{ color: "green" }}
                   >
                     <EditNote />
                   </IconButton>
                   <IconButton
                     component={Link}
-                    to={`/assgin/users/${item.id}`}
+                    to={`/System/assgin/users/${item.id}`}
                     sx={{ color: "balck" }}
                   >
                     <SupervisedUserCircle />
                   </IconButton>
                   <IconButton
                     component={Link}
-                    to={`/assgin/roles/${item.id}`}
+                    to={`/System/assgin/roles/${item.id}`}
                     sx={{ color: "balck" }}
                   >
                     <Security />

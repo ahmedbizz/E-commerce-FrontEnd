@@ -45,6 +45,7 @@ export default function ManageDashboard() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorElang, setAnchorElang] = useState(null);
   const [anchorElProducts, setAnchorElProducts] = useState(null);
+  const [anchorElFinance, setAnchorElFinance] = useState(null);
   const [anchorElWarehouses, setAnchorElWarehouses] = useState(null);
   const [anchorElUsers, setAnchorElUsers] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
@@ -77,6 +78,13 @@ export default function ManageDashboard() {
     logoutUser();
     handleClose();
   
+  };
+  const handleOpenFinance = (event) => {
+    setAnchorElFinance(event.currentTarget);
+  };
+
+  const handleCloseFinance = () => {
+    setAnchorElFinance(null);
   };
   const handleOpenProducts = (event) => {
     setAnchorElProducts(event.currentTarget);
@@ -140,10 +148,31 @@ export default function ManageDashboard() {
       <AppBar className="AppBarDashBoard" position="static">
         <Toolbar sx={{ display: "flex", justifyContent:"space-between", alignItems: "center", gap: 2 }}>
           {/* الشعار */}
-          <Button   startIcon={<Dashboard/>} variant="h6" component={Link} to="/">
+          <Button   startIcon={<Dashboard/>} variant="h6" component={Link} to="/System">
              {t("Home")}
           </Button>
+          
             <Box>
+                                      {/* إدارة الحسابات  */}
+                  <Button color="inherit" onClick={handleOpenFinance}>
+                          {t("Finance Managmenet")}
+                        </Button>
+                        <Menu
+                          anchorEl={anchorElFinance}
+                          open={Boolean(anchorElFinance)}
+                          onClose={handleCloseFinance}
+                        >
+                          <MenuItem
+                            component={Link}
+                            to="/System/PaymentMethods"
+                            onClick={handleCloseFinance}
+                          >
+                            {t("Payment Methods")}
+                          </MenuItem>
+
+
+
+                        </Menu>
                         {/* إدارة المنتجات */}
                         <Button color="inherit" onClick={handleOpenProducts}>
                           {t("Products")}
@@ -155,28 +184,28 @@ export default function ManageDashboard() {
                         >
                           <MenuItem
                             component={Link}
-                            to="/products"
+                            to="/System/products"
                             onClick={handleCloseProducts}
                           >
                             {t("Display Products")}
                           </MenuItem>
                           <MenuItem
                             component={Link}
-                            to="/product/create"
+                            to="/System/product/create"
                             onClick={handleCloseProducts}
                           >
                             {t("Create Product")}
                           </MenuItem>
                           <MenuItem
                             component={Link}
-                            to="/categorys"
+                            to="/System/categorys"
                             onClick={handleCloseProducts}
                           >
                             {t("Display Category")}
                           </MenuItem>
                           <MenuItem
                             component={Link}
-                            to="/categorys/create"
+                            to="/System/categorys/create"
                             onClick={handleCloseProducts}
                           >
                             {t("Create Category")}
@@ -184,14 +213,14 @@ export default function ManageDashboard() {
 
                           <MenuItem
                             component={Link}
-                            to="/Brands"
+                            to="/System/Brands"
                             onClick={handleCloseProducts}
                           >
                             {t("Display Brand")}
                           </MenuItem>
                           <MenuItem
                             component={Link}
-                            to="/Brands/create"
+                            to="/System/Brands/create"
                             onClick={handleCloseProducts}
                           >
                             {t("Create Brand")}
@@ -199,28 +228,28 @@ export default function ManageDashboard() {
 
                           <MenuItem
                             component={Link}
-                            to="/Sizes"
+                            to="/System/Sizes"
                             onClick={handleCloseProducts}
                           >
                             {t("Display Size")}
                           </MenuItem>
                           <MenuItem
                             component={Link}
-                            to="/Size/create"
+                            to="/System/Size/create"
                             onClick={handleCloseProducts}
                           >
                             {t("Create Size")}
                           </MenuItem>
                           <MenuItem
                             component={Link}
-                            to="/TargetGroups"
+                            to="/System/TargetGroups"
                             onClick={handleCloseProducts}
                           >
                             {t("Display TargetGroup")}
                           </MenuItem>
                           <MenuItem
                             component={Link}
-                            to="/TargetGroup/create"
+                            to="/System/TargetGroup/create"
                             onClick={handleCloseProducts}
                           >
                             {t("Create TargetGroup")}
@@ -238,14 +267,14 @@ export default function ManageDashboard() {
                         >
                           <MenuItem
                             component={Link}
-                            to="/wareHouses"
+                            to="/System/wareHouses"
                             onClick={handleCloseWarehouses}
                           >
                             {t("Display WareHouse")}
                           </MenuItem>
                           <MenuItem
                             component={Link}
-                            to="/wareHouse/create"
+                            to="/System/wareHouse/create"
                             onClick={handleCloseWarehouses}
                           >
                             {t("Create WareHouse")}
@@ -253,14 +282,14 @@ export default function ManageDashboard() {
               
                           <MenuItem
                             component={Link}
-                            to="/inventorys"
+                            to="/System/inventorys"
                             onClick={handleCloseWarehouses}
                           >
                             {t("Display Inventory")}
                           </MenuItem>
                           <MenuItem
                             component={Link}
-                            to="/inventory/create"
+                            to="/System/inventory/create"
                             onClick={handleCloseWarehouses}
                           >
                             {t("Create Inventory")}
@@ -276,33 +305,33 @@ export default function ManageDashboard() {
                           open={Boolean(anchorElUsers)}
                           onClose={handleCloseUsers}
                         >
-                          <MenuItem component={Link} to="/users" onClick={handleCloseUsers}>
+                          <MenuItem component={Link} to="/System/users" onClick={handleCloseUsers}>
                             {t("Display Users")}
                           </MenuItem>
                           <MenuItem
                             component={Link}
-                            to="/users/create"
+                            to="/System/users/create"
                             onClick={handleCloseUsers}
                           >
                             {t("Create User")}
                           </MenuItem>
-                          <MenuItem component={Link} to="/role" onClick={handleCloseUsers}>
+                          <MenuItem component={Link} to="/System/role" onClick={handleCloseUsers}>
                             {t("Display Role")}
                           </MenuItem>
                           <MenuItem
                             component={Link}
-                            to="/role/create"
+                            to="/System/role/create"
                             onClick={handleCloseUsers}
                           >
                             {t("Create Role")}
                           </MenuItem>
               
-                          <MenuItem component={Link} to="/groups" onClick={handleCloseUsers}>
+                          <MenuItem component={Link} to="/System/groups" onClick={handleCloseUsers}>
                             {t("Display Groups")}
                           </MenuItem>
                           <MenuItem
                             component={Link}
-                            to="/group/create"
+                            to="/System/group/create"
                             onClick={handleCloseUsers}
                           >
                             {t("Create Group")}

@@ -8,10 +8,11 @@ export function CartProvider({ children }) {
   const fetchCart = async () => {
     GetCart()
       .then((res) => {
+        console.log(res.data.items);
         setCartItems(res.data.items);
       })
-      .catch((err) => {
-        console.log(err)
+      .catch(() => {
+        return;
       })
     
   }

@@ -57,9 +57,33 @@ const CreateBrand = () => {
       } else {
         setError(res.message || "Name or Description is invalid");
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
+    
+      if (error.response && error.response.data) {
+        const { errors, message } = error.response.data;
+    
+        if (errors && typeof errors === "object") {
+          // نستخرج كل رسائل الأخطاء من الـ object
+          const allErrors = Object.values(errors).flat();
+          setError(allErrors.join("\n"));
+          return;
+        }
+    
+        if (Array.isArray(message)) {
+          setError(message.join("\n"));
+          return;
+        }
+    
+        if (typeof message === "string") {
+          setError(message);
+          return;
+        }
+      }
+    
       setError("Brand create failed");
+  
+    
     }
   };
 
@@ -177,7 +201,7 @@ const CreateBrand = () => {
           <Button
             startIcon={<ArrowBack />}
             component={Link}
-            to={`/Brands`}
+            to={`/System/Brands`}
             sx={{
               backgroundColor: "rgb(200, 122, 122)",
               boxShadow: "0px 6px 0px rgb(240, 240, 175, 1)",

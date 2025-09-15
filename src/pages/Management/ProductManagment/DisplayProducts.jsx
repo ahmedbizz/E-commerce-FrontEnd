@@ -88,7 +88,7 @@ const DisplayProducts = () => {
       
       const res = await GetProducts(params);
       
-
+      console.log(res.data);
       setProducts(res.data.items);
       setFilter(res.data.items);
   
@@ -271,7 +271,7 @@ const DisplayProducts = () => {
         <Button
           startIcon={<Add />}
           component={Link}
-          to={`/product/create`}
+          to={`/System/product/create`}
           variant="contained"
           className="create-button"
         >
@@ -350,7 +350,7 @@ const DisplayProducts = () => {
                   </IconButton>
                   <IconButton
                     component={Link}
-                    to={`/product/edit/${item.id}`}
+                    to={`/System/product/edit/${item.id}`}
                     sx={{ color: "green" }}
 
                   >

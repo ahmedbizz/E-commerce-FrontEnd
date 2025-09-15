@@ -55,7 +55,14 @@ import DispalyInventory from "../pages/Management/ManagmentInventory/DisplayInve
 import UpdateInventory from "../pages/Management/ManagmentInventory/UpdateInventory";
 // Managment Order
 import DispalyOrder from "../pages/Management/ManagementOrder/DisplayOrder";
-import {ROLES} from "../utils/Role" 
+
+//Managmenet Payment methods
+import CreatePaymentMethod from "../pages/Management/ManagmentPaymentMethod/CreatePaymentMethod";
+import DispalyPaymentMethod from "../pages/Management/ManagmentPaymentMethod/DispalyPaymentMethod";
+import UpdatePaymentMethod from "../pages/Management/ManagmentPaymentMethod/UpdatePaymentMethod";
+
+import { ROLES } from "../utils/Role";
+
 export default function AppRouter() {
   return (
     <Routes>
@@ -73,9 +80,7 @@ export default function AppRouter() {
               </>
             }
           />
-
         </Route>
-
       </Route>
 
       <Route element={<PrivateRoute role={ROLES.USER} />}>
@@ -91,11 +96,9 @@ export default function AppRouter() {
             }
           />
           <Route path="product/:id" element={<ProductDetails />} />
-          <Route path="products/all" element={<Products/>} />
+          <Route path="products/all" element={<Products />} />
           <Route path="cart" element={<Cart />} />
-        
         </Route>
-        
       </Route>
       <Route element={<PrivateRoute role={ROLES.ADMIN} />}>
         <Route path="/System" element={<MainLayout />}>
@@ -117,7 +120,7 @@ export default function AppRouter() {
           <Route path="users" element={<DisplayUsers />} />
           <Route path="users/create" element={<CreateUser />} />
           <Route path="user/edit/:id" element={<UpdateUser />} />
-        
+
           {/* Managment Category */}
           <Route path="categorys" element={<DispalyCategory />} />
           <Route path="categorys/create" element={<CreateCategory />} />
@@ -130,6 +133,10 @@ export default function AppRouter() {
           <Route path="Sizes" element={<DispalySize />} />
           <Route path="Size/create" element={<CreateSize />} />
           <Route path="Size/edit/:id" element={<UpdateSize />} />
+          {/* Managment PaymentMethod */}
+          <Route path="PaymentMethods" element={<DispalyPaymentMethod />} />
+          <Route path="PaymentMethod/create" element={<CreatePaymentMethod />} />
+          <Route path="PaymentMethod/edit/:id" element={<UpdatePaymentMethod />} />
           {/* Managment TargetGroup */}
           <Route path="TargetGroups" element={<DisplayTargetGroup />} />
           <Route path="TargetGroup/create" element={<CreateTargetGroup />} />
@@ -146,7 +153,7 @@ export default function AppRouter() {
         </Route>
       </Route>
 
-        <Route path="*" element={<NotFound />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
