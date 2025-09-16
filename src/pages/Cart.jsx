@@ -15,6 +15,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  CircularProgress
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -37,6 +38,7 @@ export default function Cart() {
   const [paymentMethod, setPaymentMethod] = useState(1);
   const [soldOut, setsoldOut] = useState(false);
   const [paymentMethodsList, setPaymentMethodsList] = useState([]);
+  const [Loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchPaymentMethods();
@@ -67,21 +69,48 @@ export default function Cart() {
     fetchCart();
   }, []);
 
-  const handelOrder = () => {
+  const handelOrder = async () => {
+    setLoading(true);
     const data = {
       TotalAmount: totalPrice,
-      PaymentId: paymentMethod,
+      PaymentMethodId: paymentMethod, // تأكد من نفس اسم المفتاح
       DeliveryRequestId: 1,
-      OrderItems: cartItems,
+      OrderItems: cartItems.map(item => ({
+        ProductId: item.id,
+        Quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        SelectedSize: item.selectedSize
+      })),
     };
-    
+  
     try {
-      const res = AddToOrder(data);
+      const res = await AddToOrder(data);
+      console.log(res.data);
+      
+      if (res.data?.approvalUrl) {
+          // إعادة توجيه لموقع PayPal
+          window.location.href = res.data.approvalUrl;
+      } else if (res.data?.PaymentMethod === "CashOnDelivery") {
+          // عرض رسالة نجاح للـ COD
+          alert("تم إنشاء الطلب بنجاح! الدفع عند الاستلام.");
+      } else {
+          // أي نوع دفع آخر أو خطأ
+          console.warn("لا يوجد رابط للموافقة على الدفع.");
+      }
+      
     } catch (err) {
-      console.log(err);
+      setLoading(false);
+      console.error(err);
+      alert("حدث خطأ أثناء إتمام الطلب، حاول مرة أخرى.");
     }
   };
-
+  
+  if (Loading)
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <CircularProgress size={80} />
+      </Box>
+    );
   return (
     <Box sx={{ maxWidth: "1000px", margin: "auto", padding: 3 }}>
       <Typography variant="h4" fontWeight="bold" gutterBottom>
@@ -235,7 +264,7 @@ export default function Cart() {
               <RadioGroup
   row
   value={paymentMethod}
-  onChange={(e) => setPaymentMethod(e.target.value)}
+  onChange={(e) => setPaymentMethod(Number(e.target.value))}
 >
   {paymentMethodsList.map((method) => (
     <FormControlLabel
