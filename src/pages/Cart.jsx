@@ -76,13 +76,13 @@ export default function Cart() {
       PaymentMethodId: paymentMethod, // تأكد من نفس اسم المفتاح
       DeliveryRequestId: 1,
       OrderItems: cartItems.map(item => ({
-        ProductId: item.id,
+        ProductId: item.productId,
         Quantity: item.quantity,
         unitPrice: item.unitPrice,
         SelectedSize: item.selectedSize
       })),
     };
-  
+  console.log(data)
     try {
       const res = await AddToOrder(data);
       console.log(res.data);
@@ -90,12 +90,15 @@ export default function Cart() {
       if (res.data?.approvalUrl) {
           // إعادة توجيه لموقع PayPal
           window.location.href = res.data.approvalUrl;
-      } else if (res.data?.PaymentMethod === "CashOnDelivery") {
+          setLoading(false);
+      } else if (res.data?.paymentMethod === "CashOnDelivery") {
           // عرض رسالة نجاح للـ COD
           alert("تم إنشاء الطلب بنجاح! الدفع عند الاستلام.");
+          setLoading(false);
       } else {
           // أي نوع دفع آخر أو خطأ
           console.warn("لا يوجد رابط للموافقة على الدفع.");
+          setLoading(false);
       }
       
     } catch (err) {

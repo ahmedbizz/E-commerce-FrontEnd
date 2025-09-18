@@ -194,23 +194,32 @@ export default function AddProductForm() {
       setAvailableSizes([]);
       fetchDataRelod();
     } catch (error) {
-      console.log(error)
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        const messages = error.response.data.message;
-        if (Array.isArray(messages)) {
-          // لو الرسائل كثيرة، اعرضهم كلهم
-          setError(messages.join("\n"));
-        } else {
-          // لو رسالة واحدة فقط
-          setError(messages);
+      console.log(error);
+    
+      if (error.response && error.response.data) {
+        const { errors, message } = error.response.data;
+    
+        if (errors && typeof errors === "object") {
+          // نستخرج كل رسائل الأخطاء من الـ object
+          const allErrors = Object.values(errors).flat();
+          setError(allErrors.join("\n"));
+          return;
         }
-      } else {
-        setError(t("errorr_message"));
+    
+        if (Array.isArray(message)) {
+          setError(message.join("\n"));
+          return;
+        }
+    
+        if (typeof message === "string") {
+          setError(message);
+          return;
+        }
       }
+    
+      setError(t("errorr_message"));
+  
+    
     } finally {
       setLoading(false);
     }

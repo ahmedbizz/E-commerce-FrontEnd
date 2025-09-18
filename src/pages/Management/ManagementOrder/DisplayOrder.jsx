@@ -85,10 +85,10 @@ const DisplayOrders = () => {
     } catch (err) {
       console.log(err);
       if (err.response?.status === 404) {
-        notifyErorr("لا يوجد منتجات.");
+      
         setEmpty(true);
       } else {
-        notifyErorr("حدث خطأ أثناء جلب البيانات.");
+      
         setError(true);
       }
     } finally {
