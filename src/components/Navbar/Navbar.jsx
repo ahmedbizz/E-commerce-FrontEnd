@@ -335,6 +335,16 @@ export default function Navbar() {
                 {/* أيقونة السلة */}
                 <IconButton
                   component={Link}
+                  to="/orders"
+                  size="large"
+                  color="inherit"
+                >
+                  <Badge badgeContent={cartItems.length} color="error">
+                {"Orders"}
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  component={Link}
                   to="/cart"
                   size="large"
                   color="inherit"

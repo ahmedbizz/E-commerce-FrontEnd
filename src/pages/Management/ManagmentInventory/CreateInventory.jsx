@@ -6,14 +6,15 @@ import {
   CircularProgress,
   Alert,
   Select,
-  MenuItem,Typography,Card,
-  Autocomplete
-   
+  MenuItem,
+  Typography,
+  Card,
+  Autocomplete,
 } from "@mui/material";
 import { addInventory } from "../../../services/InventoryService";
 import { GetWareHouses } from "../../../services/WareHouseService";
 import { GetProducts } from "../../../services/productService";
-
+import { GetSizes } from "../../../services/SizeService";
 import { ToastContainer, toast } from "react-toastify";
 import FormControl from "@mui/material/FormControl";
 import { useTranslation } from "react-i18next";
@@ -34,22 +35,23 @@ export default function CreateInventory() {
       theme: "light",
     });
   };
-  const notify_Error = (value) => {
-    toast.error();(`${value} `, {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+  const [availableSizes, setAvailableSizes] = useState([]);
+  const fetchSizes = async () => {
+    try {
+      const res = await GetSizes();
+      setAvailableSizes(res.data);
+    } catch (err) {
+      console.error("Error fetching sizes", err);
+    }
   };
+  useEffect(() => {
+    fetchSizes();
+  }, []);
   const [formData, setFormData] = useState({
     WarehouseId: "",
     ProductId: "",
     Quantity: "",
+    Size: "",
   });
 
   const [Warehouses, setWarehouses] = useState([]);
@@ -60,16 +62,27 @@ export default function CreateInventory() {
   const [success, setSuccess] = useState("");
   const [options, setOptions] = useState([]);
   const [loadingOpt, setLoadingOpt] = useState(false);
+  const [defaultProducts, setDefaultProducts] = useState([]);
 
   useEffect(() => {
+    const fetchDefaultProducts = async () => {
+      try {
+        const res = await GetProducts({ Page: 1, PageSize: 20 });
+        setDefaultProducts(res.data.items || []);
+        setOptions(res.data.items || []); // نعرض أول 20 منتج مباشرة
+      } catch (err) {
+        console.error("Error fetching default products", err);
+      }
+    };
+    fetchDefaultProducts();
+  }, []);
   
+  useEffect(() => {
     async function fetchData() {
       try {
         const warehouses = await GetWareHouses();
-      
+
         setWarehouses(warehouses.data.items || []);
-
-
       } catch {
         setError(t("errorr_message"));
       }
@@ -83,22 +96,19 @@ export default function CreateInventory() {
   };
 
   const handleSearch = async (event) => {
-  
-      const query = event.target.value;
-      if (!query) {
-        const products = await GetProducts({SearchTerm:query});
-        console.log(products.data.items)
-        setProducts(products.data.items || []);
-        setOptions(Products); // إذا خانة البحث فارغة، نعرض كل العناصر
-        return;
-      }
-  
-      const filtered = Products.filter((us) =>
-        us.name.toLowerCase().includes(query.toLowerCase())
-      
-        );
-        setOptions(filtered);
-  
+    const query = event.target.value;
+    if (!query) {
+      const products = await GetProducts({ SearchTerm: query });
+      console.log(products.data.items);
+      setProducts(products.data.items || []);
+      setOptions(Products); // إذا خانة البحث فارغة، نعرض كل العناصر
+      return;
+    }
+
+    const filtered = Products.filter((us) =>
+      us.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setOptions(filtered);
   };
 
   const handleSubmit = async (e) => {
@@ -118,20 +128,18 @@ export default function CreateInventory() {
         data.append(key, value);
       });
 
-    var res =  await addInventory(data);
-    console.log(res)
-    if(res.data){
-      notify(t("add_success"))
-      setSuccess(t("add_success"));
-      setFormData({
-        Quantity: "",
-        ProductId: "",
-        WarehouseId: "",
-      });
-    }
-
+      var res = await addInventory(data);
+      if (res.data) {
+        notify(t("add_success"));
+        setSuccess(t("add_success"));
+        setFormData({
+          Quantity: "",
+          ProductId: "",
+          WarehouseId: "",
+          Size: "",
+        });
+      }
     } catch (err) {
-      console.log(err.response.data)
       setError(t("errorr_message"));
     } finally {
       setLoading(false);
@@ -139,16 +147,16 @@ export default function CreateInventory() {
   };
 
   return (
-<Box className="Card-Continer">
+    <Box className="Card-Continer">
       <Card className="Card" variant="outlined">
         <ToastContainer />
         <Typography
-            component="h1"
-            variant="h4"
-            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
-          >
-            {t("Add product to WareHouse")}
-          </Typography>
+          component="h1"
+          variant="h4"
+          sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+        >
+          {t("Add product to WareHouse")}
+        </Typography>
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
@@ -159,7 +167,7 @@ export default function CreateInventory() {
             {success}
           </Alert>
         )}
-  
+
         <Box
           component="form"
           onSubmit={handleSubmit}
@@ -168,6 +176,7 @@ export default function CreateInventory() {
           <FormControl>
             <Select
               name="WarehouseId"
+              displayEmpty
               required
               value={formData.WarehouseId}
               onChange={handleChange}
@@ -186,45 +195,70 @@ export default function CreateInventory() {
               ))}
             </Select>
           </FormControl>
-  
-          <FormControl fullWidth>
-  <Autocomplete
-    options={options}
-    getOptionLabel={(option) => option.name || ""}
-    loading={loadingOpt}
-    onInputChange={async (_, value) => {
-      if (!value) {
-        setOptions([]);
-        return;
-      }
-      setLoadingOpt(true);
-      try {
-        const res = await GetProducts({ SearchTerm: value, Page: 1, PageSize: 20 });
-        setOptions(res.data.items || []);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoadingOpt(false);
-      }
-    }}
-    onChange={(_, newValue) => {
-      setFormData((prev) => ({
-        ...prev,
-        ProductId: newValue ? newValue.id : "",
-      }));
-    }}
-    renderInput={(params) => (
-      <TextField
-        {...params}
-        label={t("Select Product")}
-        variant="outlined"
-        required
-      />
-    )}
-  />
-</FormControl>
 
-  
+          <FormControl fullWidth>
+            <Autocomplete
+              options={options}
+              getOptionLabel={(option) => option.name || ""}
+              loading={loadingOpt}
+              onInputChange={async (_, value) => {
+                if (!value) {
+                  setOptions(defaultProducts);
+                  return;
+                }
+                setLoadingOpt(true);
+                try {
+                  const res = await GetProducts({
+                    SearchTerm: value,
+                    Page: 1,
+                    PageSize: 20,
+                  });
+                  setOptions(res.data.items || []);
+                } catch (err) {
+                  console.error(err);
+                } finally {
+                  setLoadingOpt(false);
+                }
+              }}
+              onChange={(_, newValue) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  ProductId: newValue ? newValue.id : "",
+                }));
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t("Select Product")}
+                  variant="outlined"
+                  required
+                />
+              )}
+            />
+          </FormControl>
+          <FormControl>
+            <Select
+              name="Size"
+              displayEmpty
+              required
+              value={formData.Size}
+              onChange={handleChange}
+              fullWidth
+              sx={{ mb: 2 }}
+            >
+              <MenuItem value="">
+                <em>
+                  {t("Select")}-{t("Size")}
+                </em>
+              </MenuItem>
+              {(availableSizes || []).map((size) => (
+                <MenuItem key={size.id} value={size.id}>
+                  {size.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
           <FormControl>
             <TextField
               label={t("Quantity")}
@@ -237,8 +271,17 @@ export default function CreateInventory() {
               onChange={handleChange}
             />
           </FormControl>
-  
-          <Button type="submit" variant="contained" fullWidth disabled={loading} sx={{backgroundColor:"rgb(56, 122, 122)",boxShadow:"0px 6px 0px rgb(240, 240, 175, 1)"}}>
+
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            disabled={loading}
+            sx={{
+              backgroundColor: "rgb(56, 122, 122)",
+              boxShadow: "0px 6px 0px rgb(240, 240, 175, 1)",
+            }}
+          >
             {loading ? <CircularProgress size={24} /> : t("Save")}
           </Button>
           <Button
@@ -256,6 +299,6 @@ export default function CreateInventory() {
           </Button>
         </Box>
       </Card>
-</Box>
+    </Box>
   );
 }

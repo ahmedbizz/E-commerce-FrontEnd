@@ -1056,6 +1056,32 @@ a {
   display: none;
 }
 
+.MuiAutocomplete-popper .MuiPaper-root {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  color: white;
+  -webkit-box-pack: left;
+      -ms-flex-pack: left;
+          justify-content: left;
+  background: rgba(30, 30, 30, 0.7) !important;
+  backdrop-filter: blur(12px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  -webkit-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35) !important;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35) !important;
+  -webkit-animation: fadeInScale 0.25s ease !important;
+          animation: fadeInScale 0.25s ease !important;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.MuiAutocomplete-popper .MuiPaper-root::-webkit-scrollbar {
+  display: none;
+}
+
 /* hedear 1 in Nave page section  */
 .Box_header_1 {
   background-color: #1a1b1b50;

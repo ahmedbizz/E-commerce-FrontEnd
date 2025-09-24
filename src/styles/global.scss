@@ -987,6 +987,29 @@ a {
 
 }
 
+
+.MuiAutocomplete-popper {
+  .MuiPaper-root {
+    display: flex;
+    color: white;
+    justify-content: left;
+    background: rgba(30, 30, 30, 0.7) !important;
+    backdrop-filter: blur(12px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35) !important;
+    animation: fadeInScale 0.25s ease !important;
+    overflow: auto;  // يخلي السكروول يشتغل
+    scrollbar-width: none; // يخفي السكرول في Firefox
+    -ms-overflow-style: none; // يخفيه في IE/Edge
+
+    &::-webkit-scrollbar {
+      display: none; // يخفيه في Chrome/Safari/Edge
+    }
+  }
+}
+
 /* hedear 1 in Nave page section  */
 .Box_header_1 {
   background-color: #1a1b1b50;

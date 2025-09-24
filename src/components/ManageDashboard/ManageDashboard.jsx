@@ -149,7 +149,7 @@ export default function ManageDashboard() {
         <Toolbar sx={{ display: "flex", justifyContent:"space-between", alignItems: "center", gap: 2 }}>
           {/* الشعار */}
           <Button   startIcon={<Dashboard/>} variant="h6" component={Link} to="/System">
-             {t("Home")}
+          
           </Button>
           
             <Box>

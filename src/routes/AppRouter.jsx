@@ -5,6 +5,7 @@ import Panel from "../components/Panel/Panel";
 import ProductDetails from "../pages/ProductDetails";
 import Products from "../pages/Products";
 import Cart from "../pages/Cart";
+import DisplayUserOrders from "../pages/DisplayUserOrders";
 import NotFound from "../pages/NotFound";
 import MainLayout from "../layouts/MainLayout";
 import SignInSide from "../pages/SignInSide";
@@ -63,6 +64,7 @@ import UpdatePaymentMethod from "../pages/Management/ManagmentPaymentMethod/Upda
 
 import { ROLES } from "../utils/Role";
 
+
 export default function AppRouter() {
   return (
     <Routes>
@@ -98,6 +100,7 @@ export default function AppRouter() {
           <Route path="product/:id" element={<ProductDetails />} />
           <Route path="products/all" element={<Products />} />
           <Route path="cart" element={<Cart />} />
+          <Route path="orders" element={<DisplayUserOrders />} />
         </Route>
       </Route>
       <Route element={<PrivateRoute role={ROLES.ADMIN} />}>

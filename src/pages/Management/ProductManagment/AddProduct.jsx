@@ -21,7 +21,11 @@ import FormControl from "@mui/material/FormControl";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import { Link } from "react-router-dom";
-
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+const CustomAlert = React.forwardRef(function CustomAlert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 export default function AddProductForm() {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
@@ -49,6 +53,7 @@ export default function AddProductForm() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [sizes, setSizes] = useState([]);
+  const [openNotifcation, setOpenNotifcation] = useState(false);
   // تحميل القوائم من الـ API
   useEffect(() => {
     async function fetchData() {
@@ -81,16 +86,15 @@ export default function AddProductForm() {
   }
 
   const [availableSizes, setAvailableSizes] = useState([]);
-
+  const fetchSizes = async () => {
+    try {
+      const res = await GetSizes(); // خدمة API تجلب الأحجام
+      setAvailableSizes(res.data);
+    } catch (err) {
+      console.error("Error fetching sizes", err);
+    }
+  };
   useEffect(() => {
-    const fetchSizes = async () => {
-      try {
-        const res = await GetSizes(); // خدمة API تجلب الأحجام
-        setAvailableSizes(res.data);
-      } catch (err) {
-        console.error("Error fetching sizes", err);
-      }
-    };
     fetchSizes();
   }, []);
 
@@ -162,7 +166,6 @@ export default function AddProductForm() {
       // إضافة الأحجام
 
       formData.productSizes.forEach((size, index) => {
-        console.log(size)
         data.append(`ProductSizes[${index}].Id`, size.id); // <-- استخدم capital I إذا كانت في DTO هكذا
       });
       
@@ -175,6 +178,7 @@ export default function AddProductForm() {
       await addProduct(data);
 
       setSuccess("تم إضافة المنتج بنجاح!");
+      setOpenNotifcation(true);
       setFormData({
         Name: "",
         Description: "",
@@ -193,8 +197,9 @@ export default function AddProductForm() {
       setGalleryPreview([]);
       setAvailableSizes([]);
       fetchDataRelod();
+      fetchSizes();
     } catch (error) {
-      console.log(error);
+    
     
       if (error.response && error.response.data) {
         const { errors, message } = error.response.data;
@@ -227,6 +232,14 @@ export default function AddProductForm() {
 
   return (
     <Box className="Card-Continer">
+    <Snackbar
+        open={openNotifcation}
+        autoHideDuration={1000}
+        onClose={() => setOpenNotifcation(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <CustomAlert severity="success">{success}</CustomAlert>
+      </Snackbar>
       <Card className="Card" variant="outlined">
         <ToastContainer />
 

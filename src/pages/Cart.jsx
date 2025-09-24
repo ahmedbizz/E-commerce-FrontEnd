@@ -93,6 +93,7 @@ export default function Cart() {
           setLoading(false);
       } else if (res.data?.paymentMethod === "CashOnDelivery") {
           // عرض رسالة نجاح للـ COD
+          fetchCart();
           alert("تم إنشاء الطلب بنجاح! الدفع عند الاستلام.");
           setLoading(false);
       } else {
