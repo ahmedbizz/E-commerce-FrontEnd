@@ -32,13 +32,15 @@ export default function SignInSide(props) {
     autoplay: true,
     autoplaySpeed: 3000,
   };
+
+
   return (
     <Box className="SignBoxContiner">
       <Slider {...settings}>
         {(images || []).map((img, index) => (
           <Box className="slide" key={index}>
             <img
-              src={`https://localhost:7137/images/Brands/${img.imageUrl}`}
+              src={`${import.meta.env.VITE_BASE_URL}/images/Brands/${img.imageUrl}`}
               alt={`Ad ${index + 1}`}
               style={{ width: "100%", height: "100%" }}
             />

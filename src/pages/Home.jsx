@@ -11,6 +11,9 @@ import {
   IconButton,
 } from "@mui/material";
 import { ArrowForward, ArrowBack } from "@mui/icons-material"; // إضافة أيقونات الأسهم
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 export default function Home() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -19,7 +22,7 @@ export default function Home() {
   const settings = {
     infinite: true,
     speed: 500,
-    slidesToShow: 3, // عدد الصور على الشاشات الكبيرة
+    slidesToShow: 3,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
@@ -27,19 +30,22 @@ export default function Home() {
     dots: false,
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 1024, // أقل من 1024px
         settings: {
           slidesToShow: 2,
+          slidesToScroll: 1,
         },
       },
       {
-        breakpoint: 600,
+        breakpoint: 768, // أقل من 768px
         settings: {
           slidesToShow: 1,
+          slidesToScroll: 1,
         },
       },
     ],
   };
+  
   const sliderRef = useRef(null);
   useEffect(() => {
     GetProducts()
@@ -76,7 +82,7 @@ export default function Home() {
                 window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
               }}
               >
-                <img src={`https://localhost:7137/images/Products/${item.imageUrl}`} alt={`Ad ${index + 1}`} />
+                <img  src={`${import.meta.env.VITE_BASE_URL}/images/Products/${item.imageUrl}`} alt={`Ad ${index + 1}`} />
 
               </Box>
             ))}

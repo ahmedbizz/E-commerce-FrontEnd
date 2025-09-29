@@ -26,7 +26,7 @@ const ProductCard = React.memo(({ product }) =>{
           objectFit:"cover",
           cursor:"pointer"
         }}
-        image={`https://localhost:7137/images/Products/${product.imageUrl}`}
+        image={`${import.meta.env.VITE_BASE_URL}/images/Products/${product.imageUrl}`}
         alt={product.name}
         loading="lazy"
       />

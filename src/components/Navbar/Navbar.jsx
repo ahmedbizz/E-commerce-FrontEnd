@@ -33,6 +33,11 @@ import { GetProducts } from "../../services/productService";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import Close from "@mui/icons-material/Close";
 import Check from "@mui/icons-material/Check";
+import Search from "@mui/icons-material/Search";
+import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
+import ShoppingBagOutlined from "@mui/icons-material/ShoppingBagOutlined";
+import LocalShippingOutlined from "@mui/icons-material/LocalShippingOutlined";
+import DensityMediumOutlined from "@mui/icons-material/DensityMediumOutlined";
 import { useMemo } from 'react';
 import Cookies from "js-cookie";
 
@@ -191,14 +196,9 @@ export default function Navbar() {
 
       >
         <Toolbar
-          sx={{
-            display: anchorSearch ? "none" : "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 2,
-          }}
+          className="Toolbar"
         >
-          {/* الشعار */}
+        
           <Box
             sx={{
               display: "flex",
@@ -207,7 +207,7 @@ export default function Navbar() {
               gap: 2,
             }}
           >
-            <List id="EN_AR_List" aria-label="Device settings">
+            {/* <List id="EN_AR_List" aria-label="Device settings">
               <ListItemButton
                 id="lock-button"
                 aria-haspopup="listbox"
@@ -241,7 +241,7 @@ export default function Navbar() {
                   {option}
                 </MenuItem>
               ))}
-            </Menu>
+            </Menu> */}
             <Typography
               variant="h6"
               component={Link}
@@ -252,20 +252,17 @@ export default function Navbar() {
             </Typography>
 
             {/* البحث */}
-            <TextField
-              variant="outlined"
-              placeholder={"Type.."}
-              onClick={(e) => setAnchorSearch(true)}
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon className="search-icon" />
-                  </InputAdornment>
-                ),
-              }}
-            />
+            <IconButton
+          onClick={(e) => setAnchorSearch(true)}
+                  size="large"
+                  color="inherit"
+                >
+
+                  <Search/>
+                </IconButton>
+
           </Box>
+          {/* Brands */}
           <Box>
             <Box>
               {(TargetGroupRes || []).map((group, index) => (
@@ -328,6 +325,7 @@ export default function Navbar() {
               ))}
             </Box>
           </Box>
+          {/* Profile */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             {/* صورة المستخدم وقائمة */}
             {user ? (
@@ -339,8 +337,8 @@ export default function Navbar() {
                   size="large"
                   color="inherit"
                 >
-                  <Badge badgeContent={cartItems.length} color="error">
-                {"Orders"}
+                  <Badge badgeContent={0} color="error">
+              <LocalShippingOutlined/>
                   </Badge>
                 </IconButton>
                 <IconButton
@@ -350,7 +348,7 @@ export default function Navbar() {
                   color="inherit"
                 >
                   <Badge badgeContent={cartItems.length} color="error">
-                    <ShoppingCartIcon />
+                    <ShoppingBagOutlined />
                   </Badge>
                 </IconButton>
                 <IconButton onClick={handleMenu} size="large" sx={{ p: 0 }}>
@@ -358,7 +356,7 @@ export default function Navbar() {
                     alt={user.name}
                     src={
                       user.image
-                        ? `https://localhost:7137/images/Users/${user.image}`
+                        ? `${import.meta.env.VITE_BASE_URL}/images/Users/${user.image}`
                         : "/user-avatar.jpg"
                     }
                   />

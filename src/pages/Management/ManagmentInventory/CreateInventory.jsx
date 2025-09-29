@@ -20,6 +20,7 @@ import FormControl from "@mui/material/FormControl";
 import { useTranslation } from "react-i18next";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import { Link } from "react-router-dom";
+import { ConnectedTvOutlined } from "@mui/icons-material";
 
 export default function CreateInventory() {
   const { t } = useTranslation();
@@ -51,7 +52,7 @@ export default function CreateInventory() {
     WarehouseId: "",
     ProductId: "",
     Quantity: "",
-    Size: "",
+    SizeId: "",
   });
 
   const [Warehouses, setWarehouses] = useState([]);
@@ -128,7 +129,14 @@ export default function CreateInventory() {
         data.append(key, value);
       });
 
+
+      for (let [key, value] of data.entries()) {
+        console.log(key, value);
+      }
+      
+
       var res = await addInventory(data);
+      console.log(res.data)
       if (res.data) {
         notify(t("add_success"));
         setSuccess(t("add_success"));
@@ -136,7 +144,7 @@ export default function CreateInventory() {
           Quantity: "",
           ProductId: "",
           WarehouseId: "",
-          Size: "",
+          SizeId: "",
         });
       }
     } catch (err) {
@@ -201,6 +209,9 @@ export default function CreateInventory() {
               options={options}
               getOptionLabel={(option) => option.name || ""}
               loading={loadingOpt}
+              value={
+                options.find((opt) => opt.id === formData.ProductId) || null
+              }
               onInputChange={async (_, value) => {
                 if (!value) {
                   setOptions(defaultProducts);
@@ -238,7 +249,7 @@ export default function CreateInventory() {
           </FormControl>
           <FormControl>
             <Select
-              name="Size"
+              name="SizeId"
               displayEmpty
               required
               value={formData.Size}

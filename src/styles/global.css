@@ -1,4 +1,5 @@
 @charset "UTF-8";
+/* =========================== Global Styles =========================== */
 html,
 body,
 #root {
@@ -15,7 +16,7 @@ main {
   min-height: 100vh;
 }
 
-/* headar 2 in Nave page section  */
+/* =========================== AppBar Header =========================== */
 .AppBarHeader {
   background: rgba(0, 0, 0, 0.25) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
@@ -23,6 +24,24 @@ main {
   -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
   -webkit-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3) !important;
           box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+@media (max-width: 600px) {
+  .AppBarHeader {
+    display: none;
+  }
+}
+
+.AppBarHeader .Toolbar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .AppBarHeader .MuiOutlinedInput-root {
@@ -58,6 +77,32 @@ main {
   color: rgba(106, 146, 146, 0.4);
 }
 
+.MobileHeader {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 1;
+  background-color: rgba(0, 0, 0, 0.25);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+          backdrop-filter: blur(12px) saturate(160%);
+  color: white;
+}
+
+.DrawerMobile .MuiPaper-root {
+  width: 80vw;
+  background-color: rgba(0, 0, 0, 0.25);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+          backdrop-filter: blur(12px) saturate(160%);
+  color: white;
+}
+
+/* =========================== Search Box =========================== */
 .Search-Box {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -68,8 +113,6 @@ main {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -ms-flex-item-align: center;
-      align-self: center;
   width: 90%;
   padding: 10px;
   gap: 10%;
@@ -78,7 +121,7 @@ main {
 
 .Search-Box .Typography {
   color: white;
-  font-size: 42;
+  font-size: 42px;
   font-weight: bold;
 }
 
@@ -134,6 +177,7 @@ main {
           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
+/* =========================== Box Products =========================== */
 .Box-Products {
   -webkit-box-flex: 1;
       -ms-flex: 1;
@@ -149,7 +193,7 @@ main {
   overflow-y: auto;
 }
 
-/* AppBar الزجاجي */
+/* =========================== AppBar Dashboard =========================== */
 .AppBarDashBoard {
   background: rgba(0, 0, 0, 0.25) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
@@ -159,7 +203,6 @@ main {
           box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* الأزرار */
 .AppBarDashBoard .MuiButton-root {
   color: #f3f1f1 !important;
   font-weight: bold !important;
@@ -176,7 +219,6 @@ main {
           transform: translateY(-2px) !important;
 }
 
-/* القوائم المنسدلة */
 .MuiMenu-paper {
   background: rgba(30, 30, 30, 0.7) !important;
   backdrop-filter: blur(12px) saturate(150%) !important;
@@ -204,7 +246,6 @@ main {
           transform: translateX(10px) !important;
 }
 
-/* حركة بسيطة للقائمة */
 @-webkit-keyframes fadeInScale {
   from {
     opacity: 0;
@@ -217,6 +258,7 @@ main {
             transform: scale(1);
   }
 }
+
 @keyframes fadeInScale {
   from {
     opacity: 0;
@@ -230,42 +272,7 @@ main {
   }
 }
 
-/* صورة المستخدم */
-.MuiAvatar-root {
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  -webkit-transition: all 0.3s ease !important;
-  transition: all 0.3s ease !important;
-}
-
-.MuiAvatar-root:hover {
-  -webkit-transform: scale(1.05) rotate(2deg);
-          transform: scale(1.05) rotate(2deg);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-.Display-Item-Continer {
-  display: block;
-  margin: 0px;
-  margin-top: 40px;
-  padding: 10px;
-  width: 100%;
-  -webkit-box-shadow: rgba(9, 11, 17, 0.05) 0px 5px 15px 0px, rgba(19, 23, 32, 0.05) 0px 15px 35px -5px;
-          box-shadow: rgba(9, 11, 17, 0.05) 0px 5px 15px 0px, rgba(19, 23, 32, 0.05) 0px 15px 35px -5px;
-}
-
-main {
-  padding: 0 !important;
-  margin: 0 !important;
-  overflow: hidden;
-}
-
-.Table {
-  max-width: 97vw;
-  margin-block: 20px;
-  -webkit-box-shadow: rgba(9, 11, 17, 0.05) 0px 5px 15px 0px, rgba(19, 23, 32, 0.05) 0px 15px 35px -5px;
-          box-shadow: rgba(9, 11, 17, 0.05) 0px 5px 15px 0px, rgba(19, 23, 32, 0.05) 0px 15px 35px -5px;
-}
-
+/* =========================== Cards =========================== */
 .Card {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -294,19 +301,7 @@ body.dark .Card {
           box-shadow: rgba(9, 11, 17, 0.5) 0px 5px 15px 0px, rgba(19, 23, 32, 0.08) 0px 15px 35px -5px;
 }
 
-.Card-Continer {
-  display: -webkit-box !important;
-  display: -ms-flexbox !important;
-  display: flex !important;
-  -webkit-box-pack: center !important;
-      -ms-flex-pack: center !important;
-          justify-content: center !important;
-  -webkit-box-align: center !important;
-      -ms-flex-align: center !important;
-          align-items: center !important;
-  padding: 5%;
-}
-
+.Card-Continer,
 .Card-Continer-Dialog {
   display: -webkit-box !important;
   display: -ms-flexbox !important;
@@ -320,71 +315,84 @@ body.dark .Card {
   padding: 5%;
 }
 
-.Card-Continer-Dialog .Card {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -ms-flex-item-align: center;
-      align-self: center;
-  width: 100%;
-  padding: 32px;
-  gap: 16px;
-  /* Dark mode */
+/* =========================== Media Queries =========================== */
+/* Small devices (mobile phones) */
+@media (max-width: 600px) {
+  .Search-Box {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    gap: 10px;
+  }
+  .Search-Box .MuiOutlinedInput-root {
+    max-width: 100%;
+  }
+  .Search-Box .Icon-button {
+    width: 100%;
+  }
+  .Box-Products {
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    gap: 5px;
+  }
+  .AppBarHeader .MuiOutlinedInput-root {
+    max-width: 100px;
+  }
+  .Card {
+    padding: 16px;
+    width: 90%;
+  }
 }
 
-@media (min-width: 600px) {
-  .Card-Continer-Dialog .Card {
+/* Medium devices (tablets) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .Search-Box {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    gap: 8%;
+  }
+  .Box-Products {
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    gap: 8px;
+  }
+  .AppBarHeader .MuiOutlinedInput-root {
+    max-width: 150px;
+  }
+  .Card {
+    width: 350px;
+  }
+}
+
+/* Large devices (laptops/desktops) */
+@media (min-width: 1025px) {
+  .Search-Box {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    gap: 10%;
+  }
+  .Box-Products {
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+    gap: 10px;
+  }
+  .AppBarHeader .MuiOutlinedInput-root {
+    max-width: 200px;
+  }
+  .Card {
     width: 450px;
   }
 }
 
-body.dark .Card-Continer-Dialog .Card {
-  background: rgba(0, 0, 0, 0.25) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.Card-Continer-Dialog .Card .DialogTitle {
-  color: white;
-  font-size: xx-large;
-}
-
-.Card-Continer-Dialog .Card .DialogContent {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -ms-flex-item-align: center;
-      align-self: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  gap: 15px;
-  color: white;
-  font-weight: bold;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-
-.Card-Continer-Dialog .Card .DialogContent .login-button {
-  background-color: #020202;
-  color: white;
-  border-radius: 20px;
-  width: 50%;
-}
-
-.Card-Continer-Dialog .Card .DialogContent .login-button:hover {
-  background-color: #757474;
-}
-
+/* =========================== يمكن إضافة بقية الأقسام بنفس الأسلوب =========================== */
+/* =========================== Table Styles =========================== */
 .TableHead {
   width: auto;
   background-color: rgba(9, 11, 17, 0.05);
@@ -396,6 +404,7 @@ body.dark .Card-Continer-Dialog .Card {
   background-color: rgba(141, 189, 189, 0.4);
 }
 
+/* =========================== Search Panel =========================== */
 .Button_Search_Panel {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -482,37 +491,31 @@ body.dark .Card-Continer-Dialog .Card {
   }
 }
 
+/* =========================== Pagination =========================== */
 .Pagination {
   border-radius: 8px;
-  /* شكل الحواف */
   padding: 5px;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
 }
 
-/* استهداف أزرار الصفحات */
 .Pagination .MuiPaginationItem-root {
   color: #ffffff;
-  /* لون الخط */
   background-color: #504c4c;
-  /* لون خلفية الأزرار */
 }
 
-/* زر الصفحة الحالي */
-.Pagination .Mui-selected {
-  background-color: #030303 !important;
-  /* لون خلفية الصفحة المحددة */
-  color: #ffffff;
-  /* لون النص */
-}
-
-/* زر عند المرور بالماوس */
 .Pagination .MuiPaginationItem-root:hover {
   background-color: #575857 !important;
   color: #ffffff;
 }
 
+.Pagination .Mui-selected {
+  background-color: #030303 !important;
+  color: #ffffff;
+}
+
+/* =========================== Home Page =========================== */
 .ads-container-home {
   width: 100%;
   height: 100vh;
@@ -533,6 +536,18 @@ body.dark .Card-Continer-Dialog .Card {
   width: 90%;
   padding: 30px;
   gap: 500px;
+}
+
+@media (max-width: 768px) {
+  .ads-container-home .Button_titel_Panel {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    padding: 15px;
+  }
 }
 
 .ads-container-home .Icon-button {
@@ -561,12 +576,17 @@ body.dark .Card-Continer-Dialog .Card {
   font-size: 27px;
 }
 
+@media (max-width: 768px) {
+  .ads-container-home .title {
+    font-size: 22px;
+    text-align: center;
+  }
+}
+
 .ads-container-home .slide {
   position: relative;
   width: 100%;
-  /* عرض كامل حسب الحاوية */
-  height: auto;
-  /* الارتفاع يتغير حسب محتوى الصورة */
+  height: 600px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -581,9 +601,7 @@ body.dark .Card-Continer-Dialog .Card {
 
 .ads-container-home .slide img {
   width: 100%;
-  /* يتناسب مع عرض السلايد */
-  height: auto;
-  /* يحافظ على نسبة الصورة */
+  height: 600px;
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 10px;
@@ -593,13 +611,15 @@ body.dark .Card-Continer-Dialog .Card {
   .ads-container-home .slide {
     -ms-flex-wrap: wrap;
         flex-wrap: wrap;
+    width: 400px;
   }
   .ads-container-home .slide img {
-    width: 90%;
-    /* أصغر قليلاً على الشاشات الصغيرة */
+    width: 400px;
+    height: 400px;
   }
 }
 
+/* =========================== Ads Page =========================== */
 .ads-container {
   width: 100%;
   height: 100vh;
@@ -637,8 +657,46 @@ body.dark .Card-Continer-Dialog .Card {
   background: rgba(0, 0, 0, 0.4);
   width: 200px;
   height: 70px;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: bold;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  cursor: pointer;
 }
 
+.ads-container .slide .GO_TO_SHOP_BT:hover {
+  background: rgba(106, 146, 146, 0.6);
+}
+
+@media (max-width: 768px) {
+  .ads-container .slide {
+    width: 100%;
+    height: 75vh;
+  }
+  .ads-container .slide .GO_TO_SHOP_BT {
+    width: 150px;
+    height: 50px;
+    left: 30%;
+    top: 55%;
+  }
+  .ads-container .slide img {
+    width: 100%;
+    height: 30vh;
+    -o-object-fit: cover;
+       object-fit: cover;
+    display: block;
+  }
+}
+
+/* =========================== Panel Container =========================== */
 .Panel-container {
   width: 100%;
   min-height: 100vh;
@@ -649,12 +707,8 @@ body.dark .Card-Continer-Dialog .Card {
 .Panel-container .Box-Panel {
   width: 90%;
   min-height: calc(100vh - 40px);
-  /* 100vh ناقص margin-top + margin-bottom */
-  margin: 20px 0;
-  margin-left: 5%;
+  margin: 20px auto;
   padding: 0;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: 1fr 1fr;
@@ -664,10 +718,20 @@ body.dark .Card-Continer-Dialog .Card {
   gap: 10px;
 }
 
+@media (max-width: 768px) {
+  .Panel-container .Box-Panel {
+    -ms-grid-columns: 1fr;
+        grid-template-columns: 1fr;
+    -ms-grid-rows: (minmax(200px, 1fr))[auto-fill];
+        grid-template-rows: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+/* =========================== Products Main Container =========================== */
 .Products-Main-container {
   width: 100%;
   height: 100vh;
-  margin: 30px;
+  margin: 30px 0;
   padding: 0;
 }
 
@@ -684,6 +748,7 @@ body.dark .Card-Continer-Dialog .Card {
   width: 300px;
   -webkit-box-shadow: rgba(9, 11, 17, 0.05) 0px 5px 15px 0px, rgba(19, 23, 32, 0.05) 0px 15px 35px -5px;
           box-shadow: rgba(9, 11, 17, 0.05) 0px 5px 15px 0px, rgba(19, 23, 32, 0.05) 0px 15px 35px -5px;
+  /* Dark mode */
 }
 
 .Card-Product .CardContent {
@@ -722,6 +787,7 @@ body.dark .Card-Product {
           box-shadow: rgba(9, 11, 17, 0.5) 0px 5px 15px 0px, rgba(19, 23, 32, 0.08) 0px 15px 35px -5px;
 }
 
+/* =========================== Products Container =========================== */
 .Products-container {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -731,8 +797,7 @@ body.dark .Card-Product {
       -ms-flex-direction: column;
           flex-direction: column;
   height: 100%;
-  margin-top: 3%;
-  margin-bottom: 3%;
+  margin: 3% 0;
 }
 
 .Products-container .Head-Side {
@@ -748,29 +813,22 @@ body.dark .Card-Product {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
+  height: 90px;
   background: rgba(221, 220, 220, 0.25);
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(12px) saturate(160%);
   -webkit-backdrop-filter: blur(12px) saturate(160%);
-  height: 90px;
 }
 
 .Products-container .Head-Side .Button {
   height: 50px;
-  color: #080808;
   font-size: large;
   gap: 10px;
   cursor: pointer;
+  color: #080808;
 }
 
-.Products-container .Head-Side .Button:hover {
-  color: gray;
-  background-color: transparent;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-
-.Products-container .Head-Side .Button:active {
+.Products-container .Head-Side .Button:hover, .Products-container .Head-Side .Button:active {
   color: gray;
   background-color: transparent;
   -webkit-box-shadow: none;
@@ -786,7 +844,6 @@ body.dark .Card-Product {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
-  background-color: inherit;
   overflow: hidden;
 }
 
@@ -834,6 +891,7 @@ body.dark .Card-Product {
   overflow-y: auto;
 }
 
+/* =========================== Price Slider =========================== */
 .PriceSlider {
   width: 100%;
   margin: 20px 0;
@@ -888,6 +946,7 @@ body.dark .Card-Product {
   width: 2px;
 }
 
+/* =========================== Image Box =========================== */
 .ImageBox {
   position: relative;
   width: 100%;
@@ -917,12 +976,23 @@ body.dark .Card-Product {
   position: absolute;
   top: 80%;
   left: 5%;
-  background: white;
+  background: #fff;
   width: 90px;
   height: 30px;
   font-weight: bold;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  cursor: pointer;
 }
 
+/* =========================== Global Links =========================== */
 a {
   text-decoration: none;
   color: inherit;
@@ -932,12 +1002,17 @@ a {
   position: relative;
   width: 100%;
   height: 90vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -ms-flex-item-align: center;
-      -ms-grid-row-align: center;
-      align-self: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  /* ===== Slider Section ===== */
+  /* ===== Login Card ===== */
 }
 
 .SignBoxContiner .slide {
@@ -966,10 +1041,23 @@ a {
 .SignBoxContiner .slide .GO_TO_SHOP_BT {
   position: absolute;
   top: 50%;
-  left: 45%;
-  background: rgba(0, 0, 0, 0.4);
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
   width: 200px;
   height: 70px;
+  border-radius: 35px;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.SignBoxContiner .slide .GO_TO_SHOP_BT:hover {
+  background: rgba(0, 0, 0, 0.8);
 }
 
 .SignBoxContiner .login-Card {
@@ -988,16 +1076,25 @@ a {
           box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3) !important;
 }
 
+@media (max-width: 600px) {
+  .SignBoxContiner .login-Card {
+    top: 10%;
+    left: 10%;
+    width: 60%;
+    height: 70%;
+    padding: 20px;
+  }
+}
+
 .SignBoxContiner .login-Card .loginButton {
   background-color: #020202;
   border-radius: 30px;
 }
 
 .SignBoxContiner .login-Card .SingupButton {
-  background-color: white;
+  background-color: #fff;
   color: #020202;
-  border: 1px solid;
-  border-color: #020202;
+  border: 1px solid #020202;
   border-radius: 30px;
 }
 
@@ -1005,6 +1102,12 @@ a {
   color: #020202;
   text-decoration: none;
   font-weight: bold;
+}
+
+@media (max-width: 600px) {
+  .SignBoxContiner .login-Card .ForgotPassword {
+    font-size: 8px;
+  }
 }
 
 .SignBoxContiner .login-Card .MuiOutlinedInput-root {
@@ -1031,40 +1134,23 @@ a {
   border-color: #f5f5f5;
 }
 
-.MuiPopper-root .MuiPaper-root {
+/* ===== Popper العام ===== */
+.MuiPopper-root,
+.MuiAutocomplete-popper {
+  /* ضبط النص داخل Autocomplete */
+}
+
+.MuiPopper-root .MuiPaper-root,
+.MuiAutocomplete-popper .MuiPaper-root {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  background: rgba(30, 30, 30, 0.7) !important;
-  backdrop-filter: blur(12px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
-  border-radius: 14px !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  -webkit-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35) !important;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35) !important;
-  -webkit-animation: fadeInScale 0.25s ease !important;
-          animation: fadeInScale 0.25s ease !important;
-  overflow: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.MuiPopper-root .MuiPaper-root::-webkit-scrollbar {
-  display: none;
-}
-
-.MuiAutocomplete-popper .MuiPaper-root {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
   color: white;
-  -webkit-box-pack: left;
-      -ms-flex-pack: left;
-          justify-content: left;
-  background: rgba(30, 30, 30, 0.7) !important;
+  background: rgba(30, 30, 30, 0.75) !important;
+  /* زيادة التباين قليلًا */
   backdrop-filter: blur(12px) saturate(150%) !important;
   -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
   border-radius: 14px !important;
@@ -1076,63 +1162,53 @@ a {
   overflow: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  /* تحسين التنسيق الداخلي في Autocomplete */
 }
 
+.MuiPopper-root .MuiPaper-root::-webkit-scrollbar,
 .MuiAutocomplete-popper .MuiPaper-root::-webkit-scrollbar {
   display: none;
 }
 
-/* hedear 1 in Nave page section  */
-.Box_header_1 {
-  background-color: #1a1b1b50;
-  color: inherit;
-  max-height: 50px;
+.MuiPopper-root .MuiPaper-root .MuiAutocomplete-listbox,
+.MuiAutocomplete-popper .MuiPaper-root .MuiAutocomplete-listbox {
+  padding: 5px;
+  gap: 4px;
 }
 
+.MuiPopper-root.MuiAutocomplete-popper .MuiPaper-root,
+.MuiAutocomplete-popper.MuiAutocomplete-popper .MuiPaper-root {
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  /* محاذاة العناصر للجانب الأيسر */
+}
+
+/* ===== قائمة اللغة EN/AR ===== */
 #EN_AR_List {
   max-width: 50px;
   max-height: 60px;
 }
 
-#EN_AR_List :hover {
+#EN_AR_List:hover {
   color: teal;
-  background-color: none;
+  background-color: transparent;
 }
 
-/* لو تريد تعدل على .MuiTypography-root داخل EN_AR_List */
 #EN_AR_List .MuiTypography-root {
   color: inherit;
 }
 
-/* Role Create Page Continer */
-.RoleCreatePageContiner {
-  display: -webkit-box !important;
-  display: -ms-flexbox !important;
-  display: flex !important;
-  -webkit-box-pack: center !important;
-      -ms-flex-pack: center !important;
-          justify-content: center !important;
-  -webkit-box-align: center !important;
-      -ms-flex-align: center !important;
-          align-items: center !important;
-  height: 50vh;
+/* ===== Header ===== */
+.Box_header_1 {
+  background-color: rgba(26, 27, 27, 0.3);
+  color: inherit;
+  max-height: 50px;
 }
 
-/* Group Create Page Continer */
-.GroupUpdatePageContiner {
-  display: -webkit-box !important;
-  display: -ms-flexbox !important;
-  display: flex !important;
-  -webkit-box-pack: center !important;
-      -ms-flex-pack: center !important;
-          justify-content: center !important;
-  -webkit-box-align: center !important;
-      -ms-flex-align: center !important;
-          align-items: center !important;
-  height: 50vh;
-}
-
-/* Category pages */
+/* ===== Pages Containers ===== */
+.RoleCreatePageContiner,
+.GroupUpdatePageContiner,
 .CategoryUpdatePageContiner {
   display: -webkit-box !important;
   display: -ms-flexbox !important;
@@ -1146,6 +1222,24 @@ a {
   height: 50vh;
 }
 
+/* ===================== Pages Containers ===================== */
+.RoleCreatePageContiner,
+.GroupUpdatePageContiner,
+.CategoryUpdatePageContiner {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-box-pack: center !important;
+      -ms-flex-pack: center !important;
+          justify-content: center !important;
+  -webkit-box-align: center !important;
+      -ms-flex-align: center !important;
+          align-items: center !important;
+  height: 50vh;
+  padding: 10px;
+}
+
+/* ===================== Product Details ===================== */
 .ProductDetailsContainer {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1158,6 +1252,9 @@ a {
   gap: 20px;
   margin-top: 100px;
   width: 100%;
+  /* ---------- Image Side ---------- */
+  /* ---------- Details Side ---------- */
+  /* ---------- Recommended Products ---------- */
 }
 
 .ProductDetailsContainer .ImageSide {
@@ -1165,7 +1262,7 @@ a {
   display: -ms-flexbox;
   display: flex;
   gap: 10px;
-  margin: 20px 20px;
+  margin: 20px;
 }
 
 .ProductDetailsContainer .ImageSide img {
@@ -1190,6 +1287,11 @@ a {
           flex-direction: column;
   gap: 20px;
   padding: 50px;
+  /* Title, Description & Price */
+  /* Color Options */
+  /* Size Options */
+  /* Action Buttons */
+  /* Extra Infos */
 }
 
 .ProductDetailsContainer .DetailsSide .Title .ProductName {
@@ -1307,7 +1409,7 @@ a {
 }
 
 .ProductDetailsContainer .DetailsSide .ActionButtons .Faveorite:hover {
-  border: 1px solid black;
+  border: 1px solid #000;
 }
 
 .ProductDetailsContainer .DetailsSide .ExtraInfos {
@@ -1342,15 +1444,13 @@ a {
   gap: 15px;
 }
 
+/* ===================== Footer ===================== */
 .Footer {
   background-color: #181717;
   color: white;
-  padding-top: 1%;
-  padding-inline: 10%;
-  padding-bottom: 1%;
+  padding: 1% 10%;
   text-align: center;
   margin-top: auto;
-  /* يخلي الفوتر يلصق تحت */
 }
 
 .Footer .Head-Footer {
@@ -1367,41 +1467,40 @@ a {
   padding: 10px;
 }
 
-.Footer .Head-Footer .Head-left .MuiMenuItem-root {
-  color: #f7f6f6 !important;
-  font-size: 18px !important;
-  padding: 10px 18px !important;
-  -webkit-transition: all 0.25s ease !important;
-  transition: all 0.25s ease !important;
-}
-
-.Footer .Head-Footer .Head-left .MuiMenuItem-root:hover {
-  -webkit-transform: translateX(5px) !important;
-          transform: translateX(5px) !important;
-}
-
+.Footer .Head-Footer .Head-left,
 .Footer .Head-Footer .Head-Main {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+}
+
+.Footer .Head-Footer .Head-left .MuiMenuItem-root,
+.Footer .Head-Footer .Head-Main .MuiMenuItem-root {
+  -webkit-transition: all 0.25s ease !important;
+  transition: all 0.25s ease !important;
+}
+
+.Footer .Head-Footer .Head-left:hover .MuiMenuItem-root,
+.Footer .Head-Footer .Head-Main:hover .MuiMenuItem-root {
+  -webkit-transform: translateX(5px) !important;
+          transform: translateX(5px) !important;
+}
+
+.Footer .Head-Footer .Head-left .MuiMenuItem-root {
+  color: #f7f6f6 !important;
+  font-size: 18px !important;
+  padding: 10px 18px !important;
 }
 
 .Footer .Head-Footer .Head-Main .MuiMenuItem-root {
   color: #b6b2b2 !important;
   font-size: 12px !important;
   padding: 10px 18px !important;
-  -webkit-transition: all 0.25s ease !important;
-  transition: all 0.25s ease !important;
-}
-
-.Footer .Head-Footer .Head-Main .MuiMenuItem-root:hover {
-  -webkit-transform: translateX(5px) !important;
-          transform: translateX(5px) !important;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 .Footer .buttom-Footer {
@@ -1420,6 +1519,7 @@ a {
       align-self: center;
 }
 
+/* ===================== Orders Page ===================== */
 .Card-Continer-Dialog-Orders .MuiDialog-paper {
   width: 100% !important;
   max-width: 1200px !important;

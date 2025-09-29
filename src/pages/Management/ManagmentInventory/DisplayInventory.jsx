@@ -66,7 +66,7 @@ const DispalyInventory = () => {
   const fetchInventorys = async (page = 1) => {
     GetInventorys(page)
       .then((res) => {
-    
+        console.log(res.data.items)
         setInventorys(res.data.items);
         setFilter(res.data.items);
     
@@ -139,6 +139,7 @@ const DispalyInventory = () => {
         setEmpty(true);
       }
     } catch (err) {
+      console.log(err)
       notifyErorr(err.message);
     }
   };
@@ -202,7 +203,7 @@ const DispalyInventory = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => navigete("/Inventory/create")} // أو أي مسار إضافة المنتج
+          onClick={() => navigete("/System/Inventory/create")} // أو أي مسار إضافة المنتج
         >
           {t("new_item")}
         </Button>
@@ -272,6 +273,7 @@ const DispalyInventory = () => {
           
             <TableCell>{t("Products")}</TableCell>
             <TableCell>{t("Warehouses")}</TableCell>
+            <TableCell>{t("Size")}</TableCell>
             <TableCell>{t("Quantity")}</TableCell>
 
             <TableCell>{t("Action")}</TableCell>
@@ -289,6 +291,7 @@ const DispalyInventory = () => {
               
                 <TableCell align="left">{item.productName}</TableCell>
                 <TableCell align="left">{item.warehouseName}</TableCell>
+                <TableCell align="left">{item.size}</TableCell>
                 <TableCell align="left">{item.quantity}</TableCell>
       
                 <TableCell align="left">

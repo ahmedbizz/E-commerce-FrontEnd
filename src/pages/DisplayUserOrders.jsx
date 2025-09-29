@@ -344,7 +344,7 @@ const getStatusChip = (status) => {
                     }}
                     src={
                       item.productImage
-                        ? `https://localhost:7137/images/Products/${item.productImage}`
+                        ? `${import.meta.env.VITE_BASE_URL}/images/Products/${item.productImage}`
                         : "/Product-avatar.jpg"
                     }
                   /></TableCell>
@@ -406,7 +406,7 @@ const getStatusChip = (status) => {
                     }}
                     src={
                       product.productImage
-                        ? `https://localhost:7137/images/Products/${product.productImage}`
+                        ? `${import.meta.env.VITE_BASE_URL}/images/Products/${product.productImage}`
                         : "/Product-avatar.jpg"
                     }/>
                     </Tooltip>

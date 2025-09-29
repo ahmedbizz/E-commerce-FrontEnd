@@ -106,10 +106,10 @@ export default function ProductDetails() {
         productId: product.id,
         quantity: 1,
         unitPrice: product.price,
-        SelectedSize: selectedSize.name,
+        SizeId: selectedSize.id,
         StockQuantity: product.stockQuantity
       };
-
+      
       const res = await AddToCart(data);
 
       fetchCart();
@@ -213,7 +213,7 @@ export default function ProductDetails() {
                 <img
                   component="img"
                   key={index}
-                  src={`https://localhost:7137/images/Products/${img.imageUrl}`}
+                  src={`${import.meta.env.VITE_BASE_URL}/images/Products/${img.imageUrl}`}
                   alt="Icon 2"
                   style={{
                     width: "60px",
@@ -234,7 +234,7 @@ export default function ProductDetails() {
             position:"relative"
           }}
           component="img"
-          src={`https://localhost:7137/images/Products/${currentImage}`}
+          src={`${import.meta.env.VITE_BASE_URL}/images/Products/${currentImage}`}
           alt={product.name}
         />
             {product.stockQuantity == 0?
@@ -284,7 +284,7 @@ export default function ProductDetails() {
                 <img
                   component="img"
                   key={index}
-                  src={`https://localhost:7137/images/Products/${img.imageUrl}`}
+                  src={`${import.meta.env.VITE_BASE_URL}/images/Products/${img.imageUrl}`}
                   alt="Icon 2"
                   style={{
                     width: "60px",
@@ -383,7 +383,7 @@ export default function ProductDetails() {
                   key={index}
                 >
                   <img
-                    src={`https://localhost:7137/images/Products/${item.imageUrl}`}
+                    src={`${import.meta.env.VITE_BASE_URL}/images/Products/${item.imageUrl}`}
                     alt={`Ad ${index + 1}`}
                   />
                 </Box>

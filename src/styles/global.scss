@@ -1,29 +1,38 @@
+/* =========================== Global Styles =========================== */
 html,
 body,
 #root {
   min-height: 100vh;
   margin: 0 auto;
   padding: 0;
-
   background: linear-gradient(135deg, #f3fffd, #f6f8f8, #e3ecee);
-
 }
 
 main {
-  flex: 1; 
+  flex: 1;
   min-height: 100vh;
 }
-/* headar 2 in Nave page section  */
 
-
+/* =========================== AppBar Header =========================== */
 .AppBarHeader {
-
+  @media (max-width:600px) {
+  
+    display: none;
+  
+    
+  }
   background: rgba(0, 0, 0, 0.25) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
   backdrop-filter: blur(12px) saturate(160%) !important;
   -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3) !important;
 
+  .Toolbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+  }
   .MuiOutlinedInput-root {
     border-radius: 30px;
     background-color: #f5f5f5;
@@ -31,14 +40,12 @@ main {
     max-width: 200px;
     max-height: 40px;
 
-
     &:hover {
       background-color: #e0e0e0;
     }
 
     &.Mui-focused {
       background-color: #fff;
-
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     }
 
@@ -56,25 +63,46 @@ main {
     color: rgba(106, 146, 146, 0.4);
   }
 
+
 }
 
+// =========================== Mobile Header =============================
 
-.Search-Box {
-
+.MobileHeader{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  align-self: center;
+  padding: 1;
+  background-color:rgba(0,0,0,0.25) ;
+  backdrop-filter: blur(12px) saturate(160%);
 
+  color: white;
+
+  
+}
+.DrawerMobile{
+  .MuiPaper-root {
+    width: 80vw;
+    background-color: rgba(0,0,0,0.25);
+    backdrop-filter: blur(12px) saturate(160%);
+    color: white;
+  }
+}
+
+
+/* =========================== Search Box =========================== */
+.Search-Box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 90%;
   padding: 10px;
   gap: 10%;
   overflow-y: auto;
 
-
   .Typography {
     color: white;
-    font-size: 42;
+    font-size: 42px;
     font-weight: bold;
   }
 
@@ -84,21 +112,17 @@ main {
     transition: all 0.3s ease;
     width: 100%;
 
-
-
     &:hover .MuiOutlinedInput-notchedOutline {
-      border-color: #f5f5f5; // بدل اللون اللي تحبه
+      border-color: #f5f5f5;
     }
 
-    // اللون عند الـ focus
     &.Mui-focused .MuiOutlinedInput-notchedOutline {
-      border-color: #f5f5f5 !important; // هنا غير الأزرق للون اللي تختاره
+      border-color: #f5f5f5 !important;
       border-width: 2px;
     }
 
-    // البوردر الافتراضي
     .MuiOutlinedInput-notchedOutline {
-      border-color: #f5f5f5; // اللون العادي
+      border-color: #f5f5f5;
     }
 
     .search-input {
@@ -130,49 +154,40 @@ main {
   }
 }
 
+/* =========================== Box Products =========================== */
 .Box-Products {
   flex: 1;
   max-height: 50vh;
-
   margin: 20px;
-
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-
-  overflow-y: auto; // المحتوى يتحرك داخل هذه المنطقة فقط
-
-
+  overflow-y: auto;
 }
 
-// Dashboard NavBar
-/* AppBar الزجاجي */
+/* =========================== AppBar Dashboard =========================== */
 .AppBarDashBoard {
-
   background: rgba(0, 0, 0, 0.25) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
   backdrop-filter: blur(12px) saturate(160%) !important;
   -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3) !important;
+
+  .MuiButton-root {
+    color: #f3f1f1 !important;
+    font-weight: bold !important;
+    font-style: italic;
+    border-radius: 12px !important;
+    padding: 6px 16px !important;
+    transition: all 0.3s ease !important;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+      transform: translateY(-2px) !important;
+    }
+  }
 }
 
-/* الأزرار */
-.AppBarDashBoard .MuiButton-root {
-
-  color: #f3f1f1 !important;
-  font-weight: bold !important;
-  font-style: italic;
-  border-radius: 12px !important;
-  padding: 6px 16px !important;
-  transition: all 0.3s ease !important;
-}
-
-.AppBarDashBoard .MuiButton-root:hover {
-  background: rgba(255, 255, 255, 0.15) !important;
-  transform: translateY(-2px) !important;
-}
-
-/* القوائم المنسدلة */
 .MuiMenu-paper {
   background: rgba(30, 30, 30, 0.7) !important;
   backdrop-filter: blur(12px) saturate(150%) !important;
@@ -189,167 +204,145 @@ main {
   font-size: 14px !important;
   padding: 10px 18px !important;
   transition: all 0.25s ease !important;
+
+  &:hover {
+    background: none !important;
+    transform: translateX(10px) !important;
+  }
 }
 
-.MuiMenuItem-root:hover {
-  background:none !important;
-  transform: translateX(10px) !important;
-}
-
-/* حركة بسيطة للقائمة */
 @keyframes fadeInScale {
   from {
     opacity: 0;
     transform: scale(0.95);
   }
-
   to {
     opacity: 1;
     transform: scale(1);
   }
 }
 
-/* صورة المستخدم */
-.MuiAvatar-root {
-  border: 2px solid rgba(255, 255, 255, 0.25);
-  transition: all 0.3s ease !important;
-}
-
-.MuiAvatar-root:hover {
-  transform: scale(1.05) rotate(2deg);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-
-.Display-Item-Continer {
-  display: block;
-  margin: 0px;
-  margin-top: 40px;
-  padding: 10px;
-
-
-  width: 100%;
-  box-shadow: hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px;
-
-}
-
-main {
-  padding: 0 !important;
-  margin: 0 !important;
-  overflow: hidden;
-}
-
-.Table {
-  max-width: 97vw;
-  margin-block: 20px;
-
-
-  box-shadow: hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px;
-}
-
-// Card Style 
+/* =========================== Cards =========================== */
 .Card {
   display: flex;
   flex-direction: column;
   align-self: center;
   width: 100%;
-  padding: 32px; // theme.spacing(4) ≈ 32px
-  gap: 16px; // theme.spacing(2) ≈ 16px
-  box-shadow:
-    hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px,
-    hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px;
+  padding: 32px;
+  gap: 16px;
+  box-shadow: hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px,
+              hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px;
 
   @media (min-width: 600px) {
-    // theme.breakpoints.up('sm')
     width: 450px;
   }
 
-  // Dark mode
   body.dark & {
-    box-shadow:
-      hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px,
-      hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px;
+    box-shadow: hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px,
+                hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px;
   }
 }
 
-.Card-Continer {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  padding: 5%;
-
-}
-
+.Card-Continer,
 .Card-Continer-Dialog {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   padding: 5%;
+}
+
+/* =========================== Media Queries =========================== */
+
+/* Small devices (mobile phones) */
+@media (max-width: 600px) {
+  .Search-Box {
+    flex-direction: column;
+    gap: 10px;
+
+    .MuiOutlinedInput-root {
+      max-width: 100%;
+    }
+
+    .Icon-button {
+      width: 100%;
+    }
+  }
+
+  .Box-Products {
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .AppBarHeader .MuiOutlinedInput-root {
+    max-width: 100px;
+  }
 
   .Card {
-    display: flex;
-    flex-direction: column;
-    align-self: center;
-    width: 100%;
-    padding: 32px;
-    gap: 16px;
-
-    @media (min-width: 600px) {
-      width: 450px;
-    }
-
-    /* Dark mode */
-    body.dark & {
-      background: rgba(0, 0, 0, 0.25) !important;
-      border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    }
-
-    .DialogTitle {
-      color: white;
-      font-size: xx-large;
-
-    }
-
-    .DialogContent {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-self: center;
-      align-items: center;
-      gap: 15px;
-      color: white;
-      font-weight: bold;
-      font-family: Verdana, Geneva, Tahoma, sans-serif;
-
-
-
-      .login-button {
-        background-color: #020202;
-        color: white;
-        border-radius: 20px;
-        width: 50%;
-
-        &:hover {
-          background-color: #757474;
-        }
-      }
-    }
+    padding: 16px;
+    width: 90%;
   }
 }
 
+/* Medium devices (tablets) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .Search-Box {
+    flex-direction: row;
+    gap: 8%;
+  }
+
+  .Box-Products {
+    justify-content: space-around;
+    gap: 8px;
+  }
+
+  .AppBarHeader .MuiOutlinedInput-root {
+    max-width: 150px;
+  }
+
+  .Card {
+    width: 350px;
+  }
+}
+
+/* Large devices (laptops/desktops) */
+@media (min-width: 1025px) {
+  .Search-Box {
+    flex-direction: row;
+    gap: 10%;
+  }
+
+  .Box-Products {
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .AppBarHeader .MuiOutlinedInput-root {
+    max-width: 200px;
+  }
+
+  .Card {
+    width: 450px;
+  }
+}
+
+/* =========================== يمكن إضافة بقية الأقسام بنفس الأسلوب =========================== */
 
 
-// Table Stayle 
+
+/* =========================== Table Styles =========================== */
 .TableHead {
   width: auto;
   background-color: hsla(220, 30%, 5%, 0.05);
-  box-shadow: hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px;
+  box-shadow: 
+    hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, 
+    hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px;
 }
 
 .TableRow:hover {
   background-color: rgba(141, 189, 189, 0.4);
 }
 
+/* =========================== Search Panel =========================== */
 .Button_Search_Panel {
   display: flex;
   justify-content: space-between;
@@ -371,7 +364,6 @@ main {
 
     &.Mui-focused {
       background-color: #fff;
-
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     }
 
@@ -406,7 +398,6 @@ main {
     }
   }
 
-  // Media query للشاشات الصغيرة
   @media (max-width: 768px) {
     flex-direction: column; // ترتيب عمودي
     gap: 15px; // مسافة أقل
@@ -421,43 +412,32 @@ main {
   }
 }
 
+/* =========================== Pagination =========================== */
 .Pagination {
-
   border-radius: 8px;
-  /* شكل الحواف */
   padding: 5px;
   display: inline-flex;
+
+  .MuiPaginationItem-root {
+    color: #ffffff;
+    background-color: #504c4c;
+
+    &:hover {
+      background-color: #575857 !important;
+      color: #ffffff;
+    }
+  }
+
+  .Mui-selected {
+    background-color: #030303 !important;
+    color: #ffffff;
+  }
 }
 
-/* استهداف أزرار الصفحات */
-.Pagination .MuiPaginationItem-root {
-  color: #ffffff;
-  /* لون الخط */
-  background-color: #504c4c;
-  /* لون خلفية الأزرار */
-
-}
-
-/* زر الصفحة الحالي */
-.Pagination .Mui-selected {
-  background-color: #030303 !important;
-  /* لون خلفية الصفحة المحددة */
-  color: #ffffff;
-  /* لون النص */
-}
-
-/* زر عند المرور بالماوس */
-.Pagination .MuiPaginationItem-root:hover {
-  background-color: #575857 !important;
-  color: #ffffff;
-}
-
-
-// HOme  Page 
+/* =========================== Home Page =========================== */
 .ads-container-home {
-
   width: 100%;
-  height: 100vh; // تملأ الشاشة
+  height: 100vh;
   margin: 0;
   padding: 0;
 
@@ -467,10 +447,14 @@ main {
     align-items: center;
     width: 90%;
     padding: 30px;
-
-
-
     gap: 500px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      padding: 15px;
+    }
   }
 
   .Icon-button {
@@ -495,14 +479,16 @@ main {
     font-family: 'Times New Roman', Times, serif;
     font-size: 27px;
 
+    @media (max-width: 768px) {
+      font-size: 22px;
+      text-align: center;
+    }
   }
 
   .slide {
     position: relative;
     width: 100%;
-    /* عرض كامل حسب الحاوية */
-    height: auto;
-    /* الارتفاع يتغير حسب محتوى الصورة */
+    height: 600px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -510,30 +496,26 @@ main {
 
     img {
       width: 100%;
-      /* يتناسب مع عرض السلايد */
-      height: auto;
-      /* يحافظ على نسبة الصورة */
+      height: 600px;
       object-fit: cover;
       border-radius: 10px;
     }
 
     @media (max-width: 600px) {
       flex-wrap: wrap;
-
+      width: 400px;
       img {
-        width: 90%;
-        /* أصغر قليلاً على الشاشات الصغيرة */
+        width: 400px;
+        height: 400px;
       }
     }
   }
-
 }
 
-// Ads  Page 
+/* =========================== Ads Page =========================== */
 .ads-container {
-
   width: 100%;
-  height: 100vh; // تملأ الشاشة
+  height: 100vh;
   margin: 0;
   padding: 0;
 
@@ -542,16 +524,11 @@ main {
     width: 100%;
     height: 100vh;
 
-
-
     img {
       width: 100%;
       height: 70vh;
       object-fit: cover;
       display: block;
-
-
-
     }
 
     .overlay {
@@ -560,7 +537,7 @@ main {
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.4); // طبقة تعتيم سوداء
+      background: rgba(0, 0, 0, 0.4); // طبقة تعتيم
     }
 
     .GO_TO_SHOP_BT {
@@ -570,46 +547,73 @@ main {
       background: rgba(0, 0, 0, 0.4);
       width: 200px;
       height: 70px;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
 
+      &:hover {
+        background: rgba(106, 146, 146, 0.6);
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .slide {
+      width: 100%;
+      height: 75vh;
+      .GO_TO_SHOP_BT {
+        width: 150px;
+        height: 50px;
+        left: 30%;
+        top: 55%;
+      }
+      img {
+        width: 100%;
+        height: 30vh;
+        object-fit: cover;
+        display: block;
+      }
     }
   }
 }
 
-
+/* =========================== Panel Container =========================== */
 .Panel-container {
   width: 100%;
   min-height: 100vh;
   margin: 0;
   padding: 0;
 
-
   .Box-Panel {
     width: 90%;
     min-height: calc(100vh - 40px);
-    /* 100vh ناقص margin-top + margin-bottom */
-    margin: 20px 0;
-    margin-left: 5%;
+    margin: 20px auto;
     padding: 0;
-    box-sizing: border-box;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     gap: 10px;
 
-
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(auto-fill, minmax(200px, 1fr));
+    }
   }
 }
 
+/* =========================== Products Main Container =========================== */
 .Products-Main-container {
   width: 100%;
   height: 100vh;
-  margin: 30px;
+  margin: 30px 0;
   padding: 0;
-
 }
 
 .Card-Product {
-
   display: flex;
   flex-direction: column;
   align-self: center;
@@ -633,17 +637,9 @@ main {
     .Price {
       height: 20%;
     }
-
-
-
-
   }
 
-
-
-
   @media (max-width: 1100px) and (min-width: 600px) {
-    // theme.breakpoints.up('sm')
     width: 350px;
     height: 580px;
   }
@@ -651,53 +647,43 @@ main {
   @media (max-width: 600px) {
     width: 250px;
     height: 480px;
-
   }
 
-  // Dark mode
+  /* Dark mode */
   body.dark & {
     box-shadow:
       hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px,
       hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px;
   }
-
 }
 
-
-
+/* =========================== Products Container =========================== */
 .Products-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-  margin-top: 3%;
-  margin-bottom: 3%;
+  margin: 3% 0;
 
   .Head-Side {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     position: sticky;
-    top: 0; // يبقى ثابت أعلى الصفحة
-
+    top: 0;
+    height: 90px;
     background: rgba(221, 220, 220, 0.25);
     border-bottom: 1px solid rgba(255, 255, 255, 0.18);
     backdrop-filter: blur(12px) saturate(160%);
     -webkit-backdrop-filter: blur(12px) saturate(160%);
-    height: 90px;
 
     .Button {
       height: 50px;
-      color: rgb(8, 8, 8);
       font-size: large;
       gap: 10px;
       cursor: pointer;
+      color: rgb(8, 8, 8);
 
-      &:hover {
-        color: gray;
-        background-color: transparent;
-        box-shadow: none;
-      }
-
+      &:hover,
       &:active {
         color: gray;
         background-color: transparent;
@@ -710,12 +696,11 @@ main {
   .Main-Side {
     display: flex;
     flex: 1;
-    background-color: inherit;
     overflow: hidden;
 
     .Filter-Side {
       position: sticky;
-      top: 90px; // بعد ارتفاع الهيدر
+      top: 90px;
       width: 250px;
       height: calc(100vh - 90px);
       background: rgba(250, 246, 246, 0.25);
@@ -737,34 +722,28 @@ main {
     }
 
     .Main-Box-Products {
-
       width: 100%;
-
 
       .Box-Products {
         flex: 1;
         min-height: calc(100vh - 90px);
         margin: 20px;
-
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
-        overflow-y: auto; // المحتوى يتحرك داخل هذه المنطقة فقط
-
-
+        overflow-y: auto;
       }
-
     }
-
   }
 }
 
+/* =========================== Price Slider =========================== */
 .PriceSlider {
   width: 100%;
   margin: 20px 0;
 
   .MuiSlider-root {
-    color: #6aa292; // لون المسار الرئيسي
+    color: #6aa292;
     height: 6px;
 
     &.Mui-disabled {
@@ -813,8 +792,8 @@ main {
   }
 }
 
+/* =========================== Image Box =========================== */
 .ImageBox {
-
   position: relative;
   width: 100%;
   height: 70vh;
@@ -832,7 +811,7 @@ main {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4); // طبقة تعتيم سوداء
+    background: rgba(0, 0, 0, 0.4);
   }
 
   .GO_TO_SHOP_BT {
@@ -841,44 +820,45 @@ main {
     position: absolute;
     top: 80%;
     left: 5%;
-    background: rgb(255, 255, 255);
+    background: #fff;
     width: 90px;
     height: 30px;
     font-weight: bold;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
   }
-
 }
 
+
+
+/* =========================== Global Links =========================== */
 a {
   text-decoration: none;
   color: inherit;
 }
 
+
 .SignBoxContiner {
-
-
   position: relative;
   width: 100%;
   height: 90vh;
+  display: flex;
   align-items: center;
-  align-self: center;
+  justify-content: center;
 
+  /* ===== Slider Section ===== */
   .slide {
     position: relative;
     width: 100%;
     height: 100vh;
-
-
 
     img {
       width: 100%;
       height: 70vh;
       object-fit: cover;
       display: block;
-
-
-
     }
 
     .overlay {
@@ -893,29 +873,46 @@ a {
     .GO_TO_SHOP_BT {
       position: absolute;
       top: 50%;
-      left: 45%;
-      background: rgba(0, 0, 0, 0.4);
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      font-weight: bold;
+      text-align: center;
       width: 200px;
       height: 70px;
+      border-radius: 35px;
+      cursor: pointer;
+      transition: all 0.3s ease;
 
+      &:hover {
+        background: rgba(0, 0, 0, 0.8);
+      }
     }
   }
 
+  /* ===== Login Card ===== */
   .login-Card {
     position: absolute;
-
     top: 20%;
     left: 35%;
     width: 30%;
     height: 55%;
     padding: 30px;
     border-radius: 30px;
-
     background: rgba(212, 209, 209, 0.25) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
     backdrop-filter: blur(12px) saturate(160%) !important;
     -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3) !important;
+
+    @media (max-width: 600px) {
+      top: 10%;
+      left: 10%;
+      width: 60%;
+      height: 70%;
+      padding: 20px;
+    }
 
     .loginButton {
       background-color: #020202;
@@ -923,10 +920,9 @@ a {
     }
 
     .SingupButton {
-      background-color: white;
+      background-color: #fff;
       color: #020202;
-      border: 1px solid;
-      border-color: #020202;
+      border: 1px solid #020202;
       border-radius: 30px;
     }
 
@@ -935,7 +931,9 @@ a {
       text-decoration: none;
       font-weight: bold;
 
-
+      @media (max-width: 600px) {
+        font-size: 8px;
+      }
     }
 
     .MuiOutlinedInput-root {
@@ -946,114 +944,84 @@ a {
       flex-grow: 1;
 
       &:hover .MuiOutlinedInput-notchedOutline {
-        border-color: #f5f5f5; // بدل اللون اللي تحبه
+        border-color: #f5f5f5;
       }
 
-      // اللون عند الـ focus
       &.Mui-focused .MuiOutlinedInput-notchedOutline {
-        border-color: #f5f5f5 !important; // هنا غير الأزرق للون اللي تختاره
+        border-color: #f5f5f5 !important;
         border-width: 2px;
       }
 
-      // البوردر الافتراضي
       .MuiOutlinedInput-notchedOutline {
-        border-color: #f5f5f5; // اللون العادي
+        border-color: #f5f5f5;
       }
     }
   }
 }
 
-.MuiPopper-root {
-  .MuiPaper-root {
-    display: flex;
-    justify-content: center;
-    background: rgba(30, 30, 30, 0.7) !important;
-    backdrop-filter: blur(12px) saturate(150%) !important;
-    -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
-    border-radius: 14px !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35) !important;
-    animation: fadeInScale 0.25s ease !important;
-    overflow: auto;  // يخلي السكروول يشتغل
-    scrollbar-width: none; // يخفي السكرول في Firefox
-    -ms-overflow-style: none; // يخفيه في IE/Edge
 
-    &::-webkit-scrollbar {
-      display: none; // يخفيه في Chrome/Safari/Edge
-    }
-
-  }
-
-
-}
-
-
+/* ===== Popper العام ===== */
+.MuiPopper-root,
 .MuiAutocomplete-popper {
   .MuiPaper-root {
     display: flex;
+    justify-content: center;
     color: white;
-    justify-content: left;
-    background: rgba(30, 30, 30, 0.7) !important;
+    background: rgba(30, 30, 30, 0.75) !important; /* زيادة التباين قليلًا */
     backdrop-filter: blur(12px) saturate(150%) !important;
     -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
     border-radius: 14px !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35) !important;
     animation: fadeInScale 0.25s ease !important;
-    overflow: auto;  // يخلي السكروول يشتغل
-    scrollbar-width: none; // يخفي السكرول في Firefox
-    -ms-overflow-style: none; // يخفيه في IE/Edge
+    overflow: auto;  // لتفعيل السكروول إذا احتاج
+    scrollbar-width: none; // Firefox
+    -ms-overflow-style: none; // IE/Edge
 
     &::-webkit-scrollbar {
-      display: none; // يخفيه في Chrome/Safari/Edge
+      display: none; // Chrome/Safari/Edge
+    }
+
+    /* تحسين التنسيق الداخلي في Autocomplete */
+    .MuiAutocomplete-listbox {
+      padding: 5px;
+      gap: 4px;
+    }
+  }
+
+  /* ضبط النص داخل Autocomplete */
+  &.MuiAutocomplete-popper {
+    .MuiPaper-root {
+      justify-content: flex-start; /* محاذاة العناصر للجانب الأيسر */
     }
   }
 }
 
-/* hedear 1 in Nave page section  */
+/* ===== قائمة اللغة EN/AR ===== */
+#EN_AR_List {
+  max-width: 50px;
+  max-height: 60px;
+
+  &:hover {
+    color: teal;
+    background-color: transparent;
+  }
+
+  .MuiTypography-root {
+    color: inherit;
+  }
+}
+
+/* ===== Header ===== */
 .Box_header_1 {
-  background-color: #1a1b1b50;
+  background-color: rgba(26, 27, 27, 0.3);
   color: inherit;
   max-height: 50px;
 }
 
-#EN_AR_List {
-  max-width: 50px;
-  max-height: 60px;
-}
-
-#EN_AR_List :hover {
-  color: teal;
-  background-color: none;
-}
-
-/* لو تريد تعدل على .MuiTypography-root داخل EN_AR_List */
-#EN_AR_List .MuiTypography-root {
-  color: inherit;
-}
-
-
-
-
-
-/* Role Create Page Continer */
-.RoleCreatePageContiner {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  height: 50vh;
-}
-
-/* Group Create Page Continer */
-
-.GroupUpdatePageContiner {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  height: 50vh;
-}
-
-/* Category pages */
+/* ===== Pages Containers ===== */
+.RoleCreatePageContiner,
+.GroupUpdatePageContiner,
 .CategoryUpdatePageContiner {
   display: flex !important;
   justify-content: center !important;
@@ -1061,23 +1029,37 @@ a {
   height: 50vh;
 }
 
-// Product Details
 
-// Container العام للمنتج
+
+
+
+
+
+/* ===================== Pages Containers ===================== */
+.RoleCreatePageContiner,
+.GroupUpdatePageContiner,
+.CategoryUpdatePageContiner {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 50vh;
+  padding: 10px; // مساحة داخلية بسيطة للشاشات الصغيرة
+}
+
+/* ===================== Product Details ===================== */
 .ProductDetailsContainer {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 20px;
   margin-top: 100px;
-
   width: 100%;
 
-  // جانب الصورة
+  /* ---------- Image Side ---------- */
   .ImageSide {
     display: flex;
     gap: 10px;
-    margin: 20px 20px;
+    margin: 20px;
 
     img {
       width: 100%;
@@ -1088,9 +1070,8 @@ a {
     }
   }
 
-  // جانب التفاصيل
+  /* ---------- Details Side ---------- */
   .DetailsSide {
-
     margin: 20px;
     width: 500px;
     display: flex;
@@ -1098,7 +1079,7 @@ a {
     gap: 20px;
     padding: 50px;
 
-    // العنوان والوصف والسعر
+    /* Title, Description & Price */
     .Title {
       .ProductName {
         font-size: 42px;
@@ -1116,18 +1097,17 @@ a {
       .ProductPrice {
         font-size: 18px;
         font-weight: lighter;
-        color: #070707; // لون أساسي
+        color: #070707;
       }
     }
 
-    // ألوان المنتج
+    /* Color Options */
     .ColorOptions {
       padding: 20px;
       gap: 10px;
       display: grid;
       grid-template-columns: repeat(auto-fill, 68px);
       grid-auto-rows: 68px;
-
 
       .ColorCircle {
         width: 60px;
@@ -1143,25 +1123,20 @@ a {
         }
 
         &.selected {
-          border-color: rgba(23, 24, 23, 0.514); // اللون الذي يوضح العنصر المختار
+          border-color: rgba(23, 24, 23, 0.514);
           transform: scale(1.1);
         }
       }
     }
 
-    // أحجام المنتج
-
-
-
+    /* Size Options */
     .SizeOptions {
-
       gap: 10px;
       display: grid;
       grid-template-columns: repeat(auto-fill, 128px);
       grid-auto-rows: 58px;
 
       .SizeButton {
-
         padding: 6px 12px;
         background-color: #fff;
         border: 1px solid #ccc;
@@ -1179,9 +1154,7 @@ a {
       }
     }
 
-
-
-    // الأزرار (إضافة للسلة، شراء الآن)
+    /* Action Buttons */
     .ActionButtons {
       display: flex;
       flex-direction: column;
@@ -1197,10 +1170,8 @@ a {
         transition: 0.3s;
         height: 60px;
 
-
         &:hover {
           background-color: #747c73;
-
         }
       }
 
@@ -1214,14 +1185,12 @@ a {
         cursor: pointer;
 
         &:hover {
-          border: 1px solid rgb(0, 0, 0);
-
+          border: 1px solid #000;
         }
       }
     }
 
-
-    // معلومات إضافية (SKU، الكمية، التقييم، إلخ)
+    /* Extra Infos */
     .ExtraInfos {
       font-size: 14px;
       color: #777;
@@ -1231,10 +1200,7 @@ a {
     }
   }
 
-
-
-
-  // المنتجات المقترحة أو التي قد تعجب المستخدم
+  /* ---------- Recommended Products ---------- */
   .YouWillLike {
     margin-top: 40px;
     width: 100%;
@@ -1252,90 +1218,80 @@ a {
     }
   }
 }
+
+/* ===================== Footer ===================== */
 .Footer {
   background-color: #181717;
   color: white;
-  padding-top: 1%;
-  padding-inline: 10%;
-  padding-bottom: 1%;
+  padding: 1% 10%;
   text-align: center;
-  margin-top: auto; /* يخلي الفوتر يلصق تحت */
-  .Head-Footer{
+  margin-top: auto;
+
+  .Head-Footer {
     display: flex;
     flex-wrap: wrap;
-    justify-content:  space-between;
+    justify-content: space-between;
     align-self: center;
     padding: 10px;
-    .Head-left{
 
-      .MuiMenuItem-root {
-        color: #f7f6f6 !important;
-        font-size: 18px !important;
-        padding: 10px 18px !important;
-        transition: all 0.25s ease !important;
-      }
-      
-      .MuiMenuItem-root:hover {
-    
-        transform: translateX(5px) !important;
-      }
-
-
-    }
-    .Head-Main{
+    .Head-left,
+    .Head-Main {
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
+
       .MuiMenuItem-root {
-        color: #b6b2b2 !important;
-        font-size: 12px !important;
-        padding: 10px 18px !important;
         transition: all 0.25s ease !important;
       }
-      
-      .MuiMenuItem-root:hover {
-    
+
+      &:hover .MuiMenuItem-root {
         transform: translateX(5px) !important;
       }
-  
+    }
+
+    .Head-left .MuiMenuItem-root {
+      color: #f7f6f6 !important;
+      font-size: 18px !important;
+      padding: 10px 18px !important;
+    }
+
+    .Head-Main .MuiMenuItem-root {
+      color: #b6b2b2 !important;
+      font-size: 12px !important;
+      padding: 10px 18px !important;
+      justify-content: center;
     }
   }
-  .buttom-Footer{
+
+  .buttom-Footer {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     align-self: center;
   }
-
 }
 
-// Orders page 
+/* ===================== Orders Page ===================== */
 .Card-Continer-Dialog-Orders {
-
   .MuiDialog-paper {
-  
-    width: 100% !important;   // غير النسبة اللي تعجبك
-    max-width: 1200px !important; // أو حجم ثابت
-    height: auto;            // لو عايز الطول يكون تلقائي
-    max-height: 90vh;        // عشان ما يطلعش برة الشاشة
+    width: 100% !important;
+    max-width: 1200px !important;
+    height: auto;
+    max-height: 90vh;
     border-radius: 14px;
-    overflow: auto;  // يخلي السكروول يشتغل
-    scrollbar-width: none; // يخفي السكرول في Firefox
-    -ms-overflow-style: none; // يخفيه في IE/Edge
+    overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 
     &::-webkit-scrollbar {
-      display: none; // يخفيه في Chrome/Safari/Edge
+      display: none;
     }
   }
 
   .Table {
-  
     width: 98.5%;
     margin: 10px;
-
-  
-  
-    box-shadow: hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px;
+    box-shadow: hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px,
+      hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px;
   }
 }

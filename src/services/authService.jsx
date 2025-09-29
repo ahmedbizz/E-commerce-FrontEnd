@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = "https://localhost:7137";
+const API_URL = "http://10.17.34.232:5013";
 import Cookies from "js-cookie";
 
 

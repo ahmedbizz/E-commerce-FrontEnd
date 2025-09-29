@@ -76,13 +76,14 @@ export default function Cart() {
       PaymentMethodId: paymentMethod, // تأكد من نفس اسم المفتاح
       DeliveryRequestId: 1,
       OrderItems: cartItems.map(item => ({
+      
         ProductId: item.productId,
         Quantity: item.quantity,
         unitPrice: item.unitPrice,
-        SelectedSize: item.selectedSize
+        SizeId: item.sizeId
       })),
     };
-  console.log(data)
+    console.log(data)
     try {
       const res = await AddToOrder(data);
       console.log(res.data);
@@ -170,7 +171,7 @@ export default function Cart() {
                   <TableCell align="center">
                     <Box sx={{ position: "relative", display: "inline-block" }}>
                       <img
-                        src={`https://localhost:7137/images/Products/${item.productImage}`}
+                        src={`${import.meta.env.VITE_BASE_URL}/images/Products/${item.productImage}`}
                         alt={item.name}
                         style={{
                           width: "70px",
@@ -207,7 +208,7 @@ export default function Cart() {
                   </TableCell>
                   <TableCell>
                     <Typography fontWeight="500">
-                      {item.selectedSize}
+                      {item.sizeName}
                     </Typography>
                   </TableCell>
                   <TableCell align="center">{formatPrice(item.unitPrice)}</TableCell>

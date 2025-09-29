@@ -42,7 +42,7 @@ const Panel = () => {
             <Box
         
               component="img"
-              src={`https://localhost:7137/images/Brands/${brand.imageUrl}`}
+              src={`${import.meta.env.VITE_BASE_URL}/images/Brands/${brand.imageUrl}`}
               alt={`Image ${index + 1}`}
               sx={{
                 width: "100%",

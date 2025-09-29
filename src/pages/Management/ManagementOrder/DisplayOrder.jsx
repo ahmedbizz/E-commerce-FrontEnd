@@ -70,7 +70,7 @@ const DisplayOrders = () => {
 
       const res = await GetOrder(params);
 
-      
+    
       setOrders(res.data.items);
       setFilter(res.data.items);
 
@@ -324,7 +324,7 @@ const getStatusChip = (status) => {
             <TableCell>{t("productImage")}</TableCell>
             <TableCell>{t("productName")}</TableCell>
             <TableCell>{t("quantity")}</TableCell>
-            <TableCell>{t("selectedSize")}</TableCell>
+            <TableCell>{t("Size")}</TableCell>
             <TableCell>{t("unitPrice")}</TableCell>
             <TableCell>{t("Amount")}</TableCell>
           </TableRow>
@@ -351,7 +351,7 @@ const getStatusChip = (status) => {
                   /></TableCell>
                 <TableCell align="left">{item.productName}</TableCell>
                 <TableCell align="left">{item.quantity}</TableCell>
-                <TableCell align="left">{item.selectedSize}</TableCell>
+                <TableCell align="left">{item.sizeName}</TableCell>
                 <TableCell align="left">{formatPrice(item.unitPrice)}</TableCell>
                 <TableCell align="left">
                   {formatPrice(item.unitPrice*item.quantity)}

@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 let isRedirecting = false;
 const instance = axios.create({
-  baseURL: 'https://localhost:7137/api',
+  baseURL: import.meta.env.VITE_API_URL, 
 });
 // إضافة التوكن لكل request
 instance.interceptors.request.use(config => {
