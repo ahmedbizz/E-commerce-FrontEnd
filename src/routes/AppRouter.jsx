@@ -46,6 +46,10 @@ import UpdateProduct from "../pages/Management/ProductManagment/UpdateProduct";
 import CreateSize from "../pages/Management/ManagmentSize/CreateSize";
 import DispalySize from "../pages/Management/ManagmentSize/DispalySizes";
 import UpdateSize from "../pages/Management/ManagmentSize/UpdateSize";
+//  Managment Size
+import CreateTaxes from "../pages/Management/ManagmentTax/CreateTaxes";
+import DispalyTaxes from "../pages/Management/ManagmentTax/DispalyTaxes";
+import UpdateTaxes from "../pages/Management/ManagmentTax/UpdateTaxes";
 // Managment TargetGroup
 import CreateTargetGroup from "../pages/Management/ManagmentTargetGroup/CreateTargetGroup";
 import DisplayTargetGroup from "../pages/Management/ManagmentTargetGroup/DisplayTargetGroup";
@@ -136,6 +140,10 @@ export default function AppRouter() {
           <Route path="Sizes" element={<DispalySize />} />
           <Route path="Size/create" element={<CreateSize />} />
           <Route path="Size/edit/:id" element={<UpdateSize />} />
+                    {/* Managment Taxes */}
+          <Route path="Taxes" element={<DispalyTaxes />} />
+          <Route path="Taxe/create" element={<CreateTaxes />} />
+          <Route path="Taxe/edit/:id" element={<UpdateTaxes />} />
           {/* Managment PaymentMethod */}
           <Route path="PaymentMethods" element={<DispalyPaymentMethod />} />
           <Route path="PaymentMethod/create" element={<CreatePaymentMethod />} />

@@ -10,13 +10,6 @@ export default defineConfig({
     },
   },
   server: {
-    host: true,               
-    port: 5173,              
-    strictPort: true,       
-    hmr: {
-      host: '10.17.34.232',
-      port: 5173,            
-    },
     historyApiFallback: true,
   },
 

@@ -13,10 +13,10 @@ import {
   InputAdornment,
   Avatar
 } from "@mui/material";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useTranslation } from "react-i18next";
-import { GetOrder ,UpdateOrderById} from "../../../services/OrederService";
+import { GetOrder, UpdateOrderById } from "../../../services/OrederService";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import AccessAlarm from "@mui/icons-material/AccessAlarm";
@@ -28,14 +28,15 @@ import Check from "@mui/icons-material/Check";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import Dialog from "@mui/material/Dialog";
+
 const CustomAlert = React.forwardRef(function CustomAlert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+
 const DisplayOrders = () => {
-  const navigete = useNavigate();
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
-  // for get all Role in list
   const [Orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -70,7 +71,6 @@ const DisplayOrders = () => {
 
       const res = await GetOrder(params);
 
-    
       setOrders(res.data.items);
       setFilter(res.data.items);
 
@@ -85,39 +85,35 @@ const DisplayOrders = () => {
     } catch (err) {
       console.log(err);
       if (err.response?.status === 404) {
-      
         setEmpty(true);
       } else {
-      
         setError(true);
       }
     } finally {
       setLoading(false);
     }
   };
+
   const handleUpdateStatus = async (order, status) => {
     try {
-      // order.id هو المهم هنا وليس الكائن كله
-      await UpdateOrderById(order.id, status); // يجب أن يكون await
+      await UpdateOrderById(order.id, status);
       setOpenNotifcation(true);
-      setsuccess(`Order status updated to ${status}`);
-      fetchOrders(currentPage); // إعادة جلب البيانات بعد التحديث
+      setsuccess(t("order_status_updated", { status }));
+      fetchOrders(currentPage);
     } catch (err) {
       console.error(err);
-      notifyErorr("Can't update order. Call Administrator.");
+      notifyErorr(t("cannot_update_order"));
     }
   };
-  
+
   useEffect(() => {
     fetchOrders(currentPage);
   }, [currentPage]);
 
-  // for delete WareHouse
   const deleteByID = async (id) => {
     try {
       const res = await DeleteOrderByID(id);
       notify(res.data.message);
-      // تحديث القائمة بدون إعادة تحميل
       const updatedList = Orders.filter((g) => g.id !== id);
       setOrders(updatedList);
       setFilter(updatedList);
@@ -126,33 +122,34 @@ const DisplayOrders = () => {
       }
     } catch (err) {
       if (err.response?.status === 401) {
-        notifyErorr("Access denied 401 Unauthorized");
+        notifyErorr(t("access_denied_401"));
       }
       if (err.response?.status === 404) {
-        notifyErorr("لا يوجد منتجات في هذه الصفحة.");
+        notifyErorr(t("no_items_on_page"));
       } else {
-        notifyErorr("حدث خطأ أثناء جلب البيانات.");
+        notifyErorr(t("fetch_data_error"));
       }
       notifyErorr(err.message);
     }
   };
+
   const handleSearch = (event) => {
     const query = event.target.value;
     if (!query) {
-      setFilter(Orders); // إذا خانة البحث فارغة، نعرض كل العناصر
+      setFilter(Orders);
       return;
     }
 
     const filtered = Orders.filter((us) =>
-      us.orderNumber.toLowerCase().includes(query.toLowerCase())||
-      us.userName.toLowerCase().includes(query.toLowerCase())||
-      us.email.toLowerCase().includes(query.toLowerCase())||
+      us.orderNumber.toLowerCase().includes(query.toLowerCase()) ||
+      us.userName.toLowerCase().includes(query.toLowerCase()) ||
+      us.email.toLowerCase().includes(query.toLowerCase()) ||
       us.createdAt.toLowerCase().includes(query.toLowerCase())
-
     );
     setFilter(filtered);
   };
-const [items, setitems] = useState([]);
+
+  const [items, setitems] = useState([]);
   const handleOpen = (values) => {
     setOpen(true);
     setitems(values);
@@ -162,130 +159,63 @@ const [items, setitems] = useState([]);
     setOpen(false);
   };
 
-const getStatusChip = (status) => {
-  switch (status) {
-    case "Pending":
-      return <Chip label="Pending" color="warning"  sx={{width:"110px"}}/>;
-    case "Processing":
-      return <Chip label="Processing" color="info" sx={{width:"110px"}}/>;
-    case "Shipped":
-      return <Chip label="Shipped" color="primary"sx={{width:"110px"}} />;
-    case "Delivered":
-      return <Chip label="Delivered" color="success"  icon={<Check/>} sx={{width:"110px"}}/>;
-    case "Cancelled":
-      return <Chip label="Cancelled" color="error" sx={{width:"110px"}}/>;
-    default:
-      return <Chip label={status} variant="outlined" />;
-  }
-};
-
-  const statusButtonsMap = {
-    Pending: ["Processing", "Cancelled"], 
-    Processing: ["Shipped", "Cancelled"], 
-    Shipped: ["Delivered"], 
-    Delivered: [],
-    Cancelled: [], 
+  const getStatusChip = (status) => {
+    switch (status) {
+      case "Pending":
+        return <Chip label={t("pending")} color="warning" sx={{width:"110px"}}/>;
+      case "Processing":
+        return <Chip label={t("processing")} color="info" sx={{width:"110px"}}/>;
+      case "Shipped":
+        return <Chip label={t("shipped")} color="primary" sx={{width:"110px"}}/>;
+      case "Delivered":
+        return <Chip label={t("delivered")} color="success" icon={<Check/>} sx={{width:"110px"}}/>;
+      case "Cancelled":
+        return <Chip label={t("cancelled")} color="error" sx={{width:"110px"}}/>;
+      default:
+        return <Chip label={status} variant="outlined" />;
+    }
   };
 
+  const statusButtonsMap = {
+    Pending: ["Processing", "Cancelled"],
+    Processing: ["Shipped", "Cancelled"],
+    Shipped: ["Delivered"],
+    Delivered: [],
+    Cancelled: [],
+  };
   if (Loading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <CircularProgress
-          sx={{ animation: "rotate 1.5s linear infinite" }}
-          size={80}
-        />
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <CircularProgress sx={{ animation: "rotate 1.5s linear infinite" }} size={80} />
       </Box>
     );
   }
+
   if (isAccess) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          gap: 2,
-          textAlign: "center",
-        }}
-      >
+      <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100vh", gap: 2, textAlign: "center" }}>
         <AccessAlarm sx={{ fontSize: 80, color: "text.secondary" }} />
-        <Typography variant="h6" color="text.secondary">
-          {t("Access Denied.")}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {t("Access_logout")}
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => navigete("/logout")} // أو أي مسار إضافة المنتج
-        >
-          {t("new_item")}
-        </Button>
+        <Typography variant="h6" color="text.secondary">{t("access_denied")}</Typography>
+        <Typography variant="body2" color="text.secondary">{t("access_logout")}</Typography>
+        <Button variant="contained" color="primary" onClick={() => navigate("/logout")}>{t("new_item")}</Button>
       </Box>
     );
   }
+
   if (isEmpty) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          gap: 2,
-          textAlign: "center",
-        }}
-      >
+      <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100vh", gap: 2, textAlign: "center" }}>
         <InventoryOutlinedIcon sx={{ fontSize: 80, color: "text.secondary" }} />
-        <Typography variant="h6" color="text.secondary">
-          {t("There are no item added yet.")}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {t("isEmpty_add")}
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => navigete("/Order/create")} // أو أي مسار إضافة المنتج
-        >
-          {t("new_item")}
-        </Button>
+        <Typography variant="h6" color="text.secondary">{t("no_items_added")}</Typography>
       </Box>
     );
   }
+
   if (error) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <Typography variant="h5" color="error">
-          Oops! Something went wrong. Please try again.
-        </Typography>
-        {/* Optionally, add a button to refresh or contact support */}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => window.location.reload()}
-        >
-          Retry
-        </Button>
+      <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <Typography variant="h5" color="error">{t("something_went_wrong")}</Typography>
+        <Button variant="contained" color="primary" onClick={() => window.location.reload()}>{t("retry")}</Button>
       </Box>
     );
   }

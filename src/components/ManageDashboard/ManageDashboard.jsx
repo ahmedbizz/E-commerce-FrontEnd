@@ -169,6 +169,20 @@ export default function ManageDashboard() {
                           >
                             {t("Payment Methods")}
                           </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/System/Taxes"
+                            onClick={handleCloseFinance}
+                          >
+                            {t("Display Taxes")}
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/System/Taxe/create"
+                            onClick={handleCloseFinance}
+                          >
+                            {t("Create Taxe")}
+                          </MenuItem>
 
 
 

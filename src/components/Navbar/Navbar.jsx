@@ -207,7 +207,7 @@ export default function Navbar() {
               gap: 2,
             }}
           >
-            {/* <List id="EN_AR_List" aria-label="Device settings">
+            <List id="EN_AR_List" aria-label="Device settings">
               <ListItemButton
                 id="lock-button"
                 aria-haspopup="listbox"
@@ -241,7 +241,7 @@ export default function Navbar() {
                   {option}
                 </MenuItem>
               ))}
-            </Menu> */}
+            </Menu>
             <Typography
               variant="h6"
               component={Link}
@@ -268,7 +268,7 @@ export default function Navbar() {
               {(TargetGroupRes || []).map((group, index) => (
                 <Box
                   key={index}
-                  onMouseEnter={(e) => handleOpenMNI(e, group)}
+                  onClick={(e) => handleOpenMNI(e, group)}
                   sx={{ display: "inline-block", mx: 1 }}
                 >
                   <Button

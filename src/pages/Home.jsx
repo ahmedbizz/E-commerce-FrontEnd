@@ -22,7 +22,7 @@ export default function Home() {
   const settings = {
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: 3, // للشاشات الكبيرة
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
@@ -30,14 +30,14 @@ export default function Home() {
     dots: false,
     responsive: [
       {
-        breakpoint: 1024, // أقل من 1024px
+        breakpoint: 1024, // تابلت
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
         },
       },
       {
-        breakpoint: 768, // أقل من 768px
+        breakpoint: 820, // جوال (يغطي Safari + Chrome + غيره)
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -45,6 +45,7 @@ export default function Home() {
       },
     ],
   };
+  
   
   const sliderRef = useRef(null);
   useEffect(() => {
@@ -78,8 +79,9 @@ export default function Home() {
             {products.map((item, index) => (
               <Box className="slide" key={index}
               onClick={() => {
-                navigate('/products/all');
                 window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                navigate('/products/all');
+              
               }}
               >
                 <img  src={`${import.meta.env.VITE_BASE_URL}/images/Products/${item.imageUrl}`} alt={`Ad ${index + 1}`} />

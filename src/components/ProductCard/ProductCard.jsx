@@ -12,24 +12,11 @@ import {formatPrice} from "/src/utils/formatPrice"
 
 const ProductCard = React.memo(({ product }) =>{
   const navigate = useNavigate();
-
+console.log(product)
   return (
     <Card  className='Card-Product'>
-      <CardMedia
-      
-      onClick={()=>navigate(`/product/${product.id}`)}
-              
-        component="img"
-        width="100%"
-        sx={{
-          maxHeight:"400px",
-          objectFit:"cover",
-          cursor:"pointer"
-        }}
-        image={`${import.meta.env.VITE_BASE_URL}/images/Products/${product.imageUrl}`}
-        alt={product.name}
-        loading="lazy"
-      />
+
+      <img src={`${import.meta.env.VITE_BASE_URL}/images/Products/${product.imageUrl}`} alt={product.name}   onClick={()=>navigate(`/product/${product.id}`)} />
       <CardContent className='CardContent'>
         <Typography gutterBottom variant="h6" component="div" noWrap className='title'>
           {product.name}

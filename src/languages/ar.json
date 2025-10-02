@@ -75,7 +75,60 @@
   ,"erorr":"حدث خطأ غير معروف ."
   ,"BrandFilter":"فلترة بالماركة"
   ,"GroupFilter":"فلترة بالجنس",
-  "ForgotPassword":"نسيت كلمة المرور"
+  "ForgotPassword":"نسيت كلمة المرور",
+  "Price": "السعر",
+  "CostPrice": "سعر التكلفة",
+  "SelectSizes": "اختر المقاسات",
+  "SelectCategory": "اختر الفئة",
+  "SelectBrand": "اختر العلامة التجارية",
+  "SelectTargetGroup": "اختر الفئة المستهدفة",
+  "SelectTaxCategory": "اختر فئة الضريبة",
+  "SelectSupplier": "اختر المورد",
+  "access_denied": "تم رفض الوصول.",
+  "access_logout": "ليس لديك صلاحية لعرض هذه الصفحة. يرجى تسجيل الخروج.",
+
+  "no_items_added": "لا يوجد عناصر مضافة حتى الآن.",
+  "productImage": "صورة المنتج",
+  "productName": "اسم المنتج",
+  "quantity": "الكمية",
+  "Size": "الحجم",
+  "unitPrice": "سعر الوحدة",
+  "Amount": "المبلغ",
+  "#": "#",
+  "orderNumber": "رقم الطلب",
+  "createdAt": "تاريخ الإنشاء",
+
+  "status": "الحالة",
+
+  "pending": "قيد الانتظار",
+  "processing": "جاري المعالجة",
+  "shipped": "تم الشحن",
+  "delivered": "تم التوصيل",
+  "cancelled": "ملغى",
+  "order_status_updated": "تم تحديث حالة الطلب إلى {{status}}",
+  "cannot_update_order": "لا يمكن تحديث الطلب. اتصل بالمشرف.",
+  "access_denied_401": "تم رفض الوصول 401 غير مصرح",
+  "no_items_on_page": "لا توجد عناصر في هذه الصفحة.",
+  "fetch_data_error": "حدث خطأ أثناء جلب البيانات.",
+  "something_went_wrong": "عفوًا! حدث خطأ ما. حاول مرة أخرى.",
+  "retry": "إعادة المحاولة",
+  "Type_search": "اكتب هنا...",
+  "Cart": "سلة المشتريات",
+  "There are no items added yet.": "لا توجد عناصر مضافة بعد.",
+
+  "Tax": "الضريبة",
+
+  "Amount + Tax": "المبلغ + الضريبة",
+
+  "Payment Method": "طريقة الدفع",
+  "Tax Rate": "نسبة الضريبة",
+  "Tax Amount": "مبلغ الضريبة",
+  "Total Amount": "المجموع النهائي",
+  "Place Order": "إتمام الطلب",
+  "Order created successfully! Cash on delivery.": "تم إنشاء الطلب بنجاح! الدفع عند الاستلام.",
+  "An error occurred while placing the order. Please try again.": "حدث خطأ أثناء إتمام الطلب، حاول مرة أخرى.",
+  "No payment approval URL provided.": "لا يوجد رابط للموافقة على الدفع."
+
 
   
 

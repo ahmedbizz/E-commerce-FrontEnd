@@ -15,7 +15,8 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-  CircularProgress
+  CircularProgress,
+  useMediaQuery,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -24,7 +25,9 @@ import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import { useTranslation } from "react-i18next";
 import { AddToOrder } from "../services/OrederService";
 import { formatPrice } from "/src/utils/formatPrice";
-import {GetPaymentMethods} from "../services/PaymentMethodService";
+import { GetPaymentMethods } from "../services/PaymentMethodService";
+import { useNavigate } from 'react-router-dom';
+
 export default function Cart() {
   const { t } = useTranslation();
   const {
@@ -34,16 +37,22 @@ export default function Cart() {
     IncreaseItemById,
     DecreaseItemById,
   } = useContext(CartContext);
+  const navigate = useNavigate();
+
   const { user } = useContext(AuthContext);
   const [paymentMethod, setPaymentMethod] = useState(1);
   const [soldOut, setsoldOut] = useState(false);
   const [paymentMethodsList, setPaymentMethodsList] = useState([]);
   const [Loading, setLoading] = useState(false);
 
+
+  const isMobile = useMediaQuery("(max-width:768px)");
+
   useEffect(() => {
     fetchPaymentMethods();
+    fetchCart();
   }, []);
-  
+
   const fetchPaymentMethods = async () => {
     try {
       const res = await GetPaymentMethods();
@@ -53,264 +62,251 @@ export default function Cart() {
     }
   };
 
-
   const totalPrice = cartItems.reduce(
-    (acc, item) => acc + item.quantity * item.unitPrice,
+    (acc, item) => acc + ((item.quantity * item.unitPrice) +(item.quantity * item.unitPrice)*item.tax ),
     0
   );
-
+  const vat = cartItems.reduce(
+    (acc, item) => acc + ((item.quantity * item.unitPrice)*item.tax ),
+    0
+  );
+  const totalWithVat = totalPrice ;
+  
+  
   useEffect(() => {
-    
-    const isSoldOut = cartItems.some(item => item.stockQuantity === 0);
+    const isSoldOut = cartItems.some((item) => item.stockQuantity === 0);
     setsoldOut(isSoldOut);
   }, [cartItems]);
-
-  useEffect(() => {
-    fetchCart();
-  }, []);
 
   const handelOrder = async () => {
     setLoading(true);
     const data = {
       TotalAmount: totalPrice,
-      PaymentMethodId: paymentMethod, // تأكد من نفس اسم المفتاح
+      PaymentMethodId: paymentMethod,
       DeliveryRequestId: 1,
-      OrderItems: cartItems.map(item => ({
-      
+      OrderItems: cartItems.map((item) => ({
         ProductId: item.productId,
         Quantity: item.quantity,
         unitPrice: item.unitPrice,
-        SizeId: item.sizeId
+        SizeId: item.sizeId,
       })),
     };
-    console.log(data)
+
     try {
       const res = await AddToOrder(data);
-      console.log(res.data);
-      
+
       if (res.data?.approvalUrl) {
-          // إعادة توجيه لموقع PayPal
-          window.location.href = res.data.approvalUrl;
-          setLoading(false);
+        window.location.href = res.data.approvalUrl;
       } else if (res.data?.paymentMethod === "CashOnDelivery") {
-          // عرض رسالة نجاح للـ COD
-          fetchCart();
-          alert("تم إنشاء الطلب بنجاح! الدفع عند الاستلام.");
-          setLoading(false);
+        fetchCart();
+        alert(t("Order created successfully! Cash on delivery."));
       } else {
-          // أي نوع دفع آخر أو خطأ
-          console.warn("لا يوجد رابط للموافقة على الدفع.");
-          setLoading(false);
+        console.warn(t("No payment approval URL provided."));
       }
-      
     } catch (err) {
-      setLoading(false);
       console.error(err);
-      alert("حدث خطأ أثناء إتمام الطلب، حاول مرة أخرى.");
+      alert(t("An error occurred while placing the order. Please try again."));
+    } finally {
+      setLoading(false);
     }
   };
-  
+
   if (Loading)
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <Box className="loading">
         <CircularProgress size={80} />
       </Box>
     );
+
   return (
-    <Box sx={{ maxWidth: "1000px", margin: "auto", padding: 3 }}>
+    <Box className="CartContiner">
       <Typography variant="h4" fontWeight="bold" gutterBottom>
-        🛒 سلة المشتريات
+        🛒{t("Cart")}
       </Typography>
 
       {cartItems.length === 0 ? (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-            gap: 2,
-            textAlign: "center",
-          }}
-        >
-          <InventoryOutlinedIcon
-            sx={{ fontSize: 80, color: "text.secondary" }}
-          />
+        <Box className="empty-cart">
+          <InventoryOutlinedIcon sx={{ fontSize: 80, color: "text.secondary" }} />
           <Typography variant="h6" color="text.secondary">
             {t("There are no item added yet.")}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {t("isEmpty_add")}
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => navigete("/product/create")} // أو أي مسار إضافة المنتج
-          >
-            {t("new_item")}
-          </Button>
         </Box>
       ) : (
         <>
-          <Table sx={{ borderRadius: 3, boxShadow: 3, overflow: "hidden" }}>
-            <TableHead sx={{ bgcolor: "grey.200" }}>
-              <TableRow>
-                <TableCell align="center">{t("Image")}</TableCell>
-                <TableCell>{t("Name")}</TableCell>
-                <TableCell>Size</TableCell>
-                <TableCell align="center">السعر</TableCell>
-                <TableCell align="center">الكمية</TableCell>
-                <TableCell align="center">الإجمالي</TableCell>
-                <TableCell align="center">إجراء</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {cartItems.map((item) => (
-                <TableRow key={item.id} hover>
-                  <TableCell align="center">
-                    <Box sx={{ position: "relative", display: "inline-block" }}>
-                      <img
-                        src={`${import.meta.env.VITE_BASE_URL}/images/Products/${item.productImage}`}
-                        alt={item.name}
-                        style={{
-                          width: "70px",
-                          height: "70px",
-                          borderRadius: "8px",
-                          objectFit: "cover",
-                        }}
-                      />
-                      {item.stockQuantity == 0?
-                                  <Box
-                                  sx={{
-                                    position: "absolute",
-                                    top: "20px",
-                                    left: "-5px",
-                                    backgroundColor: "red",
-                                    color: "white",
-                                    fontWeight: "bold",
-                                    transform: "rotate(-22deg)",
-                                    padding: "1px 6px",
-                                    textAlign: "center",
-                                    fontSize: "8px",
-                                    boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-                                    width: "70px",
-                                  }}
-                                >
-                                  Sold Out
-                                </Box>  
-                      :<></>}
-        
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontWeight="500">{item.productName}</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography fontWeight="500">
-                      {item.sizeName}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">{formatPrice(item.unitPrice)}</TableCell>
-                  <TableCell align="center">
-                    <IconButton onClick={() => DecreaseItemById(item.id)}>
-                      <RemoveIcon />
-                    </IconButton>
-                    <Typography
-                      component="span"
-                      sx={{ mx: 1, fontWeight: "bold" }}
-                    >
-                      {item.quantity}
-                    </Typography>
-                    <IconButton
-                      onClick={() => {
-                        console.log(item);
-                        IncreaseItemById(item.id);
-                      }}
-                    >
-                      <AddIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell align="center">
-                    {formatPrice(item.quantity * item.unitPrice)}
-                  </TableCell>
-                  <TableCell align="center">
-                    <IconButton
-                      color="error"
-                      onClick={() => {
-                        DeleteItemById(item.id);
+      
+          {!isMobile ? (
+            <Table className="Table">
+              <TableHead className="TableHead">
+                <TableRow>
+                  <TableCell align="center">{t("Image")}</TableCell>
+                  <TableCell>{t("Name")}</TableCell>
+                  <TableCell>{t("Size")}</TableCell>
+                  <TableCell align="center">{t("Price")}</TableCell>
+                  <TableCell align="center">{t("Quantity")}</TableCell>
+                  <TableCell align="center">{t("VAT")}</TableCell>
+                  <TableCell align="center">{t("Amount")}</TableCell>
+                  <TableCell align="center">{t("Amount + VAT")}</TableCell>
+                  <TableCell align="center">{t("Action")}</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {cartItems.map((item) => 
+                
+                {      
+                  
+                  var tax = item.tax *(item.quantity * item.unitPrice);
+                  var amount =item.quantity * item.unitPrice;
+                  return(
 
-                        fetchCart();
-                      }}
+
+
+                  <TableRow key={item.id} className="TableRow">
+                    <TableCell align="center">
+                      <img
+                        onClick={()=>navigate(`/product/${item.id}`)}
+                        src={`${import.meta.env.VITE_BASE_URL}/images/Products/${item.productImage}`}
+                        alt={item.productName}
+                        className="product-img"
+                      />
+                    </TableCell>
+                    <TableCell>{item.productName}</TableCell>
+                    <TableCell>{item.sizeName}</TableCell>
+                    <TableCell align="center">
+                      {formatPrice(item.unitPrice)}
+                    </TableCell>
+                    <TableCell align="center">
+                      <IconButton onClick={() => DecreaseItemById(item.id)}>
+                        <RemoveIcon />
+                      </IconButton>
+                      {item.quantity}
+                      <IconButton onClick={() => IncreaseItemById(item.id)}>
+                        <AddIcon />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell align="center">
+                      {formatPrice(tax)}
+                    </TableCell>
+                    <TableCell align="center">
+                      {formatPrice(amount)}
+                    </TableCell>
+                    <TableCell align="center">
+                      {formatPrice(tax + amount)}
+                    </TableCell>
+                    <TableCell align="center">
+                      <IconButton
+                        color="error"
+                        onClick={() => DeleteItemById(item.id)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                )})}
+              </TableBody>
+            </Table>
+          ) : (
+            <Box className="mobile-cards">
+              {cartItems.map((item) => (
+                <Box key={item.id} className="cart-card">
+                  <div className="row-top">
+                    <img
+                      src={`${import.meta.env.VITE_BASE_URL}/images/Products/${item.productImage}`}
+                      alt={item.productName}
+                    />
+                    <Typography className="product-name">
+                      {item.productName}
+                    </Typography>
+                  </div>
+                  <div className="row-bottom">
+                    <Typography className="price">
+                      {formatPrice(item.unitPrice * item.quantity )}
+                    </Typography>
+                    <div className="quantity-control">
+                      <IconButton onClick={() => DecreaseItemById(item.id)}>
+                        <RemoveIcon />
+                      </IconButton>
+                      <Typography>{item.quantity}</Typography>
+                      <IconButton onClick={() => IncreaseItemById(item.id)}>
+                        <AddIcon />
+                      </IconButton>
+                    </div>
+                    <IconButton
+                      className="delete-btn"
+                      onClick={() => DeleteItemById(item.id)}
                     >
                       <DeleteIcon />
                     </IconButton>
-                  </TableCell>
-                </TableRow>
+                  </div>
+                </Box>
               ))}
-            </TableBody>
-          </Table>
+            </Box>
+          )}
 
-          <Divider sx={{ my: 3 }} />
+      
 
-          {/* ملخص السلة */}
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            flexWrap="wrap"
-            gap={3}
-          >
-            {/* اختيار طريقة الدفع */}
-            <Box>
-              <Typography variant="h6" gutterBottom>
-                طريقة الدفع
+        
+          <Box className="cart-summary">
+            <Box className="PaymentMethod">
+              <Typography variant="h6" fontWeight="bold">
+              {t("Payment Method")}
               </Typography>
               <RadioGroup
-  row
-  value={paymentMethod}
-  onChange={(e) => setPaymentMethod(Number(e.target.value))}
->
-  {paymentMethodsList.map((method) => (
-    <FormControlLabel
-      key={method.id}
-      value={method.id}
-      control={<Radio />}
-      label={method.name}
-    />
-  ))}
-</RadioGroup>
-
+            className="RadioGroup"
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(Number(e.target.value))}
+              >
+                {paymentMethodsList.map((method) => (
+                  <FormControlLabel
+                    key={method.id}
+                    value={method.id}
+                    control={<Radio />}
+                    label={method.name}
+                  />
+                ))}
+              </RadioGroup>
             </Box>
 
-            {/* الإجمالي */}
-            <Box textAlign="right">
+            <Box className="AmountPrice" >
               <Typography variant="h6" fontWeight="bold">
-                الإجمالي الكلي:
+              {t("Amount + Tax")}
               </Typography>
-              <Typography
-                variant="h5"
-                color="primary"
-                fontWeight="bold"
-                sx={{ mt: 1 }}
-              >
-                {formatPrice(totalPrice)} 
-              </Typography>
+<TableBody>
+<TableRow className="TableRow">  
+<TableCell>{t("Amount")}</TableCell> 
+    <TableCell>{formatPrice(totalPrice)}</TableCell>    
+</TableRow>
+
+
+<TableRow className="TableRow">  
+<TableCell>{t("TAX")}</TableCell> 
+    <TableCell>{formatPrice(vat)}</TableCell>    
+</TableRow>
+<TableRow className="TableRow">  
+<TableCell>{t("Amount + TAX")}</TableCell> 
+    <TableCell>              
+      <Typography variant="h5" color="primary" fontWeight="bold">
+                {formatPrice(totalWithVat)}
+      </Typography></TableCell>    
+</TableRow>
+
+</TableBody>
+
+
             </Box>
           </Box>
 
-          {/* زر إتمام الشراء */}
           <Box textAlign="center" mt={3}>
-            {!soldOut?            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              sx={{ borderRadius: 3, px: 5 }}
-              onClick={() => handelOrder()}
-            >
-              إتمام الطلب
-            </Button>:<></>}
-
+            {!soldOut && (
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                sx={{ borderRadius: 3, px: 5 }}
+                onClick={handelOrder}
+              >
+                إتمام الطلب
+              </Button>
+            )}
           </Box>
         </>
       )}
