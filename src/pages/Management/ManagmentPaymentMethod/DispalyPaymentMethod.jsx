@@ -113,7 +113,7 @@ const DisplayPaymentMethod = () => {
     <Box className="Display-Item-Continer">
       <ToastContainer />
       <Box className="Button_Search_Panel">
-        <Button startIcon={<Add />} component={Link} to="/System/PaymentMethod/create" variant="contained">
+        <Button startIcon={<Add />} component={Link} to="/System/PaymentMethod/create" variant="contained"   className="create-button">
           {t("new")}
         </Button>
         <TextField

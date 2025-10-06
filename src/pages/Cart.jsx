@@ -26,7 +26,7 @@ import { useTranslation } from "react-i18next";
 import { AddToOrder } from "../services/OrederService";
 import { formatPrice } from "/src/utils/formatPrice";
 import { GetPaymentMethods } from "../services/PaymentMethodService";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
   const { t } = useTranslation();
@@ -45,7 +45,6 @@ export default function Cart() {
   const [paymentMethodsList, setPaymentMethodsList] = useState([]);
   const [Loading, setLoading] = useState(false);
 
-
   const isMobile = useMediaQuery("(max-width:768px)");
 
   useEffect(() => {
@@ -63,16 +62,18 @@ export default function Cart() {
   };
 
   const totalPrice = cartItems.reduce(
-    (acc, item) => acc + ((item.quantity * item.unitPrice) +(item.quantity * item.unitPrice)*item.tax ),
+    (acc, item) =>
+      acc +
+      (item.quantity * item.unitPrice +
+        item.quantity * item.unitPrice * item.tax),
     0
   );
   const vat = cartItems.reduce(
-    (acc, item) => acc + ((item.quantity * item.unitPrice)*item.tax ),
+    (acc, item) => acc + item.quantity * item.unitPrice * item.tax,
     0
   );
-  const totalWithVat = totalPrice ;
-  
-  
+  const totalWithVat = totalPrice;
+
   useEffect(() => {
     const isSoldOut = cartItems.some((item) => item.stockQuantity === 0);
     setsoldOut(isSoldOut);
@@ -126,14 +127,15 @@ export default function Cart() {
 
       {cartItems.length === 0 ? (
         <Box className="empty-cart">
-          <InventoryOutlinedIcon sx={{ fontSize: 80, color: "text.secondary" }} />
+          <InventoryOutlinedIcon
+            sx={{ fontSize: 80, color: "text.secondary" }}
+          />
           <Typography variant="h6" color="text.secondary">
             {t("There are no item added yet.")}
           </Typography>
         </Box>
       ) : (
         <>
-      
           {!isMobile ? (
             <Table className="Table">
               <TableHead className="TableHead">
@@ -150,58 +152,53 @@ export default function Cart() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {cartItems.map((item) => 
-                
-                {      
-                  
-                  var tax = item.tax *(item.quantity * item.unitPrice);
-                  var amount =item.quantity * item.unitPrice;
-                  return(
-
-
-
-                  <TableRow key={item.id} className="TableRow">
-                    <TableCell align="center">
-                      <img
-                        onClick={()=>navigate(`/product/${item.id}`)}
-                        src={`${import.meta.env.VITE_BASE_URL}/images/Products/${item.productImage}`}
-                        alt={item.productName}
-                        className="product-img"
-                      />
-                    </TableCell>
-                    <TableCell>{item.productName}</TableCell>
-                    <TableCell>{item.sizeName}</TableCell>
-                    <TableCell align="center">
-                      {formatPrice(item.unitPrice)}
-                    </TableCell>
-                    <TableCell align="center">
-                      <IconButton onClick={() => DecreaseItemById(item.id)}>
-                        <RemoveIcon />
-                      </IconButton>
-                      {item.quantity}
-                      <IconButton onClick={() => IncreaseItemById(item.id)}>
-                        <AddIcon />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell align="center">
-                      {formatPrice(tax)}
-                    </TableCell>
-                    <TableCell align="center">
-                      {formatPrice(amount)}
-                    </TableCell>
-                    <TableCell align="center">
-                      {formatPrice(tax + amount)}
-                    </TableCell>
-                    <TableCell align="center">
-                      <IconButton
-                        color="error"
-                        onClick={() => DeleteItemById(item.id)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                )})}
+                {cartItems.map((item) => {
+                  var tax = item.tax * (item.quantity * item.unitPrice);
+                  var amount = item.quantity * item.unitPrice;
+                  return (
+                    <TableRow key={item.id} className="TableRow">
+                      <TableCell align="center">
+                        <img
+                          onClick={() => navigate(`/product/${item.id}`)}
+                          src={`${
+                            import.meta.env.VITE_BASE_URL
+                          }/images/Products/${item.productImage}`}
+                          alt={item.productName}
+                          className="product-img"
+                        />
+                      </TableCell>
+                      <TableCell>{item.productName}</TableCell>
+                      <TableCell>{item.sizeName}</TableCell>
+                      <TableCell align="center">
+                        {formatPrice(item.unitPrice)}
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton onClick={() => DecreaseItemById(item.id)}>
+                          <RemoveIcon />
+                        </IconButton>
+                        {item.quantity}
+                        <IconButton onClick={() => IncreaseItemById(item.id)}>
+                          <AddIcon />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="center">{formatPrice(tax)}</TableCell>
+                      <TableCell align="center">
+                        {formatPrice(amount)}
+                      </TableCell>
+                      <TableCell align="center">
+                        {formatPrice(tax + amount)}
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          color="error"
+                          onClick={() => DeleteItemById(item.id)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           ) : (
@@ -210,7 +207,9 @@ export default function Cart() {
                 <Box key={item.id} className="cart-card">
                   <div className="row-top">
                     <img
-                      src={`${import.meta.env.VITE_BASE_URL}/images/Products/${item.productImage}`}
+                      src={`${import.meta.env.VITE_BASE_URL}/images/Products/${
+                        item.productImage
+                      }`}
                       alt={item.productName}
                     />
                     <Typography className="product-name">
@@ -219,7 +218,7 @@ export default function Cart() {
                   </div>
                   <div className="row-bottom">
                     <Typography className="price">
-                      {formatPrice(item.unitPrice * item.quantity )}
+                      {formatPrice(item.unitPrice * item.quantity)}
                     </Typography>
                     <div className="quantity-control">
                       <IconButton onClick={() => DecreaseItemById(item.id)}>
@@ -242,16 +241,13 @@ export default function Cart() {
             </Box>
           )}
 
-      
-
-        
           <Box className="cart-summary">
             <Box className="PaymentMethod">
               <Typography variant="h6" fontWeight="bold">
-              {t("Payment Method")}
+                {t("Payment Method")}
               </Typography>
               <RadioGroup
-            className="RadioGroup"
+                className="RadioGroup"
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(Number(e.target.value))}
               >
@@ -266,32 +262,29 @@ export default function Cart() {
               </RadioGroup>
             </Box>
 
-            <Box className="AmountPrice" >
+            <Box className="AmountPrice">
               <Typography variant="h6" fontWeight="bold">
-              {t("Amount + Tax")}
+                {t("Amount + Tax")}
               </Typography>
-<TableBody>
-<TableRow className="TableRow">  
-<TableCell>{t("Amount")}</TableCell> 
-    <TableCell>{formatPrice(totalPrice)}</TableCell>    
-</TableRow>
+              <TableBody>
+                <TableRow className="TableRow">
+                  <TableCell>{t("Amount")}</TableCell>
+                  <TableCell>{formatPrice(totalPrice)}</TableCell>
+                </TableRow>
 
-
-<TableRow className="TableRow">  
-<TableCell>{t("TAX")}</TableCell> 
-    <TableCell>{formatPrice(vat)}</TableCell>    
-</TableRow>
-<TableRow className="TableRow">  
-<TableCell>{t("Amount + TAX")}</TableCell> 
-    <TableCell>              
-      <Typography variant="h5" color="primary" fontWeight="bold">
-                {formatPrice(totalWithVat)}
-      </Typography></TableCell>    
-</TableRow>
-
-</TableBody>
-
-
+                <TableRow className="TableRow">
+                  <TableCell>{t("TAX")}</TableCell>
+                  <TableCell>{formatPrice(vat)}</TableCell>
+                </TableRow>
+                <TableRow className="TableRow">
+                  <TableCell>{t("Amount + TAX")}</TableCell>
+                  <TableCell>
+                    <Typography variant="h5" color="primary" fontWeight="bold">
+                      {formatPrice(totalWithVat)}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
             </Box>
           </Box>
 

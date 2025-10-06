@@ -26,11 +26,12 @@ import { AuthContext } from "../context/AuthContext";
 import { CartContext } from "../context/CartContext";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-
+import { useMediaQuery } from "@mui/material";
 const CustomAlert = React.forwardRef(function CustomAlert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 export default function ProductDetails() {
+  const isMobile = useMediaQuery("(max-width:768px)");
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const { cartItems, fetchCart} = useContext(CartContext);
@@ -200,35 +201,7 @@ export default function ProductDetails() {
         </Box>
       </Dialog>
       <Box className="ImageSide">
-        <Box>
-          {product.productImages.slice(0, 5).map((img, index) => {
-            return (
-              <Box
-                key={index}
-                transition={{ type: "spring", stiffness: 300 }}
-                onClick={() => {
-                  setcurrentImage(img.imageUrl);
-                }}
-              >
-                <img
-                  component="img"
-                  key={index}
-                  src={`${import.meta.env.VITE_BASE_URL}/images/Products/${img.imageUrl}`}
-                  alt="Icon 2"
-                  style={{
-                    width: "60px",
-                    height: "60px",
-                    borderRadius: "15px",
-                    objectFit: "cover",
-                    transition: "transform 0.3s ease",
-                  }}
-                />
-              
-              </Box>
-            );
-          })}
-        </Box>
-        <Box sx={{ position: "relative", display: "inline-block" }}>
+      <Box sx={{ position: "relative", display: "inline-block" }}>
         <img
           style={{
             position:"relative"
@@ -258,7 +231,37 @@ export default function ProductDetails() {
     Sold Out
           </Box>:<></>}
   </Box>
+        <Box className="ImageList">
+          {product.productImages.slice(0, 5).map((img, index) => {
+            return (
+              <Box
+                key={index}
+                transition={{ type: "spring", stiffness: 300 }}
+                onClick={() => {
+                  setcurrentImage(img.imageUrl);
+                }}
+              >
+                <img
+                  component="img"
+                  key={index}
+                  src={`${import.meta.env.VITE_BASE_URL}/images/Products/${img.imageUrl}`}
+                  alt="Icon 2"
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    borderRadius: "15px",
+                    objectFit: "cover",
+                    transition: "transform 0.3s ease",
+                  }}
+                />
+              
+              </Box>
+            );
+          })}
+        </Box>
+
       </Box>
+  
       <Box className="DetailsSide">
         <Box className="Title">
           <Typography className="ProductName">{product.name}</Typography>

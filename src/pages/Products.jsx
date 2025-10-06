@@ -185,7 +185,7 @@ const Products = ({ productsAPI }) => {
           <MenuIcon />
         </Button>
         <Button className="Button" onClick={handleClick}>
-          {t("Sort By: Featured")}
+          {t("Sort By ")}
           <ExpandMoreIcon />
         </Button>
         <Menu

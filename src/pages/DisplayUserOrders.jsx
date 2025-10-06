@@ -11,7 +11,8 @@ import {
   Pagination,
   TextField,
   InputAdornment,
-  Avatar
+  Avatar,
+  Divider
 } from "@mui/material";
 import {  useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -31,10 +32,12 @@ import Dialog from "@mui/material/Dialog";
 import { AuthContext } from "../context/AuthContext";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Tooltip from "@mui/material/Tooltip";
+import { useMediaQuery } from "@mui/material";
 const CustomAlert = React.forwardRef(function CustomAlert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 const DisplayUserOrders = () => {
+  const isMobile = useMediaQuery("(max-width:768px)");
   const navigete = useNavigate();
   const { t } = useTranslation();
   const { user, logoutUser } = useContext(AuthContext);
@@ -289,7 +292,7 @@ const getStatusChip = (status) => {
     );
   }
   return (
-    <Box className="Display-Item-Continer">
+    <Box className="Display-UserOrderItem-Continer">
       <ToastContainer />
       <Snackbar
         open={openNotifcation}
@@ -314,54 +317,69 @@ const getStatusChip = (status) => {
         className="Card-Continer-Dialog-Orders"
         open={open}
         onClose={handleClose}
-
       >
-      
-        <Table className="Table" >
-        <TableHead className="TableHead">
-          <TableRow>
-            <TableCell>{t("productImage")}</TableCell>
-            <TableCell>{t("productName")}</TableCell>
-            <TableCell>{t("quantity")}</TableCell>
-            <TableCell>{t("selectedSize")}</TableCell>
-            <TableCell>{t("unitPrice")}</TableCell>
-            <TableCell>{t("Amount")}</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {(items.length ? items : []).map((item, index) => {
-            return (
-              <TableRow key={index} className="TableRow" onClick={()=>setOpen(true)}>
-                                <TableCell>
-                  {" "}
-                  <Avatar
-                    alt={item.name}
-                    variant="square"
-                    sx={{
-                      width:"100px",
-                      height:"100px",
-                      borderRadius:"10px"
-                    }}
-                    src={
-                      item.productImage
-                        ? `${import.meta.env.VITE_BASE_URL}/images/Products/${item.productImage}`
-                        : "/Product-avatar.jpg"
-                    }
-                  /></TableCell>
-                <TableCell align="left">{item.productName}</TableCell>
-                <TableCell align="left">{item.quantity}</TableCell>
-                <TableCell align="left">{item.selectedSize}</TableCell>
-                <TableCell align="left">{formatPrice(item.unitPrice)}</TableCell>
-                <TableCell align="left">
-                  {formatPrice(item.unitPrice*item.quantity)}
-                </TableCell>
-
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    
+        <Table className="Table">
+          <TableHead className="TableHead">
+            <TableRow>
+              <TableCell>{t("productImage")}</TableCell>
+              <TableCell>{t("productName")}</TableCell>
+              <TableCell>{t("quantity")}</TableCell>
+              <TableCell>{t("Size")}</TableCell>
+              <TableCell>{t("unitPrice")}</TableCell>
+              <TableCell>{t("total")}</TableCell>
+              <TableCell>{t("Tax")}</TableCell>
+              <TableCell>{t("Amount")}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {(items.length ? items : []).map((item, index) => {
+              return (
+                <TableRow
+                  key={index}
+                  className="TableRow"
+                  onClick={() => setOpen(true)}
+                >
+                  <TableCell>
+                    {" "}
+                    <Avatar
+                      alt={item.name}
+                      variant="square"
+                      sx={{
+                        width: "100px",
+                        height: "100px",
+                        borderRadius: "10px",
+                      }}
+                      src={
+                        item.productImage
+                          ? `https://localhost:7137/images/Products/${item.productImage}`
+                          : "/Product-avatar.jpg"
+                      }
+                    />
+                  </TableCell>
+                  <TableCell align="left">{item.productName}</TableCell>
+                  <TableCell align="left">{item.quantity}</TableCell>
+                  <TableCell align="left">{item.sizeName}</TableCell>
+                  <TableCell align="left">
+                    {formatPrice(item.unitPrice)}
+                  </TableCell>
+                  <TableCell align="left">
+                    {formatPrice(item.unitPrice * item.quantity)}
+                  </TableCell>
+                  <TableCell align="left">
+                    <Typography color="error.main">
+                      +{formatPrice(item.taxAmount)}
+                    </Typography>
+                  </TableCell>
+                  <TableCell color="success" align="left">
+                    <Typography color="success.main">
+                      {formatPrice(item.totalWithTax)}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
       </Dialog>
 
       <Box className="Button_Search_Panel">
@@ -382,10 +400,12 @@ const getStatusChip = (status) => {
         />
       </Box>
 
-      <Table className="Table">
 
-        <TableBody>
-          {(Filter.length ? Filter : []).map((item, index) => {
+      {!isMobile ? (
+  // ✅ عرض جدول للابتوب
+  <Table className="Table">
+    <TableBody>
+    {(Filter.length ? Filter : []).map((item, index) => {
             return (
               <TableRow key={index} className="TableRow" >
           
@@ -419,8 +439,14 @@ const getStatusChip = (status) => {
                 </TableCell>
 
 
-                <TableCell align="left">
-                  {formatPrice(item.totalAmount)}
+                <TableCell align="left">{formatPrice(item.subTotal)} total
+                  <Typography color="error.main">
+                    + {formatPrice(item.totalTax)} tax
+                  </Typography>
+                  <Divider/>
+                  <Typography color="success.main">
+                    = {formatPrice(item.totalAmount)}
+                  </Typography>
                 </TableCell>
                 <TableCell align="left">
                 {statusButtonsMap[item.status]?.map((nextStatus) => (
@@ -445,8 +471,71 @@ const getStatusChip = (status) => {
               </TableRow>
             );
           })}
-        </TableBody>
-      </Table>
+    </TableBody>
+  </Table>
+) : (
+  // 📱 عرض كروت للجوال
+  <Box className="mobile-cards">
+    {(Filter.length ? Filter : []).map((item, index) => (
+      <Box key={index} className="order-card">
+
+        <Box className="order-head">
+        <Typography variant="h6">{t("orderNumber")}: {item.orderNumber}</Typography>
+        <Typography  >{getStatusChip(item.status)}</Typography>
+</Box>
+        <Divider sx={{ my: 1 }} />
+
+  
+        <Box className="order-info">
+        <AvatarGroup max={4} sx={{ justifyContent: "flex-start", mt: 1 }}>
+          {item.orderItems.slice(0, 4).map((product, idx) => (
+            <Tooltip key={idx} title={product.name} arrow>
+              <Avatar
+                onClick={() => handleOpen(item.orderItems)}
+                alt={product.name}
+                variant="square"
+                sx={{ width: 50, height: 50, borderRadius: "50px" }}
+                src={
+                  product.productImage
+                    ? `${import.meta.env.VITE_BASE_URL}/images/Products/${product.productImage}`
+                    : "/Product-avatar.jpg"
+                }
+              />
+            </Tooltip>
+          ))}
+        </AvatarGroup>
+<Box>
+            <Typography > {formatPrice(item.subTotal)} {t("tax")}</Typography>
+            <Typography color="error.main">+ {formatPrice(item.totalTax)} {t("tax")}</Typography>
+            <Divider sx={{ my: 1 }} />
+            <Typography color="success.main">{formatPrice(item.totalAmount)}</Typography>
+</Box>
+        </Box>
+
+        <Box sx={{ mt: 2 }}>
+          {statusButtonsMap[item.status]?.map((nextStatus) => (
+            <Button
+              key={nextStatus}
+              variant="contained"
+              color={
+                nextStatus === "Cancelled"
+                  ? "error"
+                  : nextStatus === "Delivered"
+                  ? "success"
+                  : "primary"
+              }
+              onClick={() => handleUpdateStatus(item, nextStatus)}
+              sx={{ mr: 1, width: "100%" }}
+            >
+              {nextStatus}
+            </Button>
+          ))}
+        </Box>
+      </Box>
+    ))}
+  </Box>
+)}
+
       <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
         <Pagination
           className="Pagination"

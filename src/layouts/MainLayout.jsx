@@ -13,7 +13,7 @@ export default function MainLayout() {
 
   // Detect screen size
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 600);
+    const handleResize = () => setIsMobile(window.innerWidth <= 650);
     handleResize(); // لتعيين القيمة عند التحميل أول مرة
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
