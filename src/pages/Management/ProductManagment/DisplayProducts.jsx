@@ -88,7 +88,7 @@ const DisplayProducts = () => {
       
       const res = await GetProducts(params);
       
-      console.log(res.data);
+  
       setProducts(res.data.items);
       setFilter(res.data.items);
   
@@ -101,7 +101,7 @@ const DisplayProducts = () => {
       setCurrentPage(res.data.currentPage);
       setTotalPages(res.data.totalPages);
     } catch (err) {
-      console.log(err)
+    
       if (err.response?.status === 404) {
         notifyErorr("لا يوجد منتجات.");
         setEmpty(true);
@@ -302,8 +302,8 @@ const DisplayProducts = () => {
             <TableCell>{t("price")}</TableCell>
             <TableCell>{t("costPrice")}</TableCell>
             <TableCell>{t("stockQuantity")}</TableCell>
-            <TableCell>{t("categoryId")}</TableCell>
-            <TableCell align="left">{t("isActive")}</TableCell>
+            <TableCell>{t("updatedAt")}</TableCell>
+
             <TableCell>{t("Action")}</TableCell>
 
           </TableRow>
@@ -327,7 +327,7 @@ const DisplayProducts = () => {
                     }}
                     src={
                       item.imageUrl
-                        ? `https://localhost:7137/images/Products/${item.imageUrl}`
+                        ? `${import.meta.env.VITE_BASE_URL}/images/Products/${item.imageUrl}`
                         : "/Product-avatar.jpg"
                     }
                   />
@@ -336,9 +336,9 @@ const DisplayProducts = () => {
                 <TableCell align="left">{item.price}</TableCell>
                 <TableCell align="left">{item.costPrice}</TableCell>
                 <TableCell align="left">{item.stockQuantity}</TableCell>
-                <TableCell align="left">{item.categoryId}</TableCell>
+                <TableCell align="left">{item.updatedAt}</TableCell>
       
-                <TableCell align="left">{item.isActive}</TableCell>
+            
                 <TableCell align="left">
                   <IconButton
                     sx={{ color: "red" }}

@@ -1,76 +1,114 @@
-import { Box, MenuItem, Link, MenuList } from "@mui/material";
 import React from "react";
+import {
+  Box,
+  MenuItem,
+  MenuList,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import YouTube from "@mui/icons-material/YouTube";
 import Facebook from "@mui/icons-material/Facebook";
 import Twitter from "@mui/icons-material/Twitter";
 import Instagram from "@mui/icons-material/Instagram";
+import LanguageIcon from "@mui/icons-material/Language";
+import { useTranslation } from "react-i18next";
+
 const Footer = () => {
+  const { i18n, t } = useTranslation();
+
+  const handleLanguageToggle = () => {
+    const newLang = i18n.language === "ar" ? "en" : "ar";
+    i18n.changeLanguage(newLang);
+  };
+
   const info = [
     {
-      name: "GET HELP",
-      url: "",
+      name: t("GET HELP"),
       content: [
-        { name: "Sipping and Delivery", url: "" },
-        { name: "Returns", url: "" },
-        { name: "payment Options", url: "" },
-        { name: "Cuntact us", url: "" },
+        { name: t("Shipping and Delivery") },
+        { name: t("Returns") },
+        { name: t("Payment Options") },
+        { name: t("Contact Us") },
       ],
     },
     {
-      name: "ABOUT US",
-      url: "",
+      name: t("ABOUT US"),
       content: [
-        { name: "Sipping and Delivery", url: "" },
-        { name: "Returns", url: "" },
-        { name: "payment Options", url: "" },
-        { name: "Cuntact us", url: "" },
+        { name: t("Company Info") },
+        { name: t("Careers") },
+        { name: t("Sustainability") },
+        { name: t("Press") },
       ],
     },
     {
-      name: "APPS",
-      url: "",
+      name: t("APPS"),
       content: [
-        { name: "Sipping and Delivery", url: "" },
-        { name: "Returns", url: "" },
-        { name: "payment Options", url: "" },
-        { name: "Cuntact us", url: "" },
+        { name: t("Download App") },
+        { name: t("iOS App") },
+        { name: t("Android App") },
+        { name: t("Help Center") },
       ],
     },
   ];
 
   return (
     <Box className="Footer">
+      {/* Header Section */}
       <Box className="Head-Footer">
+        {/* Left Section */}
         <Box className="Head-left">
-          <MenuList className="MenuList">
-            <MenuItem>FIND A STORE</MenuItem>
-            <MenuItem>SING UP</MenuItem>
+          <MenuList>
+            <MenuItem>{t("FIND A STORE")}</MenuItem>
+            <MenuItem>{t("SIGN UP")}</MenuItem>
           </MenuList>
         </Box>
+
+        {/* Center Section */}
         <Box className="Head-Main">
-          {(info || []).map((item, index) => (
-            <MenuList key={index}>
-              <MenuItem>{item.name}</MenuItem>
-              {(item.content || []).map((cate, index) => (
-                <MenuList
-                  key={index}
-                >
-                  <MenuItem>{cate.name}</MenuItem>
-                </MenuList>
+          {info.map((section, idx) => (
+            <Box key={idx} className="Footer-section">
+              <Typography variant="h6" className="Footer-title">
+                {section.name}
+              </Typography>
+              {section.content.map((item, i) => (
+                <Typography key={i} className="Footer-item">
+                  {item.name}
+                </Typography>
               ))}
-            </MenuList>
+            </Box>
           ))}
         </Box>
-        <Box className="Head-rghit">
-          <Twitter />
-          <Facebook />
-          <YouTube />
-          <Instagram />
+
+        {/* Right Section - Social */}
+        <Box className="Head-right">
+          <IconButton>
+            <Twitter />
+          </IconButton>
+          <IconButton>
+            <Facebook />
+          </IconButton>
+          <IconButton>
+            <YouTube />
+          </IconButton>
+          <IconButton>
+            <Instagram />
+          </IconButton>
         </Box>
       </Box>
-      <Box className="buttom-Footer">
-        <Box className="buttom-left">Languege</Box>
-        <Box className="buttom-rghit">terms us </Box>
+
+      {/* Bottom Section */}
+      <Box className="bottom-Footer">
+        <Box className="bottom-left">
+          <IconButton onClick={handleLanguageToggle}>
+            <LanguageIcon />
+          </IconButton>
+          <Typography variant="body2">
+            {i18n.language === "ar" ? "العربية" : "English"}
+          </Typography>
+        </Box>
+        <Box className="bottom-right">
+          <Typography variant="body2">{t("Terms of Use")}</Typography>
+        </Box>
       </Box>
     </Box>
   );

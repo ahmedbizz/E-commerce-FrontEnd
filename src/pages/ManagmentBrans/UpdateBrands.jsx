@@ -128,7 +128,7 @@ const UpdateBrand = () => {
                 <Avatar
                   variant="square"
                   alt="Brand"
-                  src={preview || (formData.imageUrl ? `https://localhost:7137/images/Brands/${formData.imageUrl}` : "/public/Images/AddPic.webp")}
+                  src={preview || (formData.imageUrl ? `${import.meta.env.VITE_BASE_URL}/images/Brands/${formData.imageUrl}` : "/public/Images/AddPic.webp")}
                   sx={{ width: "100%", height: "100%", transition: "0.3s" }}
                 />
                 <Box position="absolute" bottom={0} right={0} bgcolor="white" borderRadius="50%" p={0.5}>

@@ -98,7 +98,8 @@ const DisplayOrders = () => {
 
   const handleUpdateStatus = async (order, status) => {
     try {
-      await UpdateOrderById(order.id, status);
+      var res = await UpdateOrderById(order.id, status);
+      console.error(res);
       setOpenNotifcation(true);
       setsuccess(t("order_status_updated", { status }));
       fetchOrders(currentPage);
@@ -354,7 +355,7 @@ const DisplayOrders = () => {
                       }}
                       src={
                         item.productImage
-                          ? `https://localhost:7137/images/Products/${item.productImage}`
+                          ? `${import.meta.env.VITE_BASE_URL}/images/Products/${item.productImage}`
                           : "/Product-avatar.jpg"
                       }
                     />

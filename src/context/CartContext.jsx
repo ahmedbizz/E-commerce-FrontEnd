@@ -8,17 +8,17 @@ export function CartProvider({ children }) {
   const fetchCart = async () => {
     GetCart()
       .then((res) => {
-        console.log(res.data.items);
-        setCartItems(res.data.items);
+      
+        setCartItems(res.data.items|| []);
       })
-      .catch(() => {
-        return;
+      .catch((err) => {
+        console.error("Error fetching cart:", err);
       })
     
   }
 
   useEffect(() => {
-    fetchCart();
+    if (user) fetchCart();
   }, [user]);
 
 
@@ -29,9 +29,9 @@ const IncreaseItemById = async (id) => {
   try {
   
     var res =  await IncreaseItem(id);
-    setCartItems(res.data.items)
+    setCartItems(res.data.items|| cartItems)
   } catch (err) {
-    console.error("خطأ في زيادة العنصر:", err);
+    console.error("Error increasing item:", err);
   }
 };
 
@@ -41,9 +41,9 @@ const IncreaseItemById = async (id) => {
   try {
 
     var res = await DecreaseItem(id);
-    setCartItems(res.data.items)
+    setCartItems(res.data.items|| cartItems)
   } catch (err) {
-    console.error("خطأ في نقص العنصر:", err);
+    console.error("Error decreasing item:", err);
   }
 };
 
@@ -58,7 +58,8 @@ const IncreaseItemById = async (id) => {
         setCartItems(updatedList);
       
       } catch (err) {
-        console.log(err.message);
+        console.error("Error deleting item:", err.message);
+    
       }
     };
 

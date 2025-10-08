@@ -23,7 +23,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import { useTranslation } from "react-i18next";
-import { AddToOrder } from "../services/OrederService";
+import { CreatePayment,CapturePayment,CashOnDelivery } from "../services/OrederService";
 import { formatPrice } from "/src/utils/formatPrice";
 import { GetPaymentMethods } from "../services/PaymentMethodService";
 import { useNavigate } from "react-router-dom";
@@ -44,7 +44,8 @@ export default function Cart() {
   const [soldOut, setsoldOut] = useState(false);
   const [paymentMethodsList, setPaymentMethodsList] = useState([]);
   const [Loading, setLoading] = useState(false);
-
+  const [success , setSuccess] = useState(false);
+  const [orderNumber, setOrderNumber] = useState(null);
   const isMobile = useMediaQuery("(max-width:768px)");
 
   useEffect(() => {
@@ -55,7 +56,7 @@ export default function Cart() {
   const fetchPaymentMethods = async () => {
     try {
       const res = await GetPaymentMethods();
-      setPaymentMethodsList(res.data);
+      setPaymentMethodsList(res.data|| []);
     } catch (err) {
       console.error(err);
     }
@@ -82,7 +83,7 @@ export default function Cart() {
   const handelOrder = async () => {
     setLoading(true);
     const data = {
-      TotalAmount: totalPrice,
+      TotalAmount: totalWithVat,
       PaymentMethodId: paymentMethod,
       DeliveryRequestId: 1,
       OrderItems: cartItems.map((item) => ({
@@ -94,13 +95,14 @@ export default function Cart() {
     };
 
     try {
-      const res = await AddToOrder(data);
-
+      const res = await CreatePayment(data);
+      console.log(res.data)
       if (res.data?.approvalUrl) {
         window.location.href = res.data.approvalUrl;
       } else if (res.data?.paymentMethod === "CashOnDelivery") {
         fetchCart();
-        alert(t("Order created successfully! Cash on delivery."));
+        setOrderNumber(res.data?.orderNumber);
+        setSuccess(true);
       } else {
         console.warn(t("No payment approval URL provided."));
       }
@@ -112,11 +114,49 @@ export default function Cart() {
     }
   };
 
+
+
   if (Loading)
     return (
-      <Box className="loading">
-        <CircularProgress size={80} />
+      <Box
+      sx={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        backgroundColor: "rgba(30, 30, 30, 0.7)", // غطاء شفاف
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 2000, // فوق كل العناصر
+        backdropFilter: "blur(3px)", // يعطي تأثير ضبابي جميل
+      }}
+    >
+      <CircularProgress size={70} thickness={4} color="primary" />
+    </Box>
+    );
+
+    if (success)
+    return (
+      <Box className="order-success-overlay">
+      <Box className="order-success-card">
+        <Box className="icon">&#10004;</Box> {/* علامة صح */}
+        <Typography variant="h5" className="title">
+          {t("orderSuccess")}
+        </Typography>
+        <Typography variant="body1" className="order-number-text">
+          {t("orderNumber")} <span className="order-number">{orderNumber}</span>
+        </Typography>
+        <Button
+          variant="contained"
+          className="continue-btn"
+          onClick={() => navigate("/")}
+        >
+          {t("continueShopping")}
+        </Button>
       </Box>
+    </Box>
     );
 
   return (

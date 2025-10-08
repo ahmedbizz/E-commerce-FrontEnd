@@ -68,11 +68,7 @@ const DisplayUserOrders = () => {
   const fetchOrders = async (page = 1) => {
     setLoading(true);
     try {
-
-      console.log(user)
       const res = await GetOrder(user.sub);
-
-      console.log(res.data)
       setOrders(res.data.items);
       setFilter(res.data.items);
 
@@ -351,7 +347,7 @@ const getStatusChip = (status) => {
                       }}
                       src={
                         item.productImage
-                          ? `https://localhost:7137/images/Products/${item.productImage}`
+                          ? `${import.meta.env.VITE_BASE_URL}/images/Products/${item.productImage}`
                           : "/Product-avatar.jpg"
                       }
                     />
@@ -481,7 +477,7 @@ const getStatusChip = (status) => {
 
         <Box className="order-head">
         <Typography variant="h6">{t("orderNumber")}: {item.orderNumber}</Typography>
-        <Typography  >{getStatusChip(item.status)}</Typography>
+        <Typography component="span" >{getStatusChip(item.status)}</Typography>
 </Box>
         <Divider sx={{ my: 1 }} />
 

@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "../pages/Home";
 import AdsPanel from "../pages/AdsPanel";
 import Panel from "../components/Panel/Panel";
@@ -11,8 +11,8 @@ import MainLayout from "../layouts/MainLayout";
 import SignInSide from "../pages/SignInSide";
 import SignUp from "../pages/SignUp";
 import PrivateRoute from "./PrivateRoute";
-
 import Main from "../pages/Management/Main";
+
 // Role Management
 import CreateRoleUi from "../pages/Management/RoleManagment/CreateRoleUi";
 import DispalyRole from "../pages/Management/RoleManagment/DispalyRole";
@@ -34,137 +34,235 @@ import UpdateCategory from "../pages/Management/ManagmentCategory/UpdateCategory
 import CreateBrand from "../pages/ManagmentBrans/CreateBrands";
 import DispalyBrand from "../pages/ManagmentBrans/DisplayBrans";
 import UpdateBrand from "../pages/ManagmentBrans/UpdateBrands";
-// Managment WhareHouse
+// WhareHouse
 import CreateWareHouse from "../pages/Management/ManagmentWareHouse/CreateWareHouse";
 import DispalyWareHouse from "../pages/Management/ManagmentWareHouse/DisplayWareHouse";
 import UpdateWareHouse from "../pages/Management/ManagmentWareHouse/UpdateWareHouse";
-// Mangment Product
+// Product
 import AddProduct from "../pages/Management/ProductManagment/AddProduct";
 import DisplayProducts from "../pages/Management/ProductManagment/DisplayProducts";
 import UpdateProduct from "../pages/Management/ProductManagment/UpdateProduct";
-//  Managment Size
+// Size
 import CreateSize from "../pages/Management/ManagmentSize/CreateSize";
 import DispalySize from "../pages/Management/ManagmentSize/DispalySizes";
 import UpdateSize from "../pages/Management/ManagmentSize/UpdateSize";
-//  Managment Size
+// Taxes
 import CreateTaxes from "../pages/Management/ManagmentTax/CreateTaxes";
 import DispalyTaxes from "../pages/Management/ManagmentTax/DispalyTaxes";
 import UpdateTaxes from "../pages/Management/ManagmentTax/UpdateTaxes";
-// Managment TargetGroup
+// TargetGroup
 import CreateTargetGroup from "../pages/Management/ManagmentTargetGroup/CreateTargetGroup";
 import DisplayTargetGroup from "../pages/Management/ManagmentTargetGroup/DisplayTargetGroup";
 import UpdateTargetGroup from "../pages/Management/ManagmentTargetGroup/UpdateTargetGroup";
-// Managment inventory
+// Inventory
 import CreateInventory from "../pages/Management/ManagmentInventory/CreateInventory";
 import DispalyInventory from "../pages/Management/ManagmentInventory/DisplayInventory";
 import UpdateInventory from "../pages/Management/ManagmentInventory/UpdateInventory";
-// Managment Order
+// Order
 import DispalyOrder from "../pages/Management/ManagementOrder/DisplayOrder";
-
-//Managmenet Payment methods
+import ReturnPayPal from "../pages/ReturnPayPal";
+// PaymentMethod
 import CreatePaymentMethod from "../pages/Management/ManagmentPaymentMethod/CreatePaymentMethod";
 import DispalyPaymentMethod from "../pages/Management/ManagmentPaymentMethod/DispalyPaymentMethod";
 import UpdatePaymentMethod from "../pages/Management/ManagmentPaymentMethod/UpdatePaymentMethod";
 
+import { AnimatePresence, motion } from "framer-motion";
 import { ROLES } from "../utils/Role";
 
-
 export default function AppRouter() {
-  return (
-    <Routes>
-      <Route path="/login" element={<SignInSide />} />
-      <Route path="/SignUp" element={<SignUp />} />
-      <Route element={<PrivateRoute isPublic={true} />}>
-        <Route path="/" element={<MainLayout />}>
-          <Route
-            index
-            element={
-              <>
-                <AdsPanel />
-                <Panel />
-                <Home />
-              </>
-            }
-          />
-        </Route>
+const location = useLocation();
+
+return ( <AnimatePresence mode="wait"> <Routes location={location} key={location.pathname}>
+{/* صفحات عامة */}
+<Route
+path="/login"
+element={
+<motion.div
+initial={{ opacity: 0, y: 30 }}
+animate={{ opacity: 1, y: 0 }}
+exit={{ opacity: 0, y: -30 }}
+transition={{ duration: 0.35, ease: "easeInOut" }}
+> <SignInSide />
+</motion.div>
+}
+/>
+<Route
+path="/SignUp"
+element={
+<motion.div
+initial={{ opacity: 0, y: 30 }}
+animate={{ opacity: 1, y: 0 }}
+exit={{ opacity: 0, y: -30 }}
+transition={{ duration: 0.4 }}
+> <SignUp />
+</motion.div>
+}
+/>
+
+```
+    {/* صفحات المستخدم العامة */}
+    <Route element={<PrivateRoute isPublic={true} />}>
+      <Route
+        path="/"
+        element={
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35, ease: "easeInOut" }}
+
+          >
+            <MainLayout />
+          </motion.div>
+        }
+      >
+        <Route
+          index
+          element={
+            <>
+              <AdsPanel />
+              <Panel />
+              <Home />
+            </>
+          }
+        />
       </Route>
+    </Route>
 
-      <Route element={<PrivateRoute role={ROLES.USER} />}>
-        <Route path="/" element={<MainLayout />}>
-          <Route
-            index
-            element={
-              <>
-                <AdsPanel />
-                <Panel />
-                <Home />
-              </>
-            }
-          />
-          <Route path="product/:id" element={<ProductDetails />} />
-          <Route path="products/all" element={<Products />} />
-          <Route path="cart" element={<Cart />} />
-          <Route path="orders" element={<DisplayUserOrders />} />
-        </Route>
+    {/* صفحات المستخدم */}
+    <Route element={<PrivateRoute role={ROLES.USER} />}>
+      <Route
+        path="/"
+        element={
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35, ease: "easeInOut" }}
+
+          >
+            <MainLayout />
+          </motion.div>
+        }
+      >
+        <Route
+          index
+          element={
+            <>
+              <AdsPanel />
+              <Panel />
+              <Home />
+            </>
+          }
+        />
+        <Route
+          path="product/:id"
+          element={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.35, ease: "easeInOut" }}
+
+            >
+              <ProductDetails />
+            </motion.div>
+          }
+        />
+        <Route
+          path="products/all"
+          element={
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.35, ease: "easeInOut" }}
+
+            >
+              <Products />
+            </motion.div>
+          }
+        />
+        <Route path="cart" element={<Cart />} />
+        <Route path="orders" element={<DisplayUserOrders />} />
+        <Route path="ReturnPayPal" element={<ReturnPayPal />} />
       </Route>
-      <Route element={<PrivateRoute role={ROLES.ADMIN} />}>
-        <Route path="/System" element={<MainLayout />}>
-          <Route index element={<DispalyOrder />} />
-          {/* Managment Product */}
-          <Route path="product/create" element={<AddProduct />} />
-          <Route path="products" element={<DisplayProducts />} />
-          <Route path="product/edit/:id" element={<UpdateProduct />} />
-          {/* Role Managment */}
-          <Route path="role/create" element={<CreateRoleUi />} />
-          <Route path="role" element={<DispalyRole />} />
-          {/* // Group Managment */}
-          <Route path="groups" element={<DispalyGroup />} />
-          <Route path="group/create" element={<CreateGroup />} />
-          <Route path="group/edit/:id" element={<UpdateGroup />} />
-          <Route path="assgin/users/:id" element={<AssginUserToGroupUI />} />
-          <Route path="assgin/roles/:id" element={<AssginRoleToGroupUI />} />
-          {/* // User Managment */}
-          <Route path="users" element={<DisplayUsers />} />
-          <Route path="users/create" element={<CreateUser />} />
-          <Route path="user/edit/:id" element={<UpdateUser />} />
+    </Route>
 
-          {/* Managment Category */}
-          <Route path="categorys" element={<DispalyCategory />} />
-          <Route path="categorys/create" element={<CreateCategory />} />
-          <Route path="categorys/edit/:id" element={<UpdateCategory />} />
-          {/* Managment Category */}
-          <Route path="Brands" element={<DispalyBrand />} />
-          <Route path="Brands/create" element={<CreateBrand />} />
-          <Route path="Brands/edit/:id" element={<UpdateBrand />} />
-          {/* Managment Size */}
-          <Route path="Sizes" element={<DispalySize />} />
-          <Route path="Size/create" element={<CreateSize />} />
-          <Route path="Size/edit/:id" element={<UpdateSize />} />
-                    {/* Managment Taxes */}
-          <Route path="Taxes" element={<DispalyTaxes />} />
-          <Route path="Taxe/create" element={<CreateTaxes />} />
-          <Route path="Taxe/edit/:id" element={<UpdateTaxes />} />
-          {/* Managment PaymentMethod */}
-          <Route path="PaymentMethods" element={<DispalyPaymentMethod />} />
-          <Route path="PaymentMethod/create" element={<CreatePaymentMethod />} />
-          <Route path="PaymentMethod/edit/:id" element={<UpdatePaymentMethod />} />
-          {/* Managment TargetGroup */}
-          <Route path="TargetGroups" element={<DisplayTargetGroup />} />
-          <Route path="TargetGroup/create" element={<CreateTargetGroup />} />
-          <Route path="TargetGroup/:id" element={<UpdateTargetGroup />} />
+    {/* صفحات الإدارة */}
+    <Route element={<PrivateRoute role={ROLES.ADMIN} />}>
+      <Route
+        path="/System"
+        element={
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
 
-          {/* Management WhareHouse */}
-          <Route path="wareHouses" element={<DispalyWareHouse />} />
-          <Route path="wareHouse/create" element={<CreateWareHouse />} />
-          <Route path="wareHouse/:id" element={<UpdateWareHouse />} />
-          {/* Managment Inventory */}
-          <Route path="inventorys" element={<DispalyInventory />} />
-          <Route path="inventory/create" element={<CreateInventory />} />
-          <Route path="inventory/:id" element={<UpdateInventory />} />
-        </Route>
+          >
+            <MainLayout />
+          </motion.div>
+        }
+      >
+        <Route index element={<DispalyOrder />} />
+        <Route path="product/create" element={<AddProduct />} />
+        <Route path="products" element={<DisplayProducts />} />
+        <Route path="product/edit/:id" element={<UpdateProduct />} />
+        <Route path="role/create" element={<CreateRoleUi />} />
+        <Route path="role" element={<DispalyRole />} />
+        <Route path="groups" element={<DispalyGroup />} />
+        <Route path="group/create" element={<CreateGroup />} />
+        <Route path="group/edit/:id" element={<UpdateGroup />} />
+        <Route path="assgin/users/:id" element={<AssginUserToGroupUI />} />
+        <Route path="assgin/roles/:id" element={<AssginRoleToGroupUI />} />
+        <Route path="users" element={<DisplayUsers />} />
+        <Route path="users/create" element={<CreateUser />} />
+        <Route path="user/edit/:id" element={<UpdateUser />} />
+        <Route path="categorys" element={<DispalyCategory />} />
+        <Route path="categorys/create" element={<CreateCategory />} />
+        <Route path="categorys/edit/:id" element={<UpdateCategory />} />
+        <Route path="Brands" element={<DispalyBrand />} />
+        <Route path="Brands/create" element={<CreateBrand />} />
+        <Route path="Brands/edit/:id" element={<UpdateBrand />} />
+        <Route path="Sizes" element={<DispalySize />} />
+        <Route path="Size/create" element={<CreateSize />} />
+        <Route path="Size/edit/:id" element={<UpdateSize />} />
+        <Route path="Taxes" element={<DispalyTaxes />} />
+        <Route path="Taxe/create" element={<CreateTaxes />} />
+        <Route path="Taxe/edit/:id" element={<UpdateTaxes />} />
+        <Route path="PaymentMethods" element={<DispalyPaymentMethod />} />
+        <Route path="PaymentMethod/create" element={<CreatePaymentMethod />} />
+        <Route path="PaymentMethod/edit/:id" element={<UpdatePaymentMethod />} />
+        <Route path="TargetGroups" element={<DisplayTargetGroup />} />
+        <Route path="TargetGroup/create" element={<CreateTargetGroup />} />
+        <Route path="TargetGroup/:id" element={<UpdateTargetGroup />} />
+        <Route path="wareHouses" element={<DispalyWareHouse />} />
+        <Route path="wareHouse/create" element={<CreateWareHouse />} />
+        <Route path="wareHouse/:id" element={<UpdateWareHouse />} />
+        <Route path="inventorys" element={<DispalyInventory />} />
+        <Route path="inventory/create" element={<CreateInventory />} />
+        <Route path="inventory/:id" element={<UpdateInventory />} />
       </Route>
+    </Route>
 
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  );
+    <Route
+      path="*"
+      element={
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
+
+        >
+          <NotFound />
+        </motion.div>
+      }
+    />
+  </Routes>
+</AnimatePresence>
+
+
+);
 }

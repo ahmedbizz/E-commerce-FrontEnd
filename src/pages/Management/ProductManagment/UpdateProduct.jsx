@@ -84,13 +84,13 @@ export default function UpdateProduct() {
 
         setPreview(
           res.data.imageUrl
-            ? `https://localhost:7137/images/Products/${res.data.imageUrl}`
+            ? `${import.meta.env.VITE_BASE_URL}/images/Products/${res.data.imageUrl}`
             : null
         );
 
         setGalleryPreview(
           res.data.productImages?.map(
-            (img) => `https://localhost:7137/images/Products/${img.imageUrl}`
+            (img) => `${import.meta.env.VITE_BASE_URL}/images/Products/${img.imageUrl}`
           ) || []
         );
       } catch (error) {
@@ -277,7 +277,7 @@ export default function UpdateProduct() {
                   src={
                     preview ||
                     (formData.imageUrl
-                      ? `https://localhost:7137/images/Products/${formData.imageUrl}`
+                      ? `${import.meta.env.VITE_BASE_URL}/Products/${formData.imageUrl}`
                       : "/public/Images/AddPic.webp")
                   }
                   sx={{ width: "100%", height: "100%", transition: "0.3s" }}

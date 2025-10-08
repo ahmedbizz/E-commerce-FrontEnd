@@ -12,7 +12,6 @@ import {formatPrice} from "/src/utils/formatPrice"
 
 const ProductCard = React.memo(({ product }) =>{
   const navigate = useNavigate();
-console.log(product)
   return (
     <Card  className='Card-Product'>
 

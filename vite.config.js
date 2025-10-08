@@ -10,7 +10,11 @@ export default defineConfig({
     },
   },
   server: {
-    historyApiFallback: true,
+    host: true, // يسمح بالوصول من IP الجهاز
+    port: 5173,
+    strictPort: true,
+    historyApiFallback: true
   },
+  
 
 })

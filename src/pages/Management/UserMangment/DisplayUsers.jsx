@@ -290,7 +290,7 @@ const DisplayUsers = () => {
                     alt={item.fullName}
                     src={
                       item.imagePath
-                        ? `https://localhost:7137/images/Users/${item.imagePath}`
+                        ? `${import.meta.env.VITE_BASE_URL}/images/Users/${item.imagePath}`
                         : "/user-avatar.jpg"
                     }
                   />

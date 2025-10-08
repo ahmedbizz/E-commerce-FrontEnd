@@ -363,7 +363,7 @@ export default function ManageDashboard() {
                         alt={user.name}
                         src={
                           user.image
-                            ? `https://localhost:7137/images/Users/${user.image}`
+                            ? `${import.meta.env.VITE_BASE_URL}/images/Users/${user.image}`
                             : "/user-avatar.jpg"
                         }
                       />

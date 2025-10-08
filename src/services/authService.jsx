@@ -1,10 +1,9 @@
 import axios from "axios";
-const API_URL = "https://localhost:5013";
 import Cookies from "js-cookie";
 
 
 export const login = async (data) =>{
-  const res =  await axios.post(`${API_URL}/api/Account/login`, data);
+  const res =  await axios.post(`${import.meta.env.VITE_API_URL}/Account/login`, data);
   const token  = res.data.token
   
   if(token){
@@ -14,7 +13,7 @@ export const login = async (data) =>{
 }
 
 
-export const register = (data) => axios.post(`${API_URL}/api/Account/Register`, data, {
+export const register = (data) => axios.post(`${import.meta.env.VITE_API_URL}/Account/Register`, data, {
   headers: {
     "Content-Type": "multipart/form-data"
   }

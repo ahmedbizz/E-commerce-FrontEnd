@@ -38,9 +38,8 @@ import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import ShoppingBagOutlined from "@mui/icons-material/ShoppingBagOutlined";
 import LocalShippingOutlined from "@mui/icons-material/LocalShippingOutlined";
 import DensityMediumOutlined from "@mui/icons-material/DensityMediumOutlined";
-import { useMemo } from 'react';
+import { useMemo } from "react";
 import Cookies from "js-cookie";
-
 
 export default function Navbar() {
   const { i18n } = useTranslation();
@@ -62,8 +61,7 @@ export default function Navbar() {
   const fetchProducts = async (value) => {
     try {
       const res = await GetProducts();
-      console.log(res.data.items);
-      setAllProducts(res.data.items); 
+      setAllProducts(res.data.items);
       setFilter([]);
     } catch (err) {
       console.log(err);
@@ -74,7 +72,6 @@ export default function Navbar() {
     fetchProducts();
   }, []);
 
-
   const handleSearch = (event) => {
     setQuery(event.target.value);
   };
@@ -84,7 +81,7 @@ export default function Navbar() {
     async function fetchData() {
       try {
         const TargetGroup = await GetTargetGroups();
-      
+
         setTargetGroup(TargetGroup.data);
       } catch {
         setTargetGroup([]);
@@ -163,10 +160,9 @@ export default function Navbar() {
     setHoveredGroup(null);
   };
 
-
   const visibleProducts = useMemo(() => {
     if (!query) return []; // لا شيء قبل الكتابة
-    return allProducts.filter(product =>
+    return allProducts.filter((product) =>
       product.name.toLowerCase().includes(query.toLowerCase())
     );
   }, [query, allProducts]);
@@ -179,7 +175,8 @@ export default function Navbar() {
       } else {
         setIsScrolled(false);
       }
-    };    window.addEventListener("scroll", handleScroll);
+    };
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -193,12 +190,8 @@ export default function Navbar() {
       <AppBar
         className="AppBarHeader"
         position={isScrolled ? "fixed" : "static"}
-
       >
-        <Toolbar
-          className="Toolbar"
-        >
-        
+        <Toolbar className="Toolbar">
           <Box
             sx={{
               display: "flex",
@@ -207,41 +200,7 @@ export default function Navbar() {
               gap: 2,
             }}
           >
-            <List id="EN_AR_List" aria-label="Device settings">
-              <ListItemButton
-                id="lock-button"
-                aria-haspopup="listbox"
-                aria-controls="lock-menu"
-                aria-expanded={open ? "true" : undefined}
-                sx={{
-                  borderRadius: "10px",
-                }}
-                onClick={handleClickListItem}
-              >
-                <ListItemText secondary={options[selectedIndex]} />
-              </ListItemButton>
-            </List>
-            <Menu
-              id="lock-menu"
-              anchorEl={anchorElang}
-              open={open}
-              onClose={handleCloseElang}
-              MenuListProps={{
-                "aria-labelledby": "lock-button",
-                role: "listbox",
-              }}
-            >
-              {options.map((option, index) => (
-                <MenuItem
-                  key={option}
-                  selected={index === selectedIndex}
-                  onClick={(event) => handleMenuItemClick(event, index)}
-                  sx={{ fontSize: "10px" }}
-                >
-                  {option}
-                </MenuItem>
-              ))}
-            </Menu>
+  
             <Typography
               variant="h6"
               component={Link}
@@ -253,78 +212,81 @@ export default function Navbar() {
 
             {/* البحث */}
             <IconButton
-          onClick={(e) => setAnchorSearch(true)}
-                  size="large"
-                  color="inherit"
-                >
-
-                  <Search/>
-                </IconButton>
-
+              onClick={(e) => setAnchorSearch(true)}
+              size="large"
+              color="inherit"
+            >
+              <Search />
+            </IconButton>
           </Box>
-          {/* Brands */}
-          <Box>
-            <Box>
-              {(TargetGroupRes || []).map((group, index) => (
-                <Box
-                  key={index}
-                  onClick={(e) => handleOpenMNI(e, group)}
-                  sx={{ display: "inline-block", mx: 1 }}
-                >
-                  <Button
-                    color="inherit"
-                    sx={{
-                      height: "60px",
+        
+{/* Brands */}
+<Box>
+  <Box>
+    {(TargetGroupRes || []).map((group, index) => (
+      <Box
+        key={index}
+        sx={{ display: "inline-block", mx: 1 }}
+      >
+        <Button
+          color="inherit"
+          sx={{ height: "60px" }}
+          onClick={(e) => handleOpenMNI(e, group)}
+        >
+          {t(group.name)}
+        </Button>
+
+        <Popper
+          open={Boolean(anchorElMNI) && hoveredGroup === group}
+          anchorEl={anchorElMNI}
+          placement="bottom-start"
+          style={{ width: "100%" }}
+        >
+          <ClickAwayListener onClickAway={handleCloseMNI}>
+            <Paper elevation={3}>
+              {(Brands || []).map((item, index) => (
+                <MenuList key={index}>
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseMNI(); // أغلق القائمة أولاً
+                      handleBransClick(group, item); // ثم انتقل للصفحة
                     }}
                   >
-                    {t(group.name)}
-                  </Button>
+                    {item.name}
+                  </MenuItem>
 
-                  <Popper
-                    open={Boolean(anchorElMNI) && hoveredGroup === group}
-                    anchorEl={anchorElMNI}
-                    placement="bottom-start"
-                    style={{ width: "100%" }}
-                  >
-                    <ClickAwayListener onClickAway={handleCloseMNI}>
-                      <Paper elevation={3}>
-                        {(Brands || []).map((item, index) => (
-                          <MenuList key={index}>
-                            <MenuItem
-                              onClick={() => handleBransClick(group, item)}
-                            >
-                              {item.name}
-                            </MenuItem>
-                            {(item.categories || []).map((cate, index) => (
-                              <MenuList
-                                sx={{
-                                  paddingLeft: "30px",
-                                  "& .MuiMenuItem-root": {
-                                    display: "list-item",
-                                    listStyleType: "circle",
-                                    marginInline: "20px",
-                                  },
-                                }}
-                                key={index}
-                              >
-                                <MenuItem
-                                  onClick={() =>
-                                    handleCartegoryClick(cate, group, item)
-                                  }
-                                >
-                                  {cate.name}
-                                </MenuItem>
-                              </MenuList>
-                            ))}
-                          </MenuList>
-                        ))}
-                      </Paper>
-                    </ClickAwayListener>
-                  </Popper>
-                </Box>
+                  {(item.categories || []).map((cate, cIndex) => (
+                    <MenuList
+                      key={cIndex}
+                      sx={{
+                        paddingLeft: "30px",
+                        "& .MuiMenuItem-root": {
+                          display: "list-item",
+                          listStyleType: "circle",
+                          marginInline: "20px",
+                        },
+                      }}
+                    >
+                      <MenuItem
+                        onClick={() => {
+                          handleCloseMNI(); // أغلق القائمة أولاً
+                          handleCartegoryClick(cate, group, item); // ثم انتقل للصفحة
+                        }}
+                      >
+                        {cate.name}
+                      </MenuItem>
+                    </MenuList>
+                  ))}
+                </MenuList>
               ))}
-            </Box>
-          </Box>
+            </Paper>
+          </ClickAwayListener>
+        </Popper>
+      </Box>
+    ))}
+  </Box>
+</Box>
+
           {/* Profile */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             {/* صورة المستخدم وقائمة */}
@@ -338,7 +300,7 @@ export default function Navbar() {
                   color="inherit"
                 >
                   <Badge badgeContent={0} color="error">
-              <LocalShippingOutlined/>
+                    <LocalShippingOutlined />
                   </Badge>
                 </IconButton>
                 <IconButton
@@ -356,7 +318,9 @@ export default function Navbar() {
                     alt={user.name}
                     src={
                       user.image
-                        ? `${import.meta.env.VITE_BASE_URL}/images/Users/${user.image}`
+                        ? `${import.meta.env.VITE_BASE_URL}/images/Users/${
+                            user.image
+                          }`
                         : "/user-avatar.jpg"
                     }
                   />
@@ -439,20 +403,19 @@ export default function Navbar() {
 
               {/* هنا تقدر تعرض نتائج البحث */}
               <Box
-  sx={{
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-    gap: 16,
-    width: '100%',
-    maxHeight: 600,
-    overflowY: 'auto',
-  }}
->
-  {visibleProducts.map((product) => (
-    <ProductCard key={product.id} product={product} />
-  ))}
-</Box>
-
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+                  gap: 16,
+                  width: "100%",
+                  maxHeight: 600,
+                  overflowY: "auto",
+                }}
+              >
+                {visibleProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </Box>
             </Paper>
           </ClickAwayListener>
         </Popper>

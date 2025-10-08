@@ -265,7 +265,7 @@ export default function UpdateUser() {
                     preview
                       ? preview
                       : formData.imagePath
-                      ? `https://localhost:7137/images/Users/${formData.imagePath}`
+                      ? `${import.meta.env.VITE_BASE_URL}/images/Users/${formData.imagePath}`
                       : "/user-avatar.jpg"
                   }
                   sx={{

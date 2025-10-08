@@ -84,7 +84,6 @@ export default function ProductDetails() {
     GetProductById(id)
       .then((res) => {
         setProduct(res.data);
-        console.log(res.data)
         setcurrentImage(res.data.imageUrl);
         setLoading(false);
       })
@@ -139,11 +138,22 @@ export default function ProductDetails() {
   if (loading)
     return (
       <Box
-        sx={{ display: "flex", justifyContent: "center", marginTop: 4 }}
-        aria-label="loading"
-      >
-        <CircularProgress />
-      </Box>
+      sx={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        backgroundColor: "rgba(30, 30, 30, 0.7)", // غطاء شفاف
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 2000, // فوق كل العناصر
+        backdropFilter: "blur(3px)", // يعطي تأثير ضبابي جميل
+      }}
+    >
+      <CircularProgress size={70} thickness={4} color="primary" />
+    </Box>
     );
 
   if (!product)
@@ -205,6 +215,7 @@ export default function ProductDetails() {
         <img
           style={{
             position:"relative"
+            ,cursor:"pointer"
           }}
           component="img"
           src={`${import.meta.env.VITE_BASE_URL}/images/Products/${currentImage}`}
@@ -252,6 +263,7 @@ export default function ProductDetails() {
                     borderRadius: "15px",
                     objectFit: "cover",
                     transition: "transform 0.3s ease",
+                    cursor:"pointer"
                   }}
                 />
               

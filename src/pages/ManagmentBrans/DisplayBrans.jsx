@@ -284,7 +284,7 @@ const DispalyBrand = () => {
                     }}
                     src={
                       item.imageUrl
-                        ? `https://localhost:7137/images/Brands/${item.imageUrl}`
+                        ? `${import.meta.env.VITE_BASE_URL}/images/Brands/${item.imageUrl}`
                         : "/public/Images/AddPic.webp"
                     }
                   />

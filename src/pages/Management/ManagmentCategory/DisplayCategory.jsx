@@ -285,7 +285,7 @@ const DispalyCategory = () => {
                     }}
                     src={
                       item.imageUrl
-                        ? `https://localhost:7137/images/Categorys/${item.imageUrl}`
+                        ? `${import.meta.env.VITE_BASE_URL}/images/Categorys/${item.imageUrl}`
                         : "/public/Images/AddPic.webp"
                     }
                   />

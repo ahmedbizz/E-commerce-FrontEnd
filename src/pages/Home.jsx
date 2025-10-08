@@ -59,9 +59,23 @@ export default function Home() {
   return (
     <Box className="ads-container-home">
       {loading ? (
-        <Grid container justifyContent="center" mt={4}>
-          <CircularProgress />
-        </Grid>
+    <Box
+    sx={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(30, 30, 30, 0.7)", // غطاء شفاف
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 2000, // فوق كل العناصر
+      backdropFilter: "blur(3px)", // يعطي تأثير ضبابي جميل
+    }}
+  >
+    <CircularProgress size={70} thickness={4} color="primary" />
+  </Box>
       ) : (
         <>
           <Box className="Button_titel_Panel">
