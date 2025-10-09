@@ -26,12 +26,6 @@ main {
           box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3) !important;
 }
 
-@media (max-width: 600px) {
-  .AppBarHeader {
-    display: none;
-  }
-}
-
 .AppBarHeader .Toolbar {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -42,39 +36,216 @@ main {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  padding: 0 24px;
 }
 
-.AppBarHeader .MuiOutlinedInput-root {
-  border-radius: 30px;
-  background-color: #f5f5f5;
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-  max-width: 200px;
-  max-height: 40px;
-}
-
-.AppBarHeader .MuiOutlinedInput-root:hover {
-  background-color: #e0e0e0;
-}
-
-.AppBarHeader .MuiOutlinedInput-root.Mui-focused {
-  background-color: #fff;
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-}
-
-.AppBarHeader .MuiOutlinedInput-root .search-input {
-  padding-left: 10px;
-}
-
-.AppBarHeader .MuiOutlinedInput-root .search-icon {
-  color: #888;
+.AppBarHeader .button {
+  font-weight: 600;
+  font-size: 1rem;
   -webkit-transition: color 0.3s ease;
   transition: color 0.3s ease;
 }
 
-.AppBarHeader .Mui-focused .search-icon {
-  color: rgba(106, 146, 146, 0.4);
+.AppBarHeader .button:hover {
+  color: #ffcc00;
+}
+
+.DropDownBox {
+  width: 100%;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  border-radius: 8px;
+  -webkit-box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  padding: 12px 16px;
+  z-index: 3000 !important;
+  -webkit-animation: dropFade 0.25s ease;
+          animation: dropFade 0.25s ease;
+}
+
+@-webkit-keyframes dropFade {
+  from {
+    opacity: 0;
+    -webkit-transform: translateY(10px);
+            transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
+@keyframes dropFade {
+  from {
+    opacity: 0;
+    -webkit-transform: translateY(10px);
+            transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+}
+
+.brand-item {
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.brand-item:last-child {
+  border-bottom: none;
+}
+
+.brand-item .brand-title {
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+}
+
+.brand-item .brand-title:hover {
+  color: #1976d2;
+}
+
+.brand-item .category-item {
+  font-size: 0.9rem;
+  color: #666;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.brand-item .category-item:hover {
+  color: #1976d2;
+}
+
+.TargetGroupRes {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.TargetGroupRes > div {
+  position: relative;
+  margin: 0 16px;
+}
+
+.TargetGroupRes > div .DropDownBox {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: rgba(25, 25, 25, 0.96);
+  border-radius: 10px;
+  padding: 12px 18px;
+  min-width: 230px;
+  -webkit-box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  z-index: 2000;
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  opacity: 0;
+  -webkit-transform: translateY(-10px);
+          transform: translateY(-10px);
+  pointer-events: none;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.TargetGroupRes > div .DropDownBox .brand-item {
+  margin-bottom: 8px;
+}
+
+.TargetGroupRes > div .DropDownBox .brand-item .brand-title {
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  -webkit-transition: color 0.3s;
+  transition: color 0.3s;
+}
+
+.TargetGroupRes > div .DropDownBox .brand-item .brand-title:hover {
+  color: #ffcc00;
+}
+
+.TargetGroupRes > div .DropDownBox .brand-item .category-item {
+  margin-left: 16px;
+  font-size: 0.9rem;
+  color: #ccc;
+  cursor: pointer;
+  -webkit-transition: color 0.3s;
+  transition: color 0.3s;
+}
+
+.TargetGroupRes > div .DropDownBox .brand-item .category-item:hover {
+  color: #ffcc00;
+}
+
+.TargetGroupRes > div:hover .DropDownBox {
+  opacity: 1;
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
+  pointer-events: auto;
+}
+
+.Search-Box {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+}
+
+.Search-Box .Typography {
+  color: #1976d2;
+}
+
+.Search-Box .MuiOutlinedInput-root {
+  background: #fff;
+  border-radius: 8px;
+}
+
+.Search-Box .Icon-button {
+  color: #333;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.Search-Box .Icon-button:hover {
+  color: #1976d2;
+}
+
+.MuiAvatar-root {
+  border: 2px solid #ffcc00;
+  -webkit-transition: -webkit-transform 0.3s;
+  transition: -webkit-transform 0.3s;
+  transition: transform 0.3s;
+  transition: transform 0.3s, -webkit-transform 0.3s;
+}
+
+.MuiAvatar-root:hover {
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
+}
+
+.AppBarHeader.Mui-fixed {
+  background: rgba(20, 20, 20, 0.95);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .MobileHeader {
@@ -220,7 +391,7 @@ main {
 }
 
 .MuiMenu-paper {
-  background: rgba(30, 30, 30, 0.7) !important;
+  background: #1e1e1e !important;
   backdrop-filter: blur(12px) saturate(150%) !important;
   -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
   border-radius: 14px !important;
@@ -1165,63 +1336,126 @@ body.dark .Card {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  -ms-flex-item-align: center;
-      align-self: center;
-  padding-bottom: 10px;
-  width: 300px;
-  -webkit-box-shadow: rgba(9, 11, 17, 0.05) 0px 5px 15px 0px, rgba(19, 23, 32, 0.05) 0px 15px 35px -5px;
-          box-shadow: rgba(9, 11, 17, 0.05) 0px 5px 15px 0px, rgba(19, 23, 32, 0.05) 0px 15px 35px -5px;
-  /* Dark mode */
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  max-width: 320px;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: #fff;
+  -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08), 0 8px 25px rgba(0, 0, 0, 0.05);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08), 0 8px 25px rgba(0, 0, 0, 0.05);
+  position: relative;
+  -webkit-transition: -webkit-transform 0.3s ease;
+  transition: -webkit-transform 0.3s ease;
+  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, -webkit-transform 0.3s ease;
+  height: 420px;
 }
 
-.Card-Product img {
+.Card-Product .CardMedia {
+  position: relative;
   width: 100%;
-  height: 400px;
+  height: 250px;
+  overflow: hidden;
+  -webkit-transition: -webkit-transform 0.5s ease;
+  transition: -webkit-transform 0.5s ease;
+  transition: transform 0.5s ease;
+  transition: transform 0.5s ease, -webkit-transform 0.5s ease;
+}
+
+.Card-Product .CardMedia img {
+  width: 100%;
+  height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
+  -webkit-transition: -webkit-transform 0.5s ease;
+  transition: -webkit-transform 0.5s ease;
+  transition: transform 0.5s ease;
+  transition: transform 0.5s ease, -webkit-transform 0.5s ease;
+}
+
+.Card-Product .CardMedia:hover {
   cursor: pointer;
 }
 
+.Card-Product .CardMedia:hover img {
+  -webkit-transform: scale(1.2);
+          transform: scale(1.2);
+}
+
 .Card-Product .CardContent {
-  background-color: white;
-  height: 100px;
+  padding: 10px;
+  width: 90%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 8px;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -webkit-transition: opacity 0.3s ease, -webkit-transform 0.3s ease;
+  transition: opacity 0.3s ease, -webkit-transform 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease, -webkit-transform 0.3s ease;
 }
 
 .Card-Product .CardContent .title {
-  height: 30%;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #222;
 }
 
 .Card-Product .CardContent .Description {
-  height: 30%;
+  font-size: 0.9rem;
+  color: #666;
 }
 
 .Card-Product .CardContent .Price {
-  height: 20%;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #007bff;
+  margin-top: auto;
 }
 
-@media (max-width: 1100px) and (min-width: 600px) {
+.Card-Product .CardMedia:hover + .CardContent {
+  display: none;
+}
+
+.Card-Product .CardMedia:hover {
+  height: 100%;
+}
+
+.Card-Product .CardMedia:hover img {
+  height: 100%;
+}
+
+@media (min-width: 1200px) {
   .Card-Product {
-    width: 100%;
-    height: 530px;
+    max-width: 350px;
   }
-  .Card-Product img {
-    width: 100%;
-    height: 400px;
-    -o-object-fit: cover;
-       object-fit: cover;
+}
+
+@media (max-width: 992px) {
+  .Card-Product {
+    max-width: 300px;
   }
 }
 
 @media (max-width: 600px) {
   .Card-Product {
-    width: 90%;
-    height: 520px;
+    max-width: 90%;
   }
 }
 
 body.dark .Card-Product {
-  -webkit-box-shadow: rgba(9, 11, 17, 0.5) 0px 5px 15px 0px, rgba(19, 23, 32, 0.08) 0px 15px 35px -5px;
-          box-shadow: rgba(9, 11, 17, 0.5) 0px 5px 15px 0px, rgba(19, 23, 32, 0.08) 0px 15px 35px -5px;
+  background-color: #1e1e1e;
+  color: #f0f0f0;
 }
 
 /* =========================== Products Container =========================== */

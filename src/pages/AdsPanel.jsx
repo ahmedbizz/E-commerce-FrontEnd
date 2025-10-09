@@ -1,4 +1,5 @@
-import React from "react";
+
+import { useState, useEffect } from "react";
 import Slider from "react-slick";
 import { Box,Button,Grid  } from "@mui/material";
 
@@ -8,7 +9,8 @@ const images = [
   "../../public/Images/pexels-marcus-queiroga-silva-86421404-12363437.jpg",
   "../../public/Images/pexels-wesleydavi-15336560.jpg",
 ];
-
+import { GetProducts } from "../services/productService";
+import { GetBrands } from "../services/BransService";
 export default function AdsPanel() {
   const settings = {
   
@@ -20,14 +22,27 @@ export default function AdsPanel() {
     autoplay: true,
     autoplaySpeed: 3000,
   };
+  const [images, setimages] = useState([]);
 
+  const fetchProducts = async (page = 1) => {
+    try {
+      const res = await GetBrands();
+    
+      setimages(res.data.items);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    fetchProducts();
+  }, []);
   return (
     <Box className="ads-container">
       <Slider   {...settings}>
         {images.map((img, index) => (
           <Box className="slide" key={index}>
             <img
-              src={img}
+              src={`${import.meta.env.VITE_BASE_URL}/images/Brands/${img.imageUrl}`}
               alt={`Ad ${index + 1}`}
               style={{ width: "100%", height:"100%"}}
             />

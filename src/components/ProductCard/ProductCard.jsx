@@ -14,8 +14,10 @@ const ProductCard = React.memo(({ product }) =>{
   const navigate = useNavigate();
   return (
     <Card  className='Card-Product'>
-
-      <img src={`${import.meta.env.VITE_BASE_URL}/images/Products/${product.imageUrl}`} alt={product.name}   onClick={()=>navigate(`/product/${product.id}`)} />
+<CardMedia className='CardMedia'>
+<img src={`${import.meta.env.VITE_BASE_URL}/images/Products/${product.imageUrl}`} alt={product.name}   onClick={()=>navigate(`/product/${product.id}`)} />
+</CardMedia>
+    
       <CardContent className='CardContent'>
         <Typography gutterBottom variant="h6" component="div" noWrap className='title'>
           {product.name}

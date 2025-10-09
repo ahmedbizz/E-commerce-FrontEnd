@@ -1,5 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
-
+import React, { useEffect, useContext, useState, useMemo } from "react";
 import {
   AppBar,
   Toolbar,
@@ -10,8 +9,6 @@ import {
   MenuItem,
   Avatar,
   Box,
-  ListItemButton,
-  ListItemText,
   TextField,
   InputAdornment,
   Button,
@@ -19,188 +16,147 @@ import {
   Paper,
   ClickAwayListener,
   MenuList,
-  List,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+
+import {
+  Search as SearchIcon,
+  ShoppingBagOutlined,
+  LocalShippingOutlined,
+  Close,
+  Check,
+} from "@mui/icons-material";
+
 import { AuthContext } from "../../context/AuthContext";
 import { CartContext } from "../../context/CartContext";
 import { useTranslation } from "react-i18next";
 import { GetTargetGroups } from "../../services/TargetGroupService";
 import { GetBrandByType } from "../../services/BransService";
-import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { GetProducts } from "../../services/productService";
+import { useNavigate, Link } from "react-router-dom";
 import ProductCard from "../../components/ProductCard/ProductCard";
-import Close from "@mui/icons-material/Close";
-import Check from "@mui/icons-material/Check";
-import Search from "@mui/icons-material/Search";
-import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
-import ShoppingBagOutlined from "@mui/icons-material/ShoppingBagOutlined";
-import LocalShippingOutlined from "@mui/icons-material/LocalShippingOutlined";
-import DensityMediumOutlined from "@mui/icons-material/DensityMediumOutlined";
-import { useMemo } from "react";
 import Cookies from "js-cookie";
 
 export default function Navbar() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const { user, logoutUser } = useContext(AuthContext);
   const { cartItems } = useContext(CartContext);
+
   const [anchorEl, setAnchorEl] = useState(null);
-  const [anchorElang, setAnchorElang] = useState(null);
+  const [anchorElLang, setAnchorElLang] = useState(null);
   const [anchorSearch, setAnchorSearch] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
-  const [TargetGroupRes, setTargetGroup] = useState([]);
-  const [Brands, setBrands] = useState([]);
-  const [Filter, setFilter] = useState([]);
+
+  const [targetGroups, setTargetGroups] = useState([]);
+  const [brands, setBrands] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
-
   const [query, setQuery] = useState("");
-
-  const fetchProducts = async (value) => {
-    try {
-      const res = await GetProducts();
-      setAllProducts(res.data.items);
-      setFilter([]);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const handleSearch = (event) => {
-    setQuery(event.target.value);
-  };
-
-  //  for loadeing Tagrget Group List
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const TargetGroup = await GetTargetGroups();
-
-        setTargetGroup(TargetGroup.data);
-      } catch {
-        setTargetGroup([]);
-      }
-    }
-    fetchData();
-  }, []);
-
-  const handleBransClick = (group, brand) => {
-    const params = new URLSearchParams();
-    params.set("brandId", brand.id);
-    params.set("groupId", group.id);
-    navigate(`products/all?${params.toString()}`);
-  };
-
-  const handleCartegoryClick = (cate, group, brand) => {
-    const params = new URLSearchParams();
-    params.set("brandId", brand.id);
-    params.set("groupId", group.id);
-    params.set("categoryId", cate.id);
-    navigate(`products/all?${params.toString()}`);
-  };
-
-  // to cahange langueg
-  const options = ["AR", "ENG"];
-  const handleMenuItemClick = (event, index) => {
-    setSelectedIndex(index);
-    Cookies.set("language", index, { expires: 7, secure: true });
-    setAnchorEl(null);
-    if (index === 0) {
-      i18n.changeLanguage("ar");
-    } else {
-      i18n.changeLanguage("en");
-    }
-  };
-  const open = Boolean(anchorElang);
-  const handleClickListItem = (event) => {
-    setAnchorElang(event.currentTarget);
-  };
-  const handleCloseElang = () => {
-    setAnchorElang(null);
-  };
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handleCloseSearch = () => {
-    setAnchorSearch(null);
-  };
-  const handleLogout = () => {
-    logoutUser();
-    handleClose();
-  };
-
   const [anchorElMNI, setAnchorElMNI] = useState(null);
   const [hoveredGroup, setHoveredGroup] = useState(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const handleOpenMNI = (event, group) => {
-    const getBrans = async () => {
+  // 🟢 تحميل المنتجات
+  useEffect(() => {
+    (async () => {
       try {
-        var res = await GetBrandByType(group.id);
-        setBrands(res.data.brands);
+        const res = await GetProducts();
+        setAllProducts(res.data.items);
       } catch (err) {
-        setBrands([]);
+        console.error(err);
       }
-    };
-    setAnchorElMNI(event.currentTarget);
-    setHoveredGroup(group);
-    getBrans();
+    })();
+  }, []);
+
+  // 🟢 تحميل المجموعات
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await GetTargetGroups();
+        setTargetGroups(res.data);
+      } catch {
+        setTargetGroups([]);
+      }
+    })();
+  }, []);
+
+  // 🔍 البحث عن المنتجات
+  const visibleProducts = useMemo(() => {
+    if (!query) return [];
+    return allProducts.filter((p) =>
+      p.name.toLowerCase().includes(query.toLowerCase())
+    );
+  }, [query, allProducts]);
+
+  const handleSearchChange = (e) => setQuery(e.target.value);
+  const handleCloseSearch = () => setAnchorSearch(null);
+
+  // 🟢 التبديل بين اللغات
+  const handleLanguageChange = (event, index) => {
+    setSelectedIndex(index);
+    Cookies.set("language", index, { expires: 7, secure: true });
+    setAnchorElLang(null);
+    i18n.changeLanguage(index === 0 ? "ar" : "en");
   };
 
-  const handleCloseMNI = () => {
+  // 🟢 القائمة المنسدلة
+  const handleOpenMenu = (event, group) => {
+    setAnchorElMNI(event.currentTarget);
+    setHoveredGroup(group);
+
+    (async () => {
+      try {
+        const res = await GetBrandByType(group.id);
+        setBrands(res.data.brands);
+      } catch {
+        setBrands([]);
+      }
+    })();
+  };
+
+  const handleCloseMenu = () => {
     setAnchorElMNI(null);
     setHoveredGroup(null);
   };
 
-  const visibleProducts = useMemo(() => {
-    if (!query) return []; // لا شيء قبل الكتابة
-    return allProducts.filter((product) =>
-      product.name.toLowerCase().includes(query.toLowerCase())
-    );
-  }, [query, allProducts]);
-  const [isScrolled, setIsScrolled] = useState(false);
+  // 🟢 التنقل إلى الصفحة المناسبة
+  const handleBrandClick = (group, brand) => {
+    const params = new URLSearchParams({ brandId: brand.id, groupId: group.id });
+    navigate(`products/all?${params.toString()}`);
+  };
 
+  const handleCategoryClick = (cate, group, brand) => {
+    const params = new URLSearchParams({
+      brandId: brand.id,
+      groupId: group.id,
+      categoryId: cate.id,
+    });
+    navigate(`products/all?${params.toString()}`);
+  };
+
+  // 🟢 تسجيل الخروج
+  const handleLogout = () => {
+    logoutUser();
+    setAnchorEl(null);
+  };
+
+  // 🟢 تأثير عند التمرير
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    const onScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <Box>
-      {/* headar 1 section  */}
-      <Box className="Box_header_1" sx={{ height: "65px" }}></Box>
+      <Box sx={{ height: "65px" }} />
+
       <AppBar
         className="AppBarHeader"
         position={isScrolled ? "fixed" : "static"}
       >
         <Toolbar className="Toolbar">
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 2,
-            }}
-          >
-  
+          {/* 🔸 الشعار والبحث */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Typography
               variant="h6"
               component={Link}
@@ -209,217 +165,160 @@ export default function Navbar() {
             >
               {t("Home")}
             </Typography>
-
-            {/* البحث */}
-            <IconButton
-              onClick={(e) => setAnchorSearch(true)}
-              size="large"
-              color="inherit"
-            >
-              <Search />
+            <IconButton onClick={() => setAnchorSearch(true)} color="inherit">
+              <SearchIcon />
             </IconButton>
           </Box>
-        
-{/* Brands */}
-<Box>
-  <Box>
-    {(TargetGroupRes || []).map((group, index) => (
-      <Box
-        key={index}
-        sx={{ display: "inline-block", mx: 1 }}
-      >
-        <Button
-          color="inherit"
-          sx={{ height: "60px" }}
-          onClick={(e) => handleOpenMNI(e, group)}
-        >
-          {t(group.name)}
-        </Button>
 
-        <Popper
-          open={Boolean(anchorElMNI) && hoveredGroup === group}
-          anchorEl={anchorElMNI}
-          placement="bottom-start"
-          style={{ width: "100%" }}
-        >
-          <ClickAwayListener onClickAway={handleCloseMNI}>
-            <Paper elevation={3}>
-              {(Brands || []).map((item, index) => (
-                <MenuList key={index}>
-                  <MenuItem
-                    onClick={() => {
-                      handleCloseMNI(); // أغلق القائمة أولاً
-                      handleBransClick(group, item); // ثم انتقل للصفحة
-                    }}
-                  >
-                    {item.name}
-                  </MenuItem>
+          {/* 🔸 المجموعات */}
+          <Box className="TargetGroupRes">
+  {targetGroups.map((group, i) => (
+    <Box
+      key={i}
+      sx={{ position: "relative", display: "inline-block", mx: 3 }}
+      onMouseEnter={(e) => handleOpenMenu(e, group)}
+      onMouseLeave={handleCloseMenu}
+    >
+      <Button color="inherit" className="button">
+        {t(group.name)}
+      </Button>
 
-                  {(item.categories || []).map((cate, cIndex) => (
-                    <MenuList
-                      key={cIndex}
-                      sx={{
-                        paddingLeft: "30px",
-                        "& .MuiMenuItem-root": {
-                          display: "list-item",
-                          listStyleType: "circle",
-                          marginInline: "20px",
-                        },
-                      }}
-                    >
-                      <MenuItem
-                        onClick={() => {
-                          handleCloseMNI(); // أغلق القائمة أولاً
-                          handleCartegoryClick(cate, group, item); // ثم انتقل للصفحة
-                        }}
-                      >
-                        {cate.name}
-                      </MenuItem>
-                    </MenuList>
-                  ))}
-                </MenuList>
-              ))}
-            </Paper>
-          </ClickAwayListener>
-        </Popper>
-      </Box>
-    ))}
-  </Box>
+      {/* القائمة المنسدلة (بدون Popper) */}
+
+    </Box>
+  ))}
 </Box>
 
-          {/* Profile */}
+
+          {/* 🔸 المستخدم */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            {/* صورة المستخدم وقائمة */}
             {user ? (
               <>
-                {/* أيقونة السلة */}
-                <IconButton
-                  component={Link}
-                  to="/orders"
-                  size="large"
-                  color="inherit"
-                >
+                <IconButton component={Link} to="/orders" color="inherit">
                   <Badge badgeContent={0} color="error">
                     <LocalShippingOutlined />
                   </Badge>
                 </IconButton>
-                <IconButton
-                  component={Link}
-                  to="/cart"
-                  size="large"
-                  color="inherit"
-                >
+
+                <IconButton component={Link} to="/cart" color="inherit">
                   <Badge badgeContent={cartItems.length} color="error">
                     <ShoppingBagOutlined />
                   </Badge>
                 </IconButton>
-                <IconButton onClick={handleMenu} size="large" sx={{ p: 0 }}>
+
+                <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
                   <Avatar
                     alt={user.name}
                     src={
                       user.image
-                        ? `${import.meta.env.VITE_BASE_URL}/images/Users/${
-                            user.image
-                          }`
+                        ? `${import.meta.env.VITE_BASE_URL}/images/Users/${user.image}`
                         : "/user-avatar.jpg"
                     }
                   />
                 </IconButton>
+
                 <Menu
                   anchorEl={anchorEl}
                   open={Boolean(anchorEl)}
-                  onClose={handleClose}
+                  onClose={() => setAnchorEl(null)}
                 >
-                  <MenuItem
-                    component={Link}
-                    to="/profile"
-                    onClick={handleClose}
-                  >
+                  <MenuItem component={Link} to="/profile">
                     {t("Profile")}
                   </MenuItem>
-                  <MenuItem onClick={handleLogout}> {t("Logout")}</MenuItem>
+                  <MenuItem onClick={handleLogout}>{t("Logout")}</MenuItem>
                 </Menu>
               </>
             ) : (
-              <Link
-                to="/login"
-                style={{ color: "white", textDecoration: "none" }}
-              >
+              <Link to="/login" style={{ color: "white", textDecoration: "none" }}>
                 {t("Login")}
               </Link>
             )}
           </Box>
         </Toolbar>
       </AppBar>
-      <Box>
-        <Popper
-          open={Boolean(anchorSearch)}
-          anchorEl={anchorSearch}
-          placement="bottom-start"
-          sx={{ width: "100%", zIndex: 1300 }}
-        >
-          <ClickAwayListener onClickAway={handleCloseSearch}>
-            <Paper
-              elevation={4}
+      {hoveredGroup && (
+        <Box className="DropDownBox">
+          {brands.map((brand, j) => (
+            <Box key={j} className="brand-item">
+              <Box
+                className="brand-title"
+                onClick={() => handleBrandClick(hoveredGroup, brand)}
+              >
+                {brand.name}
+              </Box>
+
+              {brand.categories?.map((cate, k) => (
+                <Box
+                  key={k}
+                  className="category-item"
+                  onClick={() => handleCategoryClick(cate, hoveredGroup, brand)}
+                >
+                  {cate.name}
+                </Box>
+              ))}
+            </Box>
+          ))}
+        </Box>
+      )}
+      {/* 🔍 البحث */}
+      <Popper
+        open={Boolean(anchorSearch)}
+        anchorEl={anchorSearch}
+        placement="bottom-start"
+        sx={{ width: "100%", zIndex: 1300 }}
+      >
+        <ClickAwayListener onClickAway={handleCloseSearch}>
+          <Paper
+            elevation={4}
+            sx={{
+              p: 2,
+              bgcolor: "background.paper",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            <Box className="Search-Box">
+              <Typography className="Typography">
+                <Check />
+              </Typography>
+              <TextField
+                variant="outlined"
+                placeholder={t("Search")}
+                onChange={handleSearchChange}
+                fullWidth
+                size="small"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon color="action" />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <IconButton onClick={handleCloseSearch}>
+                <Close />
+              </IconButton>
+            </Box>
+
+            <Box
               sx={{
-                p: 2,
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+                gap: 2,
                 width: "100%",
-                bgcolor: "background.paper",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
+                maxHeight: 600,
+                overflowY: "auto",
               }}
             >
-              {/* حقل البحث */}
-
-              <Box className="Search-Box">
-                <Typography className="Typography">
-                  <Check />
-                </Typography>
-                <TextField
-                  variant="outlined"
-                  placeholder={t("Search")}
-                  onChange={(e) => handleSearch(e)}
-                  fullWidth
-                  size="small"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon color="action" />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-
-                <IconButton
-                  className="Icon-button"
-                  variant="contained"
-                  onClick={() => setAnchorSearch(false)}
-                >
-                  <Close />
-                </IconButton>
-              </Box>
-
-              {/* هنا تقدر تعرض نتائج البحث */}
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-                  gap: 16,
-                  width: "100%",
-                  maxHeight: 600,
-                  overflowY: "auto",
-                }}
-              >
-                {visibleProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </Box>
-            </Paper>
-          </ClickAwayListener>
-        </Popper>
-      </Box>
+              {visibleProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </Box>
+          </Paper>
+        </ClickAwayListener>
+      </Popper>
     </Box>
   );
 }

@@ -15,56 +15,192 @@ main {
 
 /* =========================== AppBar Header =========================== */
 .AppBarHeader {
-  @media (max-width:600px) {
-  
-    display: none;
-  
-    
-  }
   background: rgba(0, 0, 0, 0.25) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
   backdrop-filter: blur(12px) saturate(160%) !important;
   -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3) !important;
 
-  .Toolbar{
+  .Toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
+    padding: 0 24px;
   }
-  .MuiOutlinedInput-root {
-    border-radius: 30px;
-    background-color: #f5f5f5;
-    transition: all 0.3s ease;
-    max-width: 200px;
-    max-height: 40px;
+
+  .button {
+    font-weight: 600;
+    font-size: 1rem;
+    transition: color 0.3s ease;
 
     &:hover {
-      background-color: #e0e0e0;
-    }
-
-    &.Mui-focused {
-      background-color: #fff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-    }
-
-    .search-input {
-      padding-left: 10px;
-    }
-
-    .search-icon {
-      color: #888;
-      transition: color 0.3s ease;
+      color: #ffcc00;
     }
   }
-
-  .Mui-focused .search-icon {
-    color: rgba(106, 146, 146, 0.4);
-  }
-
-
 }
+
+// القائمة المنسدلة
+.DropDownBox {
+
+  width: 100%;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  padding: 12px 16px;
+  z-index: 3000 !important; // أعلى من AppBar
+
+  animation: dropFade 0.25s ease;
+}
+
+@keyframes dropFade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.brand-item {
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .brand-title {
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    &:hover {
+      color: #1976d2;
+    }
+  }
+
+  .category-item {
+    font-size: 0.9rem;
+    color: #666;
+    margin-left: 10px;
+    cursor: pointer;
+    &:hover {
+      color: #1976d2;
+    }
+  }
+}
+
+.TargetGroupRes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > div {
+    position: relative;
+    margin: 0 16px;
+
+    .DropDownBox {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: rgba(25, 25, 25, 0.96);
+      border-radius: 10px;
+      padding: 12px 18px;
+      min-width: 230px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      z-index: 2000;
+      backdrop-filter: blur(10px);
+
+      // الحركة الافتراضية
+      opacity: 0;
+      transform: translateY(-10px);
+      pointer-events: none;
+      transition: all 0.3s ease;
+
+      .brand-item {
+        margin-bottom: 8px;
+
+        .brand-title {
+          font-weight: 600;
+          cursor: pointer;
+          color: #fff;
+          transition: color 0.3s;
+
+          &:hover {
+            color: #ffcc00;
+          }
+        }
+
+        .category-item {
+          margin-left: 16px;
+          font-size: 0.9rem;
+          color: #ccc;
+          cursor: pointer;
+          transition: color 0.3s;
+
+          &:hover {
+            color: #ffcc00;
+          }
+        }
+      }
+    }
+
+    // عند تمرير الماوس على الزر
+    &:hover .DropDownBox {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  }
+}
+
+// البحث المنبثق
+.Search-Box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+
+  .Typography {
+    color: #1976d2;
+  }
+
+  .MuiOutlinedInput-root {
+    background: #fff;
+    border-radius: 8px;
+  }
+
+  .Icon-button {
+    color: #333;
+    transition: all 0.3s;
+
+    &:hover {
+      color: #1976d2;
+    }
+  }
+}
+
+// الصورة الرمزية والمستخدم
+.MuiAvatar-root {
+  border: 2px solid #ffcc00;
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+// تحسين عند التمرير (scrolled)
+.AppBarHeader.Mui-fixed {
+  background: rgba(20, 20, 20, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
 
 // =========================== Mobile Header =============================
 
@@ -189,7 +325,7 @@ main {
 }
 
 .MuiMenu-paper {
-  background: rgba(30, 30, 30, 0.7) !important;
+  background: rgba(30, 30, 30, 7) !important;
   backdrop-filter: blur(12px) saturate(150%) !important;
   -webkit-backdrop-filter: blur(12px) saturate(150%) !important;
   border-radius: 14px !important;
@@ -943,59 +1079,76 @@ main {
 .Card-Product {
   display: flex;
   flex-direction: column;
-  align-self: center;
-  padding-bottom: 10px;
-  width: 300px;
-  box-shadow:
-    hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px,
-    hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px;
-img{
+  align-items: center;
   width: 100%;
-  height: 400px;
-  object-fit: cover;
-  cursor: pointer;
-  
-}
-  .CardContent {
-    background-color: white;
-    height: 100px;
+  max-width: 320px;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08), 0 8px 25px rgba(0,0,0,0.05);
+  position: relative;
+  transition: transform 0.3s ease;
+  height: 420px; // 👈 هذا يحافظ على ثبات الكارد مهما تغيّر المحتوى أو الصورة
 
-    .title {
-      height: 30%;
-    }
-
-    .Description {
-      height: 30%;
-    }
-
-    .Price {
-      height: 20%;
-    }
-  }
-
-  @media (max-width: 1100px) and (min-width: 600px) {
+  .CardMedia {
+    position: relative;
     width: 100%;
-    height: 530px;
-    img{
+    height: 250px;
+    overflow: hidden;
+    transition: transform 0.5s ease;
+
+    img {
       width: 100%;
-      height: 400px;
+      height: 100%;
       object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    &:hover {
+      cursor: pointer;
+      img {
+        transform: scale(1.2); // 👈 تكبير الصورة داخل الكارد بدل تمديدها
+      }
     }
   }
 
-  @media (max-width: 600px) {
+  .CardContent {
+    padding: 10px;
     width: 90%;
-    height: 520px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 
+    .title { font-size: 1.1rem; font-weight: 600; color: #222; }
+    .Description { font-size: 0.9rem; color: #666; }
+    .Price { font-size: 1rem; font-weight: 700; color: #007bff; margin-top: auto; }
   }
 
-  /* Dark mode */
+
+
+  .CardMedia:hover + .CardContent {
+    display: none;
+      }
+    
+      .CardMedia:hover {
+        height: 100%;       
+        img {
+          height: 100%;
+        
+        }
+      }
+  @media (min-width: 1200px) { max-width: 350px; }
+  @media (max-width: 992px) { max-width: 300px; }
+  @media (max-width: 600px) { max-width: 90%; }
+
   body.dark & {
-    box-shadow:
-      hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px,
-      hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px;
+    background-color: #1e1e1e;
+    color: #f0f0f0;
   }
 }
+
 
 /* =========================== Products Container =========================== */
 .Products-container {

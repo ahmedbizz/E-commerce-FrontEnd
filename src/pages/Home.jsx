@@ -54,30 +54,22 @@ export default function Home() {
       .finally(() => setLoading(false));
   }, []);
 
-
-
-  return (
-    <Box className="ads-container-home">
-      {loading ? (
+if(loading){
+  return(
     <Box
-    sx={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      backgroundColor: "rgba(30, 30, 30, 0.7)", // غطاء شفاف
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      zIndex: 2000, // فوق كل العناصر
-      backdropFilter: "blur(3px)", // يعطي تأثير ضبابي جميل
-    }}
+className="loading"
   >
     <CircularProgress size={70} thickness={4} color="primary" />
   </Box>
-      ) : (
-        <>
+  );
+
+}
+
+  return (
+    <Box className="ads-container-home">
+    
+  
+      
           <Box className="Button_titel_Panel">
             <Typography className="title">{t("shop_Item")}</Typography>
             <Box >
@@ -103,8 +95,8 @@ export default function Home() {
               </Box>
             ))}
           </Slider>
-        </>
-      )}
+      
+    
     </Box>
   );
 }

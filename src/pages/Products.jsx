@@ -188,31 +188,15 @@ const fetchProducts = async (page = 1, filtersArg = filters) => {
   };
 
 
-
+if(loading){
+return(  <Box className="loading">
+  <CircularProgress size={70} thickness={4} color="primary" />
+</Box>);
+}
   
 
 
   return (
-<>
-{loading && (
-    <Box
-    sx={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      backgroundColor: "rgba(30, 30, 30, 0.7)", // غطاء شفاف
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      zIndex: 2000, // فوق كل العناصر
-      backdropFilter: "blur(3px)", // يعطي تأثير ضبابي جميل
-    }}
-  >
-    <CircularProgress size={70} thickness={4} color="primary" />
-  </Box>
-  )}
       <Box className="Products-container">
         <Box className="Head-Side">
           <Button className="Button" onClick={toggleDrawer(true)}>
@@ -339,7 +323,7 @@ const fetchProducts = async (page = 1, filtersArg = filters) => {
   
         </Box>
       </Box>
-</>
+
   );
 };
 

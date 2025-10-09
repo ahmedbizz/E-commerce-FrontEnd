@@ -15,6 +15,7 @@ export default function SignInSide(props) {
   const fetchProducts = async (page = 1) => {
     try {
       const res = await GetBrands();
+    
       setimages(res.data.items);
     } catch (err) {
       console.log(err);
@@ -33,12 +34,12 @@ export default function SignInSide(props) {
     autoplaySpeed: 3000,
   };
 
-
+  console.log(images)
   return (
     <Box className="SignBoxContiner">
       <Slider {...settings}>
         {(images || []).map((img, index) => (
-          <Box className="slide" key={index}>
+          <Box key={index}>
             <img
               src={`${import.meta.env.VITE_BASE_URL}/images/Brands/${img.imageUrl}`}
               alt={`Ad ${index + 1}`}

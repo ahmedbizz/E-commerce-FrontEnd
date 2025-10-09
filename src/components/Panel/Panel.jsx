@@ -1,4 +1,4 @@
-import { Box ,Button} from '@mui/material';
+import { Box ,Button,CircularProgress} from '@mui/material';
 import {useState ,useEffect}from 'react';
 import {GetBrands ,GetProductsByBrand} from "../../services/BransService"
 import { useNavigate } from 'react-router-dom';
@@ -6,14 +6,18 @@ import { useNavigate } from 'react-router-dom';
 const Panel = () => {
   const navigate = useNavigate();
   const [brandsRes, setbrands] = useState([]);
+  const [loading, setloading] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
       try {  
+        setloading(true)
         const brandsRes = await GetBrands();
         setbrands(brandsRes.data.items);
       } catch(err) {
         setbrands([]);
+      }finally{
+        setloading(false)
       }
     }
     fetchData();
@@ -27,6 +31,17 @@ const Panel = () => {
       params.set("brandId", brand.id);
       navigate(`products/all?${params.toString()}`);
     };
+
+    if(loading){
+      return(
+        <Box
+    className="loading"
+      >
+        <CircularProgress size={70} thickness={4} color="primary" />
+      </Box>
+      );
+    
+    }
 
   return (
 <Box className="Panel-container">
