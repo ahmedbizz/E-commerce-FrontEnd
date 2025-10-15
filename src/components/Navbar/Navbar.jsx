@@ -53,6 +53,7 @@ export default function Navbar() {
   const [query, setQuery] = useState("");
   const [anchorElMNI, setAnchorElMNI] = useState(null);
   const [hoveredGroup, setHoveredGroup] = useState(null);
+  const [openDropDown, setopenDropDown] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   // 🟢 تحميل المنتجات
@@ -102,6 +103,7 @@ export default function Navbar() {
   const handleOpenMenu = (event, group) => {
     setAnchorElMNI(event.currentTarget);
     setHoveredGroup(group);
+    
 
     (async () => {
       try {
@@ -148,11 +150,12 @@ export default function Navbar() {
 
   return (
     <Box>
-      <Box sx={{ height: "65px" }} />
+      <Box sx={{ height: "65px", position: "relative" }} />
 
       <AppBar
         className="AppBarHeader"
-        position={isScrolled ? "fixed" : "static"}
+        position="static"
+        // position={isScrolled ? "fixed" : "static"}
       >
         <Toolbar className="Toolbar">
           {/* 🔸 الشعار والبحث */}
@@ -171,20 +174,17 @@ export default function Navbar() {
           </Box>
 
           {/* 🔸 المجموعات */}
-          <Box className="TargetGroupRes">
+          <Box className="TargetGroupRes"   >
   {targetGroups.map((group, i) => (
     <Box
       key={i}
       sx={{ position: "relative", display: "inline-block", mx: 3 }}
       onMouseEnter={(e) => handleOpenMenu(e, group)}
-      onMouseLeave={handleCloseMenu}
+    
     >
       <Button color="inherit" className="button">
         {t(group.name)}
       </Button>
-
-      {/* القائمة المنسدلة (بدون Popper) */}
-
     </Box>
   ))}
 </Box>
@@ -236,8 +236,8 @@ export default function Navbar() {
           </Box>
         </Toolbar>
       </AppBar>
-      {hoveredGroup && (
-        <Box className="DropDownBox">
+
+        <Box className={`DropDownBox ${hoveredGroup ? "show" : ""}`}    onMouseLeave={handleCloseMenu}>
           {brands.map((brand, j) => (
             <Box key={j} className="brand-item">
               <Box
@@ -259,7 +259,7 @@ export default function Navbar() {
             </Box>
           ))}
         </Box>
-      )}
+    
       {/* 🔍 البحث */}
       <Popper
         open={Boolean(anchorSearch)}

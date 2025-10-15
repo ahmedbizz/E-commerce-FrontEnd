@@ -44,24 +44,84 @@ main {
   font-size: 1rem;
   -webkit-transition: color 0.3s ease;
   transition: color 0.3s ease;
+  height: 60px;
 }
 
 .AppBarHeader .button:hover {
-  color: #ffcc00;
+  bottom: 3px solid;
 }
 
 .DropDownBox {
-  width: 100%;
-  top: 100%;
+  position: absolute;
+  top: 130px;
+  /* نفس ارتفاع الـ Navbar */
   left: 0;
-  background: #fff;
-  border-radius: 8px;
-  -webkit-box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-  padding: 12px 16px;
-  z-index: 3000 !important;
-  -webkit-animation: dropFade 0.25s ease;
-          animation: dropFade 0.25s ease;
+  width: 100%;
+  height: 50vh;
+  background: linear-gradient(135deg, #f3fffd, #f6f8f8, #e3ecee);
+  -webkit-backdrop-filter: blur(12px);
+          backdrop-filter: blur(12px);
+  color: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  gap: 100px;
+  padding: 20px;
+  padding-top: 100px;
+  z-index: 2000;
+  /* اجعلها فوق كل العناصر */
+  opacity: 0;
+  -webkit-transform: translateY(-10px);
+          transform: translateY(-10px);
+  pointer-events: none;
+  -webkit-transition: opacity 0.4s ease, -webkit-transform 0.4s ease;
+  transition: opacity 0.4s ease, -webkit-transform 0.4s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease, -webkit-transform 0.4s ease;
+}
+
+.DropDownBox.show {
+  opacity: 1;
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
+  pointer-events: auto;
+}
+
+.DropDownBox .brand-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.DropDownBox .brand-item .brand-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  -webkit-transition: color 0.3s;
+  transition: color 0.3s;
+}
+
+.DropDownBox .brand-item .brand-title:hover {
+  color: #8ab37a;
+}
+
+.DropDownBox .brand-item .category-item {
+  font-size: 0.95rem;
+  -webkit-transition: color 0.3s;
+  transition: color 0.3s;
+}
+
+.DropDownBox .brand-item .category-item:hover {
+  color: #8ab37a;
 }
 
 @-webkit-keyframes dropFade {
@@ -132,68 +192,6 @@ main {
           justify-content: center;
 }
 
-.TargetGroupRes > div {
-  position: relative;
-  margin: 0 16px;
-}
-
-.TargetGroupRes > div .DropDownBox {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: rgba(25, 25, 25, 0.96);
-  border-radius: 10px;
-  padding: 12px 18px;
-  min-width: 230px;
-  -webkit-box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-  z-index: 2000;
-  -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
-  opacity: 0;
-  -webkit-transform: translateY(-10px);
-          transform: translateY(-10px);
-  pointer-events: none;
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-}
-
-.TargetGroupRes > div .DropDownBox .brand-item {
-  margin-bottom: 8px;
-}
-
-.TargetGroupRes > div .DropDownBox .brand-item .brand-title {
-  font-weight: 600;
-  cursor: pointer;
-  color: #fff;
-  -webkit-transition: color 0.3s;
-  transition: color 0.3s;
-}
-
-.TargetGroupRes > div .DropDownBox .brand-item .brand-title:hover {
-  color: #ffcc00;
-}
-
-.TargetGroupRes > div .DropDownBox .brand-item .category-item {
-  margin-left: 16px;
-  font-size: 0.9rem;
-  color: #ccc;
-  cursor: pointer;
-  -webkit-transition: color 0.3s;
-  transition: color 0.3s;
-}
-
-.TargetGroupRes > div .DropDownBox .brand-item .category-item:hover {
-  color: #ffcc00;
-}
-
-.TargetGroupRes > div:hover .DropDownBox {
-  opacity: 1;
-  -webkit-transform: translateY(0);
-          transform: translateY(0);
-  pointer-events: auto;
-}
-
 .Search-Box {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -228,7 +226,6 @@ main {
 }
 
 .MuiAvatar-root {
-  border: 2px solid #ffcc00;
   -webkit-transition: -webkit-transform 0.3s;
   transition: -webkit-transform 0.3s;
   transition: transform 0.3s;

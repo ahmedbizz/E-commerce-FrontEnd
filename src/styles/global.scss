@@ -31,28 +31,71 @@ main {
   .button {
     font-weight: 600;
     font-size: 1rem;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease;  
+    height: 60px;
 
-    &:hover {
-      color: #ffcc00;
+    &:hover{
+      bottom: 3px solid ;
     }
+
+
   }
 }
 
 // القائمة المنسدلة
 .DropDownBox {
-
-  width: 100%;
-  top: 100%;
+  position: absolute;
+  top: 130px; /* نفس ارتفاع الـ Navbar */
   left: 0;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-  padding: 12px 16px;
-  z-index: 3000 !important; // أعلى من AppBar
+  width: 100%;
+  height: 50vh;
+  background: linear-gradient(135deg, #f3fffd, #f6f8f8, #e3ecee);
+  backdrop-filter: blur(12px);
+  color: white;
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+  padding: 20px;
+  padding-top: 100px;
+  z-index: 2000; /* اجعلها فوق كل العناصر */
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .brand-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+  
+    .brand-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+    margin-bottom: 20px;
+      
+      transition: color 0.3s;
+      &:hover {
+        color: #8ab37a;
+      }
 
-  animation: dropFade 0.25s ease;
+    }
+
+    .category-item {
+      font-size: 0.95rem;
+  
+      transition: color 0.3s;
+      &:hover {
+        color: #8ab37a;
+      }
+    }
+  }
 }
+
 
 @keyframes dropFade {
   from {
@@ -98,63 +141,7 @@ main {
   align-items: center;
   justify-content: center;
 
-  > div {
-    position: relative;
-    margin: 0 16px;
 
-    .DropDownBox {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: rgba(25, 25, 25, 0.96);
-      border-radius: 10px;
-      padding: 12px 18px;
-      min-width: 230px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-      z-index: 2000;
-      backdrop-filter: blur(10px);
-
-      // الحركة الافتراضية
-      opacity: 0;
-      transform: translateY(-10px);
-      pointer-events: none;
-      transition: all 0.3s ease;
-
-      .brand-item {
-        margin-bottom: 8px;
-
-        .brand-title {
-          font-weight: 600;
-          cursor: pointer;
-          color: #fff;
-          transition: color 0.3s;
-
-          &:hover {
-            color: #ffcc00;
-          }
-        }
-
-        .category-item {
-          margin-left: 16px;
-          font-size: 0.9rem;
-          color: #ccc;
-          cursor: pointer;
-          transition: color 0.3s;
-
-          &:hover {
-            color: #ffcc00;
-          }
-        }
-      }
-    }
-
-    // عند تمرير الماوس على الزر
-    &:hover .DropDownBox {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-  }
 }
 
 // البحث المنبثق
@@ -186,7 +173,7 @@ main {
 
 // الصورة الرمزية والمستخدم
 .MuiAvatar-root {
-  border: 2px solid #ffcc00;
+
   transition: transform 0.3s;
 
   &:hover {

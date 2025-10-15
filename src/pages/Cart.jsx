@@ -98,6 +98,7 @@ export default function Cart() {
       const res = await CreatePayment(data);
       console.log(res.data)
       if (res.data?.approvalUrl) {
+      
         window.location.href = res.data.approvalUrl;
       } else if (res.data?.paymentMethod === "CashOnDelivery") {
         fetchCart();
