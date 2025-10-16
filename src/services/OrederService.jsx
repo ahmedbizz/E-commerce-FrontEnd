@@ -6,5 +6,7 @@ export const CashOnDelivery  = (data)=> axios.post(`/Order/CashOnDelivery`,data)
 export const GetOrderById = (id) => axios.get(`/Order/${id}`);
 export const UpdateOrderById  = (id,status)=> axios.patch(`/Order/${id}/status`,{ Status: status});
 
-export const CapturePayment = (PaymentId,data) =>
-  axios.post(`/Order/CapturePayment`, { PaymentId, data });
+export const CapturePayment = (paymentId, providerOrderId) => axios.post(`/Order/CapturePayment`, {
+  paymentId: Number(paymentId),
+  providerOrderId
+});

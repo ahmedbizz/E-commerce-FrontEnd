@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import axios from "../services/axiosInstance";
+import {CapturePayment} from "../services/OrederService";
 import { Box, Typography, CircularProgress, Button } from "@mui/material";
 
 export default function ReturnPayPal() {
@@ -10,7 +10,7 @@ export default function ReturnPayPal() {
   const [searchParams] = useSearchParams();
 
   const providerOrderId = searchParams.get("token"); // PayPal يعيد token كمعرف الطلب
-
+  const paymentId = searchParams.get("paymentId");
   useEffect(() => {
     const capturePayment = async () => {
       try {
@@ -20,9 +20,8 @@ export default function ReturnPayPal() {
           return;
         }
 
-        const res = await axios.post("/Payment/CapturePaypal", {
-          ProviderOrderId: providerOrderId,
-        });
+        const res = await CapturePayment(paymentId, providerOrderId);
+
 
         if (res.data?.message) {
           setMessage(res.data.message);
