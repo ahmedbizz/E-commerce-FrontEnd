@@ -9,6 +9,7 @@ import {
   MenuItem,Typography,Card
 } from "@mui/material";
 import { GetInventoryById,UpdateInventoryById } from "../../../services/InventoryService";
+import { GetSizes } from "../../../services/SizeService";
 import { GetWareHouses } from "../../../services/WareHouseService";
 import { GetProducts } from "../../../services/productService";
 import { ToastContainer, toast } from "react-toastify";
@@ -48,6 +49,7 @@ export default function UpdateInventory() {
     WarehouseId: "",
     ProductId: "",
     Quantity: "",
+    SizeId: "",
   });
   useEffect(() => {
     GetInventoryById(id)
@@ -57,6 +59,7 @@ export default function UpdateInventory() {
           WarehouseId: res.data.warehouseId || "",
           ProductId: res.data.productId || "",
           Quantity: res.data.quantity || "",
+          SizeId:res.data.sizeId || "",
 
         })}
       )
@@ -89,7 +92,18 @@ export default function UpdateInventory() {
     }
     fetchData();
   }, []);
-
+  const [availableSizes, setAvailableSizes] = useState([]);
+  const fetchSizes = async () => {
+    try {
+      const res = await GetSizes();
+      setAvailableSizes(res.data);
+    } catch (err) {
+      console.error("Error fetching sizes", err);
+    }
+  };
+  useEffect(() => {
+    fetchSizes();
+  }, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -198,7 +212,28 @@ export default function UpdateInventory() {
               ))}
             </Select>
           </FormControl>
-  
+          <FormControl>
+            <Select
+              name="SizeId"
+              displayEmpty
+              required
+              value={formData.SizeId}
+              onChange={handleChange}
+              fullWidth
+              sx={{ mb: 2 }}
+            >
+              <MenuItem value="">
+                <em>
+                  {t("Select")}-{t("Size")}
+                </em>
+              </MenuItem>
+              {(availableSizes || []).map((size) => (
+                <MenuItem key={size.id} value={size.id}>
+                  {size.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <FormControl>
             <TextField
               label={t("Quantity")}

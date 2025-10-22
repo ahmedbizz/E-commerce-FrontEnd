@@ -26,7 +26,7 @@ import AccessAlarm from "@mui/icons-material/AccessAlarm";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import Add from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
-import { debounce } from "lodash";
+import { formatPrice } from "/src/utils/formatPrice";
 
 const DisplayProducts = () => {
   const navigete = useNavigate();
@@ -301,7 +301,7 @@ const DisplayProducts = () => {
             <TableCell>{t("Name")}</TableCell>
             <TableCell>{t("price")}</TableCell>
             <TableCell>{t("costPrice")}</TableCell>
-            <TableCell>{t("stockQuantity")}</TableCell>
+            <TableCell>{t("Quantity")}</TableCell>
             <TableCell>{t("updatedAt")}</TableCell>
 
             <TableCell>{t("Action")}</TableCell>
@@ -333,10 +333,19 @@ const DisplayProducts = () => {
                   />
                 </TableCell>
                 <TableCell>{item.name}</TableCell>
-                <TableCell align="left">{item.price}</TableCell>
-                <TableCell align="left">{item.costPrice}</TableCell>
+                <TableCell align="left">{formatPrice(item.price)}</TableCell>
+                <TableCell align="left">{formatPrice(item.costPrice)}</TableCell>
                 <TableCell align="left">{item.stockQuantity}</TableCell>
-                <TableCell align="left">{item.updatedAt}</TableCell>
+                <TableCell align="left">
+                    {new Date(item.updatedAt).toLocaleString('en-CA', {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    }).replace(',', '')}
+                  </TableCell>
+
       
             
                 <TableCell align="left">

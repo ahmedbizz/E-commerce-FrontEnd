@@ -65,7 +65,10 @@ import ReturnPayPal from "../pages/ReturnPayPal";
 import CreatePaymentMethod from "../pages/Management/ManagmentPaymentMethod/CreatePaymentMethod";
 import DispalyPaymentMethod from "../pages/Management/ManagmentPaymentMethod/DispalyPaymentMethod";
 import UpdatePaymentMethod from "../pages/Management/ManagmentPaymentMethod/UpdatePaymentMethod";
-
+//Accounts
+import DispalyAccounts from "../pages/Management/ManagmentAccounts/DispalyAccounts"
+import DispalyjournalEntryDetails from "../pages/Management/ManagmentAccounts/DispalyjournalEntryDetails"
+import DispalyInvoices from "../pages/Management/ManagmentAccounts/DispalyInvoices"
 import { AnimatePresence, motion } from "framer-motion";
 import { ROLES } from "../utils/Role";
 
@@ -231,6 +234,9 @@ transition={{ duration: 0.4 }}
         <Route path="Taxes" element={<DispalyTaxes />} />
         <Route path="Taxe/create" element={<CreateTaxes />} />
         <Route path="Taxe/edit/:id" element={<UpdateTaxes />} />
+        <Route path="Accounts" element={<DispalyAccounts />} />
+        <Route path="journalEntryDetails" element={<DispalyjournalEntryDetails />} />
+        <Route path="Invoices" element={<DispalyInvoices />} />
         <Route path="PaymentMethods" element={<DispalyPaymentMethod />} />
         <Route path="PaymentMethod/create" element={<CreatePaymentMethod />} />
         <Route path="PaymentMethod/edit/:id" element={<UpdatePaymentMethod />} />

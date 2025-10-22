@@ -30,6 +30,7 @@ import MuiAlert from "@mui/material/Alert";
 import Dialog from "@mui/material/Dialog";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Tooltip from "@mui/material/Tooltip";
+import * as signalR from "@microsoft/signalr";
 
 const CustomAlert = React.forwardRef(function CustomAlert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -110,31 +111,53 @@ const DisplayOrders = () => {
   };
 
   useEffect(() => {
+        // الاتصال بالـ Hub
+        const connection = new signalR.HubConnectionBuilder()
+        .withUrl(`${import.meta.env.VITE_BASE_URL}/OrderHub`) // 👈 نفس المسار في السيرفر
+        .withAutomaticReconnect()
+        .build();
+  
+      // بدء الاتصال
+      connection.start()
+        .then(() => console.log("✅ Connected to SignalR OrderHub"))
+        .catch(err => console.error("❌ SignalR error:", err));
+  
+      // عند استقبال التحديث من السيرفر
+      connection.on("OrderUpdated", () => {
+        fetchOrders(currentPage); // تحديث القائمة مباشرة
+      });
+  
+      // جلب الطلبات أول مرة
     fetchOrders(currentPage);
+
+        // تنظيف الاتصال عند الخروج
+        return () => {
+          connection.stop();
+        };
   }, [currentPage]);
 
-  const deleteByID = async (id) => {
-    try {
-      const res = await DeleteOrderByID(id);
-      notify(res.data.message);
-      const updatedList = Orders.filter((g) => g.id !== id);
-      setOrders(updatedList);
-      setFilter(updatedList);
-      if (updatedList.length === 0) {
-        setEmpty(true);
-      }
-    } catch (err) {
-      if (err.response?.status === 401) {
-        notifyErorr(t("access_denied_401"));
-      }
-      if (err.response?.status === 404) {
-        notifyErorr(t("no_items_on_page"));
-      } else {
-        notifyErorr(t("fetch_data_error"));
-      }
-      notifyErorr(err.message);
-    }
-  };
+  // const deleteByID = async (id) => {
+  //   try {
+  //     const res = await DeleteOrderByID(id);
+  //     notify(res.data.message);
+  //     const updatedList = Orders.filter((g) => g.id !== id);
+  //     setOrders(updatedList);
+  //     setFilter(updatedList);
+  //     if (updatedList.length === 0) {
+  //       setEmpty(true);
+  //     }
+  //   } catch (err) {
+  //     if (err.response?.status === 401) {
+  //       notifyErorr(t("access_denied_401"));
+  //     }
+  //     if (err.response?.status === 404) {
+  //       notifyErorr(t("no_items_on_page"));
+  //     } else {
+  //       notifyErorr(t("fetch_data_error"));
+  //     }
+  //     notifyErorr(err.message);
+  //   }
+  // };
 
   const handleSearch = (event) => {
     const query = event.target.value;

@@ -10,29 +10,48 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [roleUser, setRole] = useState(ROLES.GUEST);
   const navigate = useNavigate();
-  useEffect(() => {
+
+
+  //  دالة لفحص صلاحية التوكن
+  const checkToken = () => {
     const token = Cookies.get("token");
-    if (token) {
-      try {
 
-        const decoded = jwtDecode(token);
-        const currentTime = Date.now() / 1000;
-      
-        if (decoded.exp && decoded.exp < currentTime) {
-          logoutUser();
-        } else {
-          setUser(decoded);
-          setRole(decoded.role?.toLowerCase());
-
-        }
-      } catch {
-        Cookies.remove("token");
-        setRole(ROLES.GUEST);
-      }
-      
+    if (!token) {
+      logoutUser(false); // false = لا تعمل navigate مرتين
+      return;
     }
-    setLoading(false); 
+
+    try {
+      const decoded = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
+
+      if (decoded.exp && decoded.exp < currentTime) {
+        console.warn(" Token expired — logging out...");
+        logoutUser(false);
+      } else {
+        setUser(decoded);
+        setRole(decoded.role?.toLowerCase());
+      }
+    } catch (error) {
+      console.error(" Invalid token:", error);
+      Cookies.remove("token");
+      setRole(ROLES.GUEST);
+      setUser(null);
+    }
+  };
+
+  // 🕒 عند أول تحميل + تحقق كل 3 دقائق
+  useEffect(() => {
+    checkToken(); // فحص أولي
+    setLoading(false);
+
+    const interval = setInterval(() => {
+      checkToken();
+    }, 180000); // كل 3 دقائق
+
+    return () => clearInterval(interval);
   }, []);
+
 
   const loginUser = (token) => {
     Cookies.set("token", token, { expires: 7 });

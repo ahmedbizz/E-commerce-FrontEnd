@@ -119,5 +119,6 @@
   "An error occurred while placing the order. Please try again.": "An error occurred while placing the order. Please try again.",
   "No payment approval URL provided.": "No payment approval URL provided.",
   "orderSuccess": "Order placed successfully!",
-  "continueShopping": "Continue Shopping"
+  "continueShopping": "Continue Shopping",
+  "costPrice":"Cost Price"
 }

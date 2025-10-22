@@ -174,7 +174,7 @@ export default function ManageDashboard() {
                             to="/System/Taxes"
                             onClick={handleCloseFinance}
                           >
-                            {t("Display Taxes")}
+                            {t(" Taxes")}
                           </MenuItem>
                           <MenuItem
                             component={Link}
@@ -182,6 +182,29 @@ export default function ManageDashboard() {
                             onClick={handleCloseFinance}
                           >
                             {t("Create Taxe")}
+                          </MenuItem>
+
+                          <MenuItem
+                            component={Link}
+                            to="/System/Accounts"
+                            onClick={handleCloseFinance}
+                          >
+                            {t(" Accounts")}
+                          </MenuItem>
+
+                          <MenuItem
+                            component={Link}
+                            to="/System/journalEntryDetails"
+                            onClick={handleCloseFinance}
+                          >
+                            {t(" journal Entry Details")}
+                          </MenuItem>
+                          <MenuItem
+                            component={Link}
+                            to="/System/Invoices"
+                            onClick={handleCloseFinance}
+                          >
+                            {t("Invoices")}
                           </MenuItem>
 
 

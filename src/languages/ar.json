@@ -129,7 +129,7 @@
   "An error occurred while placing the order. Please try again.": "حدث خطأ أثناء إتمام الطلب، حاول مرة أخرى.",
   "No payment approval URL provided.": "لا يوجد رابط للموافقة على الدفع.",
   "orderSuccess": "تم الطلب بنجاح!",
-
+"costPrice":"سعر التكلفة",
   "continueShopping": "العودة للتسوق"
 
 
